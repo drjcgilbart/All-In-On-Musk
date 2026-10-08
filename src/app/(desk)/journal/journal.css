@@ -1,0 +1,65 @@
+.story p {
+  white-space: pre-wrap;
+}
+
+.story figure,
+.frame {
+  margin: 1rem 0;
+}
+
+.story img,
+.frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  background: #05070a;
+}
+
+.card-grid .plain-card > img {
+  display: block;
+  width: 100%;
+  height: 11rem;
+  max-height: 11rem;
+  object-fit: cover;
+  margin-bottom: 0.7rem;
+  border: 1px solid #1a3a44;
+}
+
+.story figcaption,
+.frame figcaption {
+  margin-top: 0.35rem;
+  color: var(--desk-muted);
+  font-size: 0.85rem;
+}
+
+.watch-frame {
+  position: relative;
+  margin: 1rem 0 1.4rem;
+  padding-top: 56.25%;
+  border: 1px solid var(--desk-line);
+  background: #05070a;
+}
+
+.watch-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.piece-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.2rem;
+  margin: 0.4rem 0 0;
+}
+
+.piece-links a {
+  color: #2ee6d6;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}

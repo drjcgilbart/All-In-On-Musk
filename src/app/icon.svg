@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" fill="#05060a"/>
+  <rect x="1.5" y="1.5" width="29" height="29" stroke="#2ee7ff" stroke-width="1"/>
+  <text x="16" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#f4fbff">IN</text>
+  <rect x="8" y="24" width="16" height="1.5" fill="#ff2bd6"/>
+</svg>
