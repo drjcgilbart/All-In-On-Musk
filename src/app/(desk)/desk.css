@@ -1755,3 +1755,20 @@ a.plain-card {
 .nv-card h3 { font-size: 1rem; line-height: 1.3; }
 @media (max-width: 900px) { .nv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .nv-grid { grid-template-columns: 1fr; } }
+
+/* Player layout for the video block on /news */
+.nvp, .nvp-block { min-width: 0; max-width: 100%; }
+.nvp-block .journal-player { margin-top: .6rem; }
+.nvp-poster { display: block; width: 100%; padding: 0; cursor: pointer; overflow: hidden; }
+.nvp-poster .jv-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.nvp-poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.nvp-more { margin: .4rem 0 1.6rem; border: 1px solid var(--desk-line); }
+.nvp-more summary { cursor: pointer; padding: .75rem .9rem; font-family: var(--font-mono, "IBM Plex Mono", monospace); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: #2ee6d6; }
+.nvp-list { list-style: none; margin: 0; padding: 0 .5rem .5rem; max-height: 26rem; overflow-y: auto; }
+.nvp-list button { display: flex; gap: .75rem; align-items: center; width: 100%; padding: .5rem; background: none; border: 0; border-top: 1px solid var(--desk-line); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.nvp-list button:hover { background: rgba(46, 230, 214, .06); }
+.nvp-list img { width: 112px; aspect-ratio: 16 / 9; object-fit: cover; flex: none; }
+.nvp-list img.is-short { width: 54px; aspect-ratio: 9 / 16; }
+.nvp-list .idx { display: block; margin: 0 0 .2rem; }
+.nvp-title { display: block; font-size: .92rem; line-height: 1.3; overflow-wrap: anywhere; }
+.nvp-block .journal-player:not(.is-short) .watch-frame { padding-top: 0; aspect-ratio: 16 / 9; width: min(100%, 960px); }

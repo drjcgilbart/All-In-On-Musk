@@ -20,7 +20,7 @@ export default async function NewsPage() {
       <p className="lede">
         Pulled from the news wires every morning, newest first. Headlines are ours, the story is at the link. Empty filters mean nothing on that tag this week.
       </p>
-      <NewsVideos limit={6} />
+      <NewsVideos limit={30} layout="player" />
       <NewsList items={items} />
     </>
   );

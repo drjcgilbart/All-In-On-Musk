@@ -1,7 +1,9 @@
 import { getNewsVideos } from "@/lib/channelRss";
+import { NewsVideoPlayer } from "@/components/news-video-player";
+import "@/app/(desk)/journal/journal.css";
 
 /** Latest channel videos, shown at the top of /news (and as a teaser on the homepage). */
-export async function NewsVideos({ limit = 6, heading = "Latest videos", moreHref }: { limit?: number; heading?: string; moreHref?: string }) {
+export async function NewsVideos({ limit = 6, layout = "grid", heading = "Latest videos", moreHref }: { limit?: number; layout?: "grid" | "player"; heading?: string; moreHref?: string }) {
   const videos = await getNewsVideos(limit);
   if (videos.length === 0) return null;
   return (
@@ -13,6 +15,7 @@ export async function NewsVideos({ limit = 6, heading = "Latest videos", moreHre
           {moreHref ? "More on News" : "All videos on YouTube"}
         </a>
       </p>
+      {layout === "player" ? <NewsVideoPlayer videos={videos} /> : (
       <div className="nv-grid">
         {videos.map((v) => {
           const external = v.href.startsWith("http");
@@ -28,6 +31,7 @@ export async function NewsVideos({ limit = 6, heading = "Latest videos", moreHre
           );
         })}
       </div>
+      )}
     </section>
   );
 }
