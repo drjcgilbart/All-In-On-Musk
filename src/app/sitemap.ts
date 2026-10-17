@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { machines } from "@/content/machines";
 import { site } from "@/content/site";
+import { PRODUCTS } from "@/lib/shop/catalog";
 
 const paths = [
   "",
@@ -23,6 +24,9 @@ const paths = [
   "/glossary",
   "/x",
   "/race/index.html",
+  "/shop",
+  "/shop/returns",
+  "/shop/privacy",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -38,6 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: site.updatedIso,
       changeFrequency: "weekly" as const,
       priority: 0.7,
+    })),
+    ...PRODUCTS.map((product) => ({
+      url: `${site.url}/shop/${product.slug}`,
+      lastModified: site.updatedIso,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
     })),
   ];
 }

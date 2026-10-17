@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Chip } from "@/components/chip";
 import { JournalStrip } from "@/components/journal-strip";
 import { NewsList } from "@/components/news-list";
 import { Tape } from "@/components/tape";
 import { machineArt } from "@/content/art";
 import { machines } from "@/content/machines";
-import { news } from "@/content/news";
+import { getLiveNews, latestByTag } from "@/lib/liveNews";
 import { bench, milestones, watchlist } from "@/content/records";
 import { site } from "@/content/site";
 
@@ -17,7 +18,12 @@ export const metadata: Metadata = {
 
 const DAY = 86_400_000;
 
-export default function HomePage() {
+export const revalidate = 21600;
+
+export default async function HomePage() {
+  const news = await getLiveNews(10);
+  const latest = await latestByTag(["Tesla", "SpaceX", "Neuralink", "Boring", "xAI"]);
+  const tagFor: Record<string, string> = { tesla: "Tesla", spacex: "SpaceX", neuralink: "Neuralink", boring: "Boring", xai: "xAI", terafab: "Tesla" };
   const recent = news.filter((item) => Date.now() - Date.parse(item.iso) < DAY).slice(0, 5);
   const headlines = recent.length > 0 ? recent : news.slice(0, 5);
 
@@ -42,6 +48,13 @@ export default function HomePage() {
                 <p className="line">{machine.line}</p>
                 <p>{machine.text}</p>
               </a>
+              {latest[tagFor[machine.slug]] ? (
+                <p className="mono">
+                  <a href={latest[tagFor[machine.slug]]!.href} target="_blank" rel="noopener noreferrer">
+                    {latest[tagFor[machine.slug]]!.time} · {latest[tagFor[machine.slug]]!.title}
+                  </a>
+                </p>
+              ) : null}
               <a className="ext" href={machine.href}>
                 {machine.site}
               </a>
@@ -101,6 +114,17 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="section" aria-labelledby="merch-title">
+        <h2 id="merch-title">Merch</h2>
+        <div className="stack">
+          <Link className="plain-card span-6 merch-card" href="/shop">
+            <p className="kicker">Shop</p>
+            <h3>Desk merch</h3>
+            <p>Tees, a dad hat and a mission patch. Printed to order. Unofficial fan merch.</p>
+          </Link>
+        </div>
+      </section>
+
       <JournalStrip />
 
       <section className="section" aria-labelledby="record-title">
@@ -113,7 +137,7 @@ export default function HomePage() {
                 <Chip chip={item.chip} />
                 {item.date}
               </p>
-              <a href={item.href}>{item.text}</a>
+              <a href={item.href} target="_blank" rel="noopener noreferrer">{item.text}</a>
             </li>
           ))}
         </ol>

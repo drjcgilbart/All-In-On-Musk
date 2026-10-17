@@ -100,7 +100,12 @@ export function normalizeCatalog(raw: unknown): StudioCatalog {
 }
 
 function blobReady() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  return Boolean(process.env.UPSTASH_BLOB_TOKEN);
+}
+
+async function upstash() {
+  const { Bucket } = await import("@upstash/blob");
+  return Bucket.fromEnv();
 }
 
 function productionHost() {
@@ -122,25 +127,18 @@ async function writeLocal(catalog: StudioCatalog) {
 }
 
 async function readBlob(): Promise<StudioCatalog> {
-  const { head } = await import("@vercel/blob");
   try {
-    const meta = await head(BLOB_PATH);
-    const response = await fetch(meta.url, { cache: "no-store" });
-    if (!response.ok) return emptyCatalog();
-    return normalizeCatalog(await response.json());
+    const file = await (await upstash()).get(BLOB_PATH);
+    return normalizeCatalog(JSON.parse(await new Response(file.body).text()));
   } catch {
     return emptyCatalog();
   }
 }
 
 async function writeBlob(catalog: StudioCatalog) {
-  const { put } = await import("@vercel/blob");
-  await put(BLOB_PATH, JSON.stringify(catalog), {
-    access: "public",
-    addRandomSuffix: false,
-    allowOverwrite: true,
+  await (await upstash()).put(BLOB_PATH, JSON.stringify(catalog), {
     contentType: "application/json",
-    cacheControlMaxAge: 60,
+    cache: 60,
   });
 }
 
@@ -172,12 +170,11 @@ export async function saveUpload(file: File) {
   const ext = type === "image/png" ? "png" : type === "image/webp" ? "webp" : type === "image/gif" ? "gif" : "jpg";
   const name = `${createHash("sha1").update(bytes).digest("hex").slice(0, 12)}-${Date.now().toString(36)}.${ext}`;
   if (blobReady()) {
-    const { put } = await import("@vercel/blob");
-    const blob = await put(`studio/media/${name}`, bytes, {
-      access: "public",
-      addRandomSuffix: false,
+    const blob = await (await upstash()).put(`studio/media/${name}`, bytes, {
       contentType: type,
+      cache: "immutable",
     });
+    if (!blob.url) throw new Error("Picture storage is private. The bucket has to be public.");
     return blob.url;
   }
   if (productionHost()) throw new Error("Picture storage is not configured on this host.");

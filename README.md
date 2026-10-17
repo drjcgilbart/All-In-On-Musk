@@ -1,5 +1,16 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Journal Videos
+
+`/watch` loads the latest videos and Shorts from https://www.youtube.com/@allinonmusk with the YouTube Data API v3. A card plays in the page. The list is cached for five minutes.
+
+Copy the names in `.env.example` into `.env.local` in this folder:
+
+- `YOUTUBE_API_KEY` is a YouTube Data API v3 key. Enable that API on the key in Google Cloud.
+- `YOUTUBE_CHANNEL_ID` is already filled with the @allinonmusk channel id.
+
+On Vercel, add both names to the `all-in-on-musk` project for Production, then redeploy. The live site does not see a new variable until that deploy. Do not put the key in the browser or in a `NEXT_PUBLIC_` name.
+
 ## Getting Started
 
 First, run the development server:

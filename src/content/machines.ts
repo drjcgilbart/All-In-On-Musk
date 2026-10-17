@@ -46,7 +46,7 @@ export const machines: Machine[] = [
     chips: [
       { label: "Vehicles shipping", chip: "In production" },
       { label: "Unsupervised robotaxi", chip: "Reported" },
-      { label: "Roadster", chip: "Announced" },
+      { label: "Roadster, production 2028", chip: "Announced" },
     ],
     programs: [
       {
@@ -64,14 +64,14 @@ export const machines: Machine[] = [
       {
         name: "Semi",
         line: "Haul it.",
-        chip: "Limited",
-        text: "A few fleets have trucks. Volume production is the open question. Treat delivery counts as Limited until Tesla publishes a run rate.",
+        chip: "In production",
+        text: "Volume production started 24 Sep 2026 at the Semi factory in Sparks, Nevada. Tesla says the plant can build 50,000 a year. Capacity is not deliveries.",
       },
       {
         name: "Roadster",
         line: "Show the car.",
         chip: "Announced",
-        text: "Announced. Not a car you can buy. Unveiling talk is not a production date.",
+        text: "Revealed 15 Oct 2026 at McGregor, Texas. Reservations are open, no price. Tesla says production starts in 2028.",
       },
       {
         name: "Energy storage",
@@ -95,20 +95,20 @@ export const machines: Machine[] = [
         name: "Dojo",
         line: "Train the net.",
         chip: "Reported",
-        text: "Tesla's training-computer effort. Scope and even the name of the program have shifted in public comments. Status moves.",
+        text: "Shut down in 2025. In Jan 2026 Musk said Dojo3 restarts, aimed at space-based compute. Status moves.",
       },
       {
         name: "Terafab",
         line: "Own the wafer.",
-        chip: "Discussed",
-        text: "A discussed chip fab, not a plant with a loading dock. See the Terafab page.",
+        chip: "Announced",
+        text: "A chip fab sited in Grimes County, Texas, announced 6 Aug 2026. See the Terafab page.",
       },
     ],
     watch: [
       "Unsupervised miles inside a named geofence, from Tesla, not a fan map.",
-      "Semi deliveries versus the last stated target.",
+      "Semi deliveries versus the 50,000-a-year plant.",
       "Megapack backlog, when Tesla prints it.",
-      "Whether Terafab stays a sentence or becomes a site.",
+      "Roadster: whether 2028 holds.",
     ],
   },
   {
@@ -177,13 +177,13 @@ export const machines: Machine[] = [
         name: "Implant",
         line: "Read the nerve.",
         chip: "Reported",
-        text: "An implanted interface in early human studies. Demos are not endpoints.",
+        text: "An implanted interface in human studies. Not FDA approved. Demos are not endpoints.",
       },
       {
         name: "Trials",
         line: "Count the patients.",
         chip: "Reported",
-        text: "Watch enrollment, adverse events, and the task the device claims. This page will not grade a surgery from a video.",
+        text: "26 people had the N1 implant as of 22 Jun 2026, per Neuralink. Watch enrollment, adverse events, and the task the device claims.",
       },
     ],
     watch: [
@@ -252,7 +252,7 @@ export const machines: Machine[] = [
         name: "Terafab",
         line: "Own the wafer.",
         chip: "Discussed",
-        text: "Same rumor as on the Tesla page. A fab that would feed the cluster. Not a street address.",
+        text: "xAI is named with SpaceX and Tesla in the Terafab filings. Grimes County, Texas. See the Terafab page.",
       },
     ],
     watch: [
@@ -265,21 +265,30 @@ export const machines: Machine[] = [
     index: "06",
     name: "Terafab",
     line: "Own the wafer.",
-    text: "A discussed chip plant. Not a loading dock.",
-    why: "Terafab is the name for a very large fab that would sit under Tesla and xAI. It is a sentence in public comments. It is not a factory this desk can point to.",
+    text: "A chip plant with a site. Not a fab yet.",
+    why: "Terafab is the chip complex for SpaceX, Tesla, and xAI. Texas announced the Grimes County site on 6 Aug 2026. Earthwork is under way. No wafer has shipped.",
     site: "tesla.com",
     href: "https://www.tesla.com",
     x: "https://x.com/tesla",
-    chips: [{ label: "Plant", chip: "Discussed" }],
+    chips: [
+      { label: "Site, Grimes County TX", chip: "Confirmed" },
+      { label: "Plant", chip: "Announced" },
+    ],
     programs: [
       {
         name: "The idea",
         line: "Print the chip.",
         chip: "Discussed",
-        text: "Own the wafer instead of buying every accelerator. Useful if power, people, and tools show up. Until then it stays Discussed.",
+        text: "Own the wafer instead of buying every accelerator. Logic, memory, and packaging on one site.",
+      },
+      {
+        name: "Phase one",
+        line: "Pour the pad.",
+        chip: "Announced",
+        text: "$16.8 billion and 3,000 jobs in phase one, per Texas. Filings put operations in 2028. Site prep was seen in Oct 2026.",
       },
     ],
-    watch: ["A site, a permit, or a tool order.", "Any sentence that names a city."],
+    watch: ["A tool order or a first wafer.", "Whether 2028 operations holds."],
   },
 ];
 

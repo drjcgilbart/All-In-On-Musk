@@ -24,6 +24,7 @@ export const nav = [
   { href: "/merger", label: "Merger" },
   { href: "/projects", label: "Projects" },
   { href: "/race/index.html", label: "Race" },
+  { href: "/shop", label: "Merch" },
   { href: "/about", label: "About" },
 ] as const;
 
@@ -44,4 +45,5 @@ export const tabs = [
   { href: "/journal", label: "Journal" },
   { href: "/machines", label: "Machines" },
   { href: "/projects", label: "Projects" },
+  { href: "/shop", label: "Merch" },
 ] as const;

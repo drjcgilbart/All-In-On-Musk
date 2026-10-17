@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { NewsList } from "@/components/news-list";
+import { getLiveNews } from "@/lib/liveNews";
+
+export const revalidate = 21600;
 
 export const metadata: Metadata = {
   title: "News",
@@ -7,15 +10,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "/news" },
 };
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const items = await getLiveNews(30);
   return (
     <>
       <p className="kicker">News</p>
       <h1 className="page-title">The desk.</h1>
       <p className="lede">
-        A starter pile of items we can point at. Official pages and primary reports first. A rumor is labeled a rumor. Empty filters mean the tag is not on this pile yet.
+        Pulled from the news wires every morning, newest first. Headlines are ours, the story is at the link. Empty filters mean nothing on that tag this week.
       </p>
-      <NewsList />
+      <NewsList items={items} />
     </>
   );
 }

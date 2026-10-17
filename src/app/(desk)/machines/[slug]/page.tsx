@@ -3,11 +3,17 @@ import { notFound } from "next/navigation";
 import { Chip } from "@/components/chip";
 import { NewsList } from "@/components/news-list";
 import { machineBySlug, machines } from "@/content/machines";
-import { news } from "@/content/news";
+import { getLiveNews } from "@/lib/liveNews";
+
+export const revalidate = 21600;
 
 const tagFor: Record<string, string> = {
+  tesla: "Tesla",
+  spacex: "SpaceX",
+  neuralink: "Neuralink",
   boring: "Boring",
   xai: "xAI",
+  terafab: "Terafab",
 };
 
 export function generateStaticParams() {
@@ -34,7 +40,7 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
   const machine = machineBySlug(slug);
   if (!machine) notFound();
   const tag = tagFor[machine.slug] ?? machine.name;
-  const items = news.filter((item) => item.tags.includes(tag));
+  const items = (await getLiveNews(60).catch(() => [])).filter((item) => item.tags.includes(tag)).slice(0, 8);
 
   return (
     <>
@@ -69,10 +75,13 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
           ))}
         </ul>
       </section>
-      <section className="section">
-        <h2>On the desk</h2>
-        <NewsList items={items} showFilters={false} />
-      </section>
+      {items.length > 0 ? (
+        <section className="section">
+          <h2>On the desk</h2>
+          <p className="note">Pulled every morning. Headlines are ours, the story is at the link.</p>
+          <NewsList items={items} showFilters={false} />
+        </section>
+      ) : null}
       <p className="chip-row section">
         <a className="ext" href={machine.href}>
           {machine.site}
