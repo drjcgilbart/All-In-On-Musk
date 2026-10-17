@@ -39,7 +39,7 @@ export default async function WatchPage() {
       <p className="kicker">Videos</p>
       <h1 className="page-title">Video on the desk.</h1>
       <p className="piece-links">
-        <a href="/journal">Journal</a>
+        <a href="/news">News</a>
         <a href="/pictures">Pictures</a>
       </p>
       <section className="section" id="journal-videos">

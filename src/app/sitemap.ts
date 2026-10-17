@@ -8,7 +8,6 @@ const paths = [
   "/machines",
   "/markets",
   "/news",
-  "/journal",
   "/pictures",
   "/watch",
   "/watch/grok-bot-best-model",

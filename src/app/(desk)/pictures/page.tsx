@@ -19,7 +19,7 @@ export default async function PicturesPage() {
       <p className="kicker">Pictures</p>
       <h1 className="page-title">Pictures on the desk.</h1>
       <p className="piece-links">
-        <a href="/journal">Journal</a>
+        <a href="/news">News</a>
         <a href="/watch">Videos</a>
       </p>
       <section className="section">

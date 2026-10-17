@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Chip } from "@/components/chip";
-import { JournalStrip } from "@/components/journal-strip";
+import { NewsVideos } from "@/components/news-videos";
 import { NewsList } from "@/components/news-list";
 import { Tape } from "@/components/tape";
 import { machineArt } from "@/content/art";
@@ -125,7 +125,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <JournalStrip />
+      <NewsVideos limit={3} moreHref="/news" />
 
       <section className="section" aria-labelledby="record-title">
         <h2 id="record-title">The record</h2>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { NewsList } from "@/components/news-list";
 import { getLiveNews } from "@/lib/liveNews";
+import { NewsVideos } from "@/components/news-videos";
 
 export const revalidate = 21600;
 
@@ -19,6 +20,7 @@ export default async function NewsPage() {
       <p className="lede">
         Pulled from the news wires every morning, newest first. Headlines are ours, the story is at the link. Empty filters mean nothing on that tag this week.
       </p>
+      <NewsVideos limit={6} />
       <NewsList items={items} />
     </>
   );
