@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChangePassword } from "@/components/change-password";
+import { RefreshNews } from "@/components/refresh-news";
 import type { Clip, StudioCatalog } from "@/lib/studio/types";
 import "./studio.css";
 
@@ -156,6 +157,7 @@ export function StudioClient({
           <button type="button" onClick={signOut}>Sign out</button>
         </div>
         <ChangePassword />
+        <RefreshNews />
         <p className="piece-links">
           <a href="/news">News</a>
           <a href="/watch">Videos</a>
