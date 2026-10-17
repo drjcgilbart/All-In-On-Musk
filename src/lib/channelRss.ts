@@ -3,6 +3,7 @@
  *  A failed pull returns an empty list and the block hides itself.
  */
 import { channelIdFromEnv } from "@/lib/youtubeChannel";
+import { readCatalog } from "@/lib/studio/catalog";
 
 export type RssVideo = {
   id: string;
@@ -65,4 +66,24 @@ export async function getChannelRss(limit = 6): Promise<RssVideo[]> {
   } catch {
     return [];
   }
+}
+
+/** Channel RSS plus videos added in Creator Studio (each has a /watch page), newest first, de-duplicated by YouTube id. */
+export async function getNewsVideos(limit = 6): Promise<RssVideo[]> {
+  const [rss, catalog] = await Promise.all([getChannelRss(15), readCatalog().catch(() => null)]);
+  const studio: RssVideo[] = (catalog?.clips ?? []).map((clip) => ({
+    id: clip.youtubeId || clip.id,
+    title: clip.title,
+    publishedAt: clip.publishedAt,
+    dateLabel: dateLabel(clip.publishedAt),
+    thumbnailUrl: clip.thumbnailUrl || (clip.youtubeId ? `https://i.ytimg.com/vi/${clip.youtubeId}/hqdefault.jpg` : ""),
+    kind: "video" as const,
+    href: `/watch/${clip.slug}`,
+  }));
+  const byId = new Map<string, RssVideo>();
+  for (const v of rss) byId.set(v.id, v);
+  for (const v of studio) byId.set(v.id, { ...(byId.get(v.id) ?? {}), ...v, kind: byId.get(v.id)?.kind ?? v.kind });
+  return [...byId.values()]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, limit);
 }

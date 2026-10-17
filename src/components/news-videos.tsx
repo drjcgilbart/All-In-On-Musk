@@ -1,8 +1,8 @@
-import { getChannelRss } from "@/lib/channelRss";
+import { getNewsVideos } from "@/lib/channelRss";
 
 /** Latest channel videos, shown at the top of /news (and as a teaser on the homepage). */
 export async function NewsVideos({ limit = 6, heading = "Latest videos", moreHref }: { limit?: number; heading?: string; moreHref?: string }) {
-  const videos = await getChannelRss(limit);
+  const videos = await getNewsVideos(limit);
   if (videos.length === 0) return null;
   return (
     <section className="section news-videos" aria-labelledby="news-videos-title">
