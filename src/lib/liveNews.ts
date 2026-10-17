@@ -143,3 +143,37 @@ export async function latestByTag(tags: string[]): Promise<Record<string, NewsIt
   const items = await getLiveNews(60);
   return Object.fromEntries(tags.map((t) => [t, items.find((n) => n.tags.includes(t))]));
 }
+
+/**
+ * Live merger desk for /merger. Same Bing pull, same screening and dead-link check as the news desk.
+ * Only headlines that name Tesla AND SpaceX AND a combination word. Last 45 days. Never throws.
+ */
+/** Mainstream business, auto and tech desks only, so a merger line is worth a slot. */
+const MERGER_OUTLETS = /(^|\.)(reuters|bloomberg|wsj|cnbc|foxbusiness|electrek|teslarati|nypost|finance\.yahoo|investopedia|barrons|marketwatch|businessinsider|forbes|nbcnews|apnews|ft|investors|benzinga|notateslaapp|fortune|axios|thestreet|insideevs|space)\.com$|(^|\.)ft\.com$/i;
+const outletOk = (href: string) => {
+  try { return MERGER_OUTLETS.test(new URL(href).hostname.replace(/^www\./, "")); } catch { return false; }
+};
+const MERGER_WORD = /\b(merg\w*|combin\w*|tie-up|takeover|acqui\w*|consolidat\w*)\b/i;
+
+export async function getLiveMerger(limit = 6): Promise<NewsItem[]> {
+  try {
+    const raw = (await Promise.all(["Tesla SpaceX merger", "SpaceX Tesla merge"].map((q) => fetchQuery(q).catch(() => [])))).flat();
+    const seen = new Set<string>();
+    const fresh = raw
+      .filter((n) => /\btesla\b/i.test(n.raw) && /\b(spacex|spcx)\b/i.test(n.raw) && MERGER_WORD.test(n.raw))
+      .filter((n) => !screen(n) && outletOk(n.href))
+      .filter((n) => Date.now() - Date.parse(n.iso) < 45 * 86_400_000)
+      .sort((a, b) => Date.parse(b.iso) - Date.parse(a.iso))
+      .filter((n) => {
+        const key = n.title.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 40);
+        if (seen.has(key) || seen.has(n.href)) return false;
+        seen.add(key); seen.add(n.href); return true;
+      })
+      .slice(0, limit * 2)
+      .map(({ raw: _r, desc: _d, ...n }) => ({ ...n, title: _r }) as NewsItem);
+    const ok = await Promise.all(fresh.map((n) => alive(n.href)));
+    return fresh.filter((_, i) => ok[i]).slice(0, limit);
+  } catch {
+    return [];
+  }
+}

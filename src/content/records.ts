@@ -33,29 +33,147 @@ export const spacexMarks = [
   },
 ] as const;
 
-export const mergerTimeline = [
+export type MergerChip = "Confirmed" | "Reported" | "Rumor" | "Speculation" | "Headline";
+
+export type MergerEntry = {
+  /** ISO date (Eastern) used for sorting. */
+  iso: string;
+  /** Display date. */
+  date: string;
+  who: string;
+  chip: MergerChip;
+  text: string;
+  href: string;
+};
+
+/** Hand-curated. Order here does not matter; the page sorts newest first. */
+export const mergerTimeline: MergerEntry[] = [
   {
+    iso: "2025-12-05",
     date: "5 Dec 2025",
     who: "Wall Street Journal",
-    chip: "Reported" as const,
+    chip: "Reported",
     text: "Reported secondary-sale talks that would mark SpaceX near $800 billion. A valuation story, not a Tesla combination.",
     href: "https://www.wsj.com/business/spacex-in-talks-for-share-sale-that-would-boost-valuation-to-800-billion-b2852191",
   },
   {
+    iso: "2025-12-09",
     date: "9 Dec 2025",
     who: "Reuters, citing Bloomberg",
-    chip: "Rumor" as const,
+    chip: "Rumor",
     text: "Reported that SpaceX was pursuing a 2026 public listing raising above $30 billion. A listing is not a merger with Tesla.",
     href: "https://www.reuters.com/business/spacex-pursue-2026-ipo-raising-above-30-billion-bloomberg-news-reports-2025-12-09/",
   },
   {
+    iso: "2026-01-29",
+    date: "29 Jan 2026",
+    who: "Bloomberg",
+    chip: "Reported",
+    text: "Reported that SpaceX had discussed the feasibility of a tie-up with Tesla, and separately a combination with xAI, citing people familiar with the matter.",
+    href: "https://www.bloomberg.com/news/articles/2026-01-29/elon-musk-s-spacex-is-said-to-consider-merger-with-tesla-or-xai",
+  },
+  {
+    iso: "2026-02-03",
     date: "3 Feb 2026",
     who: "Reuters, and Bloomberg the same week",
-    chip: "Reported" as const,
-    text: "Reported a SpaceX combination with xAI at a stated $1.25 trillion value. That deal, if it stands, joins the rocket company and the model company. It does not join Tesla.",
+    chip: "Reported",
+    text: "Reported a SpaceX combination with xAI at a stated $1.25 trillion value. SpaceX's later IPO filing lists the xAI merger as effective February 2. It joined the rocket company and the model company, not Tesla.",
     href: "https://cio.economictimes.indiatimes.com/news/corporate-news/spacex-merges-with-elon-musks-ai-startup-xai-to-alleviate-debt-woes/127925412",
   },
+  {
+    iso: "2026-03-15",
+    date: "Mar 2026",
+    who: "Tesla 10-Q (SEC)",
+    chip: "Confirmed",
+    text: "Tesla says its $2 billion investment, first agreed as xAI preferred stock, became SpaceX common stock in March 2026: under 1% ownership, booked under the equity method. A stake, not a merger.",
+    href: "https://www.sec.gov/Archives/edgar/data/1318605/000162828026026673/R20.htm",
+  },
+  {
+    iso: "2026-03-21",
+    date: "21 Mar 2026",
+    who: "Elon Musk, via Reuters",
+    chip: "Confirmed",
+    text: "Musk announced Terafab, an AI chip complex in Austin built by SpaceX and Tesla together: two fabs, one for cars and robots, one for data centers. The biggest shared project between the two.",
+    href: "https://www.reuters.com/business/autos-transportation/musk-says-spacex-tesla-build-advanced-chip-factories-austin-2026-03-22/",
+  },
+  {
+    iso: "2026-04-07",
+    date: "7 Apr 2026",
+    who: "Intel, via Reuters",
+    chip: "Confirmed",
+    text: "Intel said it will join the Terafab chip project with SpaceX and Tesla.",
+    href: "https://www.reuters.com/business/autos-transportation/intel-join-musks-terafab-mega-ai-chip-project-2026-04-07/",
+  },
+  {
+    iso: "2026-04-07",
+    date: "7 Apr 2026",
+    who: "Wall Street Journal",
+    chip: "Speculation",
+    text: "Reported that investors and analysts were already debating a SpaceX and Tesla combination ahead of the IPO. Musk had said his companies are converging, but had not commented on a merger.",
+    href: "https://www.wsj.com/business/spacex-isnt-even-public-yet-and-investors-are-already-abuzz-about-a-tesla-merger-592b64f6",
+  },
+  {
+    iso: "2026-05-26",
+    date: "26 May 2026",
+    who: "CNBC",
+    chip: "Reported",
+    text: "Reported, citing people familiar with the talks, that Musk had discussed folding the two companies together with colleagues. Neither company confirmed it.",
+    href: "https://www.cnbc.com/2026/05/26/spacex-tesla-merger-chatter-reignites-as-musk-rocket-company-nears-ipo.html",
+  },
+  {
+    iso: "2026-06-12",
+    date: "12 Jun 2026",
+    who: "NBC News",
+    chip: "Confirmed",
+    text: "SpaceX began trading on Nasdaq as SPCX at $135 a share. Both companies are now listed, so any combination needs two shareholder votes.",
+    href: "https://www.nbcnews.com/business/markets/spacex-ipo-stock-price-rcna349760",
+  },
+  {
+    iso: "2026-07-22",
+    date: "22 Jul 2026",
+    who: "Elon Musk, Tesla earnings call, via Reuters",
+    chip: "Confirmed",
+    text: "Musk did not rule a merger out: \u201cthere's more and more overlap,\u201d especially Terafab. He added that combining companies is not for an earnings call and would need the appropriate process.",
+    href: "https://www.reuters.com/legal/legalindustry/musk-keeps-tesla-spacex-merger-speculation-alive-cites-growing-overlap-2026-07-23/",
+  },
+  {
+    iso: "2026-09-14",
+    date: "14 Sep 2026",
+    who: "Elon Musk, All-In Summit, via Yahoo Finance",
+    chip: "Confirmed",
+    text: "Asked whether the companies stay separate, Musk said: \u201cwho can imagine what action one might take when there's so much close collaboration in so many areas.\u201d A hint, not an announcement.",
+    href: "https://finance.yahoo.com/markets/stocks/article/musk-hints-again-at-possible-spacex-tesla-merger-135029754.html",
+  },
+  {
+    iso: "2026-10-14",
+    date: "14 Oct 2026",
+    who: "Barclays note, via Yahoo Finance",
+    chip: "Speculation",
+    text: "Barclays said an announcement could come before Tesla's annual meeting (due by Dec 6), most likely SpaceX buying Tesla in stock at about 0.7 SpaceX shares per Tesla share. An analyst view, not a proposal.",
+    href: "https://finance.yahoo.com/markets/stocks/articles/tesla-spacex-merger-could-announced-234757020.html",
+  },
+  {
+    iso: "2026-10-15",
+    date: "15 Oct 2026",
+    who: "Elon Musk on X",
+    chip: "Confirmed",
+    text: "Musk posted \u201cTesla x SpaceX\u201d with the Roadster event livestream. The Roadster demo, filmed at a SpaceX test site, used SpaceX thruster technology to hover.",
+    href: "https://x.com/elonmusk/status/2110894635904110632",
+  },
+  {
+    iso: "2026-10-16",
+    date: "16 Oct 2026",
+    who: "CNBC",
+    chip: "Speculation",
+    text: "Kalshi traders lifted the odds of a merger before March 2027 to 56% from 29% after the Barclays note and the Roadster demo. Prediction-market odds, not a filing.",
+    href: "https://www.cnbc.com/2026/10/16/tesla-spacex-merger-odds-rise-on-kalshi.html",
+  },
 ];
+
+/** Newest first, always. */
+export function sortMerger<T extends { iso: string }>(list: T[]): T[] {
+  return [...list].sort((a, b) => b.iso.localeCompare(a.iso));
+}
 
 export const mergerQuestions = [
   "Who would own the combined equity, and whose vote actually moves?",
@@ -67,7 +185,7 @@ export const mergerQuestions = [
 export const mergerCounter = [
   "SpaceX has launch licenses, export rules, and government customers that a car company does not.",
   "Tesla and SpaceX are both listed. Putting them together is a vote of two shareholder bases, plus the launch license and the export rules.",
-  "The February 2026 report joined xAI to SpaceX, not Tesla to SpaceX. The firms can share a founder and stay separate.",
+  "The February 2026 deal joined xAI to SpaceX, not Tesla to SpaceX. The firms can share a founder and stay separate.",
   "A commentator's chain — one company rescues the next — is an opinion. It is not a term sheet.",
 ];
 

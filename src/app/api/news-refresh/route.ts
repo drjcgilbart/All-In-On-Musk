@@ -23,7 +23,7 @@ function cronOk(req: Request) {
 }
 
 function refresh() {
-  for (const p of ["/", "/news", "/markets", "/machines/[slug]"]) revalidatePath(p, p.includes("[") ? "page" : undefined);
+  for (const p of ["/", "/news", "/markets", "/merger", "/machines/[slug]"]) revalidatePath(p, p.includes("[") ? "page" : undefined);
   return Response.json({ revalidated: true, at: new Date().toISOString() });
 }
 
