@@ -33,6 +33,8 @@ export type Product = {
   description: string;
   priceCents: number;
   image: string;
+  // Optional second view (hat back / bottle logo side) shown with a Front/Back toggle.
+  backImage?: string;
   printfulProduct: string; // human note
   variants: Variant[];
   files: PrintFile[];
@@ -76,6 +78,7 @@ export const PRODUCTS: Product[] = [
       "An embroidered dad hat for the analyst who models a trillion-dollar TAM before breakfast and still can't expense the coffee. Terms not final. Snacks are.",
     priceCents: 3000,
     image: "/shop/03-hat-musconomy-desk-funding-secured.png",
+    backImage: "/shop/back/03-hat-musconomy-desk-funding-secured.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [{ sku: "hat-desk-OS", label: "One size", printfulVariantId: 7854 }],
     // TODO: embroidery files need a digitized/flat-colour version; Printful may charge digitization.
@@ -188,6 +191,7 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Musconomy Desk shield, the rocket edition: one tilted rocket, zero hesitation.",
     priceCents: 3000,
     image: "/shop/10-hat-shield-01-rocket.png",
+    backImage: "/shop/back/10-hat-shield-01-rocket.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh01-OS", label: "One size", printfulVariantId: 7854 },
@@ -205,6 +209,7 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Musconomy Desk shield, the launch pad edition: tower up, pad clear, snacks staged.",
     priceCents: 3000,
     image: "/shop/11-hat-shield-02-launch-pad.png",
+    backImage: "/shop/back/11-hat-shield-02-launch-pad.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh02-OS", label: "One size", printfulVariantId: 7854 },
@@ -222,6 +227,7 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Musconomy Desk shield, the gear edition, for anyone whose best design review was a deletion.",
     priceCents: 3000,
     image: "/shop/12-hat-shield-03-gear.png",
+    backImage: "/shop/back/12-hat-shield-03-gear.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh03-OS", label: "One size", printfulVariantId: 7854 },
@@ -239,6 +245,7 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Musconomy Desk shield, the orbit edition: nominal trajectory, nominal vibes.",
     priceCents: 3000,
     image: "/shop/13-hat-shield-04-orbit.png",
+    backImage: "/shop/back/13-hat-shield-04-orbit.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh04-OS", label: "One size", printfulVariantId: 7854 },
@@ -256,6 +263,7 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Musconomy Desk shield, the countdown edition, for everyone who has heard T-10 and then a hold.",
     priceCents: 3000,
     image: "/shop/14-hat-shield-05-countdown.png",
+    backImage: "/shop/back/14-hat-shield-05-countdown.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh05-OS", label: "One size", printfulVariantId: 7854 },
@@ -273,6 +281,7 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Musconomy Desk shield, the stars edition, for the clear-sky nights that actually go.",
     priceCents: 3000,
     image: "/shop/15-hat-shield-06-stars.png",
+    backImage: "/shop/back/15-hat-shield-06-stars.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh06-OS", label: "One size", printfulVariantId: 7854 },
@@ -364,6 +373,7 @@ export const PRODUCTS: Product[] = [
       "A 17 oz black stainless steel water bottle for launch-day beach mornings. Hydrate, or the cloud wins.",
     priceCents: 3600,
     image: "/shop/24-bottle-1-hydrate-or-scrub.png",
+    backImage: "/shop/back/24-bottle-1-hydrate-or-scrub.png",
     printfulProduct: "Stainless Steel Water Bottle, Black 17 oz (catalog product 382)",
     variants: [
       { sku: "hydrate-or-17oz", label: "17 oz", printfulVariantId: 16030 },
@@ -380,6 +390,7 @@ export const PRODUCTS: Product[] = [
       "A 17 oz black stainless steel water bottle with the Musconomy Desk shield. Full send, fully hydrated.",
     priceCents: 3600,
     image: "/shop/25-bottle-2-shield-full-send.png",
+    backImage: "/shop/back/25-bottle-2-shield-full-send.png",
     printfulProduct: "Stainless Steel Water Bottle, Black 17 oz (catalog product 382)",
     variants: [
       { sku: "full-send--17oz", label: "17 oz", printfulVariantId: 16030 },
@@ -396,6 +407,7 @@ export const PRODUCTS: Product[] = [
       "A 20 oz black stainless steel tumbler. Propellant loading, one coffee at a time.",
     priceCents: 3400,
     image: "/shop/26-tumbler-1-fuel-load.png",
+    backImage: "/shop/back/26-tumbler-1-fuel-load.png",
     printfulProduct: "Stainless Steel Tumbler, Black 20 oz (catalog product 585)",
     variants: [
       { sku: "fuel-load--20oz", label: "20 oz", printfulVariantId: 15004 },
@@ -412,6 +424,7 @@ export const PRODUCTS: Product[] = [
       "A 20 oz black stainless steel tumbler for the morning countdown. No launch before coffee.",
     priceCents: 3400,
     image: "/shop/27-tumbler-2-t-minus-coffee.png",
+    backImage: "/shop/back/27-tumbler-2-t-minus-coffee.png",
     printfulProduct: "Stainless Steel Tumbler, Black 20 oz (catalog product 585)",
     variants: [
       { sku: "t-minus-co-20oz", label: "20 oz", printfulVariantId: 15004 },
