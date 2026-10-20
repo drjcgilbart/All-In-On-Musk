@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { buildLineItems, PricingError } from "@/lib/shop/pricing";
+import { findVariant } from "@/lib/shop/catalog";
 import { getStripe } from "@/lib/shop/stripe";
 import { automaticTax, checkoutEnabled, shipCountries, shippingRateCents, siteUrl, SHIPPING_TAX_CODE } from "@/lib/shop/config";
 import { logError } from "@/lib/shop/log";
@@ -21,6 +22,8 @@ export async function POST(req: Request) {
   try {
     const tax = automaticTax();
     const { lineItems } = buildLineItems(body?.items, { taxBehavior: tax ? "exclusive" : undefined }); // server-side prices only
+    // Pre-order pins in the cart: say so honestly on Stripe's shipping option.
+    const hasPin = lineItems.some((li) => findVariant(li.price_data.product_data.metadata.sku)?.product.selfFulfilled);
     const stripe = getStripe();
     const base = siteUrl();
     const session = await stripe.checkout.sessions.create({
@@ -33,15 +36,15 @@ export async function POST(req: Request) {
       shipping_options: [
         {
           shipping_rate_data: {
-            display_name: "Standard shipping",
+            display_name: hasPin ? "Pre-order: pins ship in about 3 weeks" : "Standard (print on demand)",
             type: "fixed_amount",
             fixed_amount: { amount: shippingRateCents(), currency: "usd" },
             // Shipping is taxable in Florida when the item is; Stripe Tax uses this code.
             tax_code: SHIPPING_TAX_CODE,
             ...(tax ? { tax_behavior: "exclusive" as const } : {}),
             delivery_estimate: {
-              minimum: { unit: "business_day", value: 5 },
-              maximum: { unit: "business_day", value: 12 },
+              minimum: hasPin ? { unit: "week", value: 3 } : { unit: "business_day", value: 5 },
+              maximum: hasPin ? { unit: "week", value: 4 } : { unit: "business_day", value: 12 },
             },
           },
         },
