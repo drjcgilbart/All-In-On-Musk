@@ -25,12 +25,13 @@ export default async function ProductPage({ params }: Props) {
   if (!p) notFound();
   return (
     <div className="shop-product">
-      <Image className="shop-pimg" src={p.image} alt={`${p.name} mockup`} width={1000} height={1000} sizes="(max-width: 760px) 100vw, 50vw" priority />
+      <Image className="shop-pimg" src={p.image} alt={p.selfFulfilled ? `${p.name} preview` : `${p.name} mockup`} width={1000} height={1000} sizes="(max-width: 760px) 100vw, 50vw" priority />
       <div>
         <Link href="/shop" className="shop-mono">← All merch</Link>
         <h1 className="page-title shop-ptitle">{p.name}</h1>
         <p className="shop-tag shop-tag-lg">{p.tagline}</p>
         <p className="shop-price shop-price-lg">{formatPrice(p.priceCents)}</p>
+        {p.preorder ? <p className="shop-mono shop-preorder shop-preorder-lg">{p.preorder}</p> : null}
         <p className="lede">{p.description}</p>
         <AddToCart variants={p.variants} />
         {p.variants.length > 1 ? (
@@ -47,7 +48,7 @@ export default async function ProductPage({ params }: Props) {
             <p className="shop-tag">Unisex fit, measured flat. Made to order, so wrong-size returns are not accepted. <Link href="/shop/returns">Returns policy</Link></p>
           </details>
         ) : null}
-        <p className="shop-mono shop-note">Printed on demand · ships in about 3–7 business days</p>
+        <p className="shop-mono shop-note">{p.selfFulfilled ? "Pre-order · made in a small batch and mailed by All In On Musk" : "Printed on demand · ships in about 3–7 business days"}</p>
       </div>
     </div>
   );

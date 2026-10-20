@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       shipping_options: [
         {
           shipping_rate_data: {
-            display_name: "Standard (print on demand)",
+            display_name: "Standard shipping",
             type: "fixed_amount",
             fixed_amount: { amount: shippingRateCents(), currency: "usd" },
             // Shipping is taxable in Florida when the item is; Stripe Tax uses this code.

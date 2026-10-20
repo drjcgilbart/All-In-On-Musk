@@ -223,3 +223,7 @@
 .shop-chip:hover { border-color: var(--shop-hot); color: var(--shop-cyan); }
 .shop-chip[aria-current="page"] { border-color: var(--shop-cyan); color: var(--shop-bg); background: var(--shop-cyan); }
 .shop-count { color: var(--shop-muted); font-size: 0.8rem; margin: 0 0 14px; }
+
+/* Pre-order label (self-fulfilled pins) */
+.shop-preorder { color: #ff2bd6; margin: 4px 0 6px; font-size: 12px; letter-spacing: .04em; }
+.shop-preorder-lg { font-size: 14px; margin: 8px 0 12px; }

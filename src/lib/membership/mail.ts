@@ -1,4 +1,5 @@
-const TO = "admin@allinonmusk.com";
+export const ADMIN_EMAIL = "admin@allinonmusk.com";
+const TO = ADMIN_EMAIL;
 
 export type MembershipMail = {
   name: string;

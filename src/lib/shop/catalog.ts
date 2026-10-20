@@ -11,7 +11,7 @@ export type Variant = {
 
 export type PrintFile = { type: string; path: string }; // path under /public
 
-export type ProductType = "tees" | "hoodies" | "hats" | "stickers" | "patches" | "posters" | "water-bottles" | "tumblers";
+export type ProductType = "tees" | "hoodies" | "hats" | "stickers" | "patches" | "posters" | "water-bottles" | "tumblers" | "pins";
 
 // Shop-by-type order and labels (used by /shop?type=...)
 export const PRODUCT_TYPES: { id: ProductType; label: string }[] = [
@@ -23,6 +23,7 @@ export const PRODUCT_TYPES: { id: ProductType; label: string }[] = [
   { id: "posters", label: "Posters" },
   { id: "water-bottles", label: "Water bottles" },
   { id: "tumblers", label: "Tumblers" },
+  { id: "pins", label: "Pins" },
 ];
 
 export type Product = {
@@ -40,7 +41,12 @@ export type Product = {
   // Printful item options. Embroidery REQUIRES thread colours (Printful rejects the order without them).
   // Allowed: #FFFFFF #000000 #96A1A8 #A67843 #FFCC00 #E25C27 #CC3366 #CC3333 #660000 #333366 #005397 #3399FF #6B5294 #01784E #7BA35A
   options?: { id: string; value: string | string[] }[];
+  // Self-fulfilled items (e.g. bulk-made enamel pins) never go to Printful; the webhook emails the owner to mail them.
+  selfFulfilled?: boolean;
+  preorder?: string; // shown on the card and product page, e.g. "Pre-order: ships in about 3 weeks"
 };
+
+export const PIN_PREORDER = "Pre-order: ships in about 3 weeks";
 
 export const CURRENCY = "usd";
 
@@ -418,6 +424,81 @@ export const PRODUCTS: Product[] = [
     ],
     files: [{ type: "default", path: "/shop/print/tumbler-2-t-minus-coffee.png" }],
     taxCode: "txcd_99999999",
+  },
+  {
+    slug: "excellent-data-pin",
+    type: "pins",
+    name: "Excellent Data Pin",
+    tagline: "Flight OK-ish",
+    description: "A 1 inch hard enamel pin with polished nickel lines. A rocket, a few sparkles and the official debrief: excellent data was collected.",
+    priceCents: 1200,
+    image: "/shop/pins/pin-1-excellent-data.png",
+    printfulProduct: "None. Hard enamel pin, made in bulk and mailed by All In On Musk (self-fulfilled)",
+    variants: [{ sku: "pin-edc-1in", label: "1 in", printfulVariantId: 0 }],
+    files: [],
+    taxCode: "txcd_99999999",
+    selfFulfilled: true,
+    preorder: PIN_PREORDER,
+  },
+  {
+    slug: "full-send-shield-pin",
+    type: "pins",
+    name: "Full Send Shield Pin",
+    tagline: "Musconomy Desk issue",
+    description: "A 1 inch hard enamel pin in the Musconomy Desk shield. Rocket up, horizon down, full send.",
+    priceCents: 1200,
+    image: "/shop/pins/pin-2-full-send-shield.png",
+    printfulProduct: "None. Hard enamel pin, made in bulk and mailed by All In On Musk (self-fulfilled)",
+    variants: [{ sku: "pin-fss-1in", label: "1 in", printfulVariantId: 0 }],
+    files: [],
+    taxCode: "txcd_99999999",
+    selfFulfilled: true,
+    preorder: PIN_PREORDER,
+  },
+  {
+    slug: "hold-hold-hold-pin",
+    type: "pins",
+    name: "Hold Hold Hold Pin",
+    tagline: "T-00:10 and holding",
+    description: "A 1 inch hard enamel launch-control pin for everyone who has watched a countdown stop at ten seconds. Again.",
+    priceCents: 1200,
+    image: "/shop/pins/pin-3-hold-hold-hold.png",
+    printfulProduct: "None. Hard enamel pin, made in bulk and mailed by All In On Musk (self-fulfilled)",
+    variants: [{ sku: "pin-hhh-1in", label: "1 in", printfulVariantId: 0 }],
+    files: [],
+    taxCode: "txcd_99999999",
+    selfFulfilled: true,
+    preorder: PIN_PREORDER,
+  },
+  {
+    slug: "t-minus-coffee-pin",
+    type: "pins",
+    name: "T-Minus Coffee Pin",
+    tagline: "Fuel load in progress",
+    description: "A 1 inch hard enamel pin for the morning countdown. No launch before coffee.",
+    priceCents: 1200,
+    image: "/shop/pins/pin-4-t-minus-coffee.png",
+    printfulProduct: "None. Hard enamel pin, made in bulk and mailed by All In On Musk (self-fulfilled)",
+    variants: [{ sku: "pin-tmc-1in", label: "1 in", printfulVariantId: 0 }],
+    files: [],
+    taxCode: "txcd_99999999",
+    selfFulfilled: true,
+    preorder: PIN_PREORDER,
+  },
+  {
+    slug: "aim-logo-pin",
+    type: "pins",
+    name: "AIM Logo Pin",
+    tagline: "The channel badge",
+    description: "The All In On Musk channel badge as a 1 inch hard enamel pin: A, rocket, M, over a Mars horizon.",
+    priceCents: 1200,
+    image: "/shop/pins/pin-5-aim-logo.png",
+    printfulProduct: "None. Hard enamel pin, made in bulk and mailed by All In On Musk (self-fulfilled)",
+    variants: [{ sku: "pin-aim-1in", label: "1 in", printfulVariantId: 0 }],
+    files: [],
+    taxCode: "txcd_99999999",
+    selfFulfilled: true,
+    preorder: PIN_PREORDER,
   },
 ];
 

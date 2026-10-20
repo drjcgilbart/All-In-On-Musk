@@ -11,6 +11,7 @@ export function ProductCard({ p, index }: { p: Product; index: number }) {
           {String(index + 1).padStart(2, "0")} · {p.variants.length > 1 ? "S–3XL" : p.variants[0].label}
         </p>
         <h2>{p.name}</h2>
+        {p.preorder ? <p className="shop-mono shop-preorder">{p.preorder}</p> : null}
         <div className="shop-row">
           <span className="shop-tag">{p.tagline}</span>
           <span className="shop-price">{formatPrice(p.priceCents)}</span>

@@ -26,6 +26,26 @@ function printFileUrl(path: string): string {
   return url;
 }
 
+function lineSku(li: Stripe.LineItem) {
+  const product = li.price?.product as Stripe.Product | string | undefined;
+  return typeof product === "object" ? product?.metadata?.sku : undefined;
+}
+
+/** Split a session's line items: self-fulfilled (pins) vs Printful. Unknown skus stay on the Printful side so they still error loudly. */
+export function selfFulfilledLines(session: Stripe.Checkout.Session) {
+  return (session.line_items?.data ?? []).flatMap((li) => {
+    const sku = lineSku(li);
+    const found = sku ? findVariant(sku) : undefined;
+    return found?.product.selfFulfilled ? [{ sku: sku!, name: found.product.name, label: found.variant.label, quantity: li.quantity ?? 1 }] : [];
+  });
+}
+export function printfulLines(session: Stripe.Checkout.Session) {
+  return (session.line_items?.data ?? []).filter((li) => {
+    const sku = lineSku(li);
+    return !(sku && findVariant(sku)?.product.selfFulfilled);
+  });
+}
+
 /** Map a completed Stripe session (with expanded line_items.data.price.product) to a Printful order body. */
 export function sessionToPrintfulOrder(session: Stripe.Checkout.Session): PrintfulOrder {
   type Ship = { name?: string | null; address?: Stripe.Address | null } | null | undefined;
@@ -33,8 +53,8 @@ export function sessionToPrintfulOrder(session: Stripe.Checkout.Session): Printf
   const details = loose.collected_information?.shipping_details ?? loose.shipping_details;
   const addr = details?.address;
   if (!addr?.line1 || !addr?.country) throw new Error("Session has no shipping address");
-  const lines = session.line_items?.data ?? [];
-  if (!lines.length) throw new Error("Session has no line items");
+  const lines = printfulLines(session);
+  if (!lines.length) throw new Error("Session has no Printful line items");
 
   const items = lines.map((li) => {
     const product = li.price?.product as Stripe.Product | string | undefined;
