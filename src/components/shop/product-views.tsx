@@ -10,7 +10,6 @@ export function ProductViews({ name, front, back, labels }: { name: string; fron
   }
   return (
     <div className="shop-views">
-      <Image className="shop-pimg" src={side ? back : front} alt={`${name} mockup, ${labels[side].toLowerCase()}`} width={1000} height={1000} sizes="(max-width: 760px) 100vw, 50vw" priority />
       <div className="shop-viewtoggle" role="group" aria-label="Product view">
         {labels.map((label, i) => (
           <button key={label} type="button" className="shop-mono" aria-pressed={side === i} onClick={() => setSide(i as 0 | 1)}>
@@ -18,6 +17,7 @@ export function ProductViews({ name, front, back, labels }: { name: string; fron
           </button>
         ))}
       </div>
+      <Image className="shop-pimg" src={side ? back : front} alt={`${name} mockup, ${labels[side].toLowerCase()}`} width={1000} height={1000} sizes="(max-width: 760px) 100vw, 50vw" priority />
     </div>
   );
 }
