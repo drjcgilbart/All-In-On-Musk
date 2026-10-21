@@ -5,7 +5,6 @@
  *   title:     the video title shown on the page
  *   date:      publish date, YYYY-MM-DD
  *   blurb:     one or two sentences shown under the video
- */
  *   src/poster/captions: optional self-hosted MP4, poster image and WebVTT captions (used instead of a YouTube embed)
  *   links:     optional extra links shown under the video
  *   credits:   optional credit lines
@@ -21,7 +20,6 @@ export type SlopcoreVideo = {
   links?: { label: string; href: string }[];
   credits?: string[];
 };
-/**
 
 export const slopcoreVideos: SlopcoreVideo[] = [
   {
