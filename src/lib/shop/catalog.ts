@@ -95,7 +95,7 @@ export const PRODUCTS: Product[] = [
       { type: "embroidery_front", path: "/shop/print/hat.png" },
       { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
     ],
-    options: [{ id: "thread_colors", value: ["#FFFFFF", "#3399FF", "#CC3366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
+    options: [{ id: "thread_colors", value: ["#FFFFFF", "#3399FF", "#CC3366"] }, { id: "thread_colors_back", value: ["#CC3333", "#FFFFFF", "#E25C27", "#96A1A8", "#3399FF"] }],
     taxCode: "txcd_30011000", // clothing
   },
   {
@@ -215,7 +215,7 @@ export const PRODUCTS: Product[] = [
       { type: "embroidery_front", path: "/shop/print/hat-shield-01-rocket.png" },
       { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
     ],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#CC3333", "#FFFFFF", "#E25C27", "#96A1A8", "#3399FF"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -239,7 +239,7 @@ export const PRODUCTS: Product[] = [
       { type: "embroidery_front", path: "/shop/print/hat-shield-02-launch-pad.png" },
       { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
     ],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#CC3333", "#FFFFFF", "#E25C27", "#96A1A8", "#3399FF"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -263,7 +263,7 @@ export const PRODUCTS: Product[] = [
       { type: "embroidery_front", path: "/shop/print/hat-shield-03-gear.png" },
       { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
     ],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#CC3333", "#FFFFFF", "#E25C27", "#96A1A8", "#3399FF"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -287,7 +287,7 @@ export const PRODUCTS: Product[] = [
       { type: "embroidery_front", path: "/shop/print/hat-shield-04-orbit.png" },
       { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
     ],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#CC3333", "#FFFFFF", "#E25C27", "#96A1A8", "#3399FF"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -311,7 +311,7 @@ export const PRODUCTS: Product[] = [
       { type: "embroidery_front", path: "/shop/print/hat-shield-05-countdown.png" },
       { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
     ],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#CC3333", "#FFFFFF", "#E25C27", "#96A1A8", "#3399FF"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -335,7 +335,7 @@ export const PRODUCTS: Product[] = [
       { type: "embroidery_front", path: "/shop/print/hat-shield-06-stars.png" },
       { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
     ],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#CC3333", "#FFFFFF", "#E25C27", "#96A1A8", "#3399FF"] }],
     taxCode: "txcd_30011000",
   },
   {
