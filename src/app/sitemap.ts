@@ -11,6 +11,7 @@ const paths = [
   "/pictures",
   "/watch",
   "/watch/grok-bot-best-model",
+  "/si-slopcore-videos",
   "/merger",
   "/projects",
   "/projects/robotaxi",

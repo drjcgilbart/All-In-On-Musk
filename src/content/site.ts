@@ -35,6 +35,7 @@ export const moreNav = [
   { href: "/x", label: "X feed" },
   { href: "/pictures", label: "Pictures" },
   { href: "/watch", label: "Videos" },
+  { href: "/si-slopcore-videos", label: "SI Slopcore" },
 ] as const;
 
 export const tabs = [
