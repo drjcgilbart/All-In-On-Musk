@@ -19,17 +19,21 @@ export default function SlopcorePage() {
   return (
     <>
       <FleetModelAnalytics />
-      <p className="kicker">Monthly series</p>
-      <h1 className="page-title">SI Slopcore Videos</h1>
+      <div className="slop">
+      <header className="slop-head">
+        <p className="slop-kicker">Monthly series</p>
+        <h1 className="page-title">SI Slopcore <span>Videos</span></h1>
+        <p className="slop-sub">A new monthly video series from All In On Musk.</p>
+      </header>
       {videos.length === 0 ? (
         <section className="slop-empty" aria-label="Coming soon">
           <p className="slop-empty-tag">New monthly series</p>
-          <h2>First video coming soon</h2>
+          <h2>First video coming soon<span className="slop-cursor" aria-hidden="true" /></h2>
           <p>SI Slopcore is a new monthly video series. The first episode lands here soon, then a new one every month.</p>
         </section>
       ) : (
         <ol className="slop-list">
-          {videos.map((v) => (
+          {videos.map((v, i) => (
             <li key={v.youtubeId} className="slop-item">
               <div className="slop-frame">
                 <iframe
@@ -41,13 +45,17 @@ export default function SlopcorePage() {
                   allowFullScreen
                 />
               </div>
-              <time className="slop-date" dateTime={v.date}>{longDate(v.date)}</time>
+              <div className="slop-meta">
+                <span className="slop-ep">Ep {String(videos.length - i).padStart(2, "0")}</span>
+                <time className="slop-date" dateTime={v.date}>{longDate(v.date)}</time>
+              </div>
               <h2 className="slop-title">{v.title}</h2>
               <p className="slop-blurb">{v.blurb}</p>
             </li>
           ))}
         </ol>
       )}
+      </div>
     </>
   );
 }
