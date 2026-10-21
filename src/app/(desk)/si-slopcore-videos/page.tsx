@@ -9,6 +9,31 @@ export const metadata: Metadata = {
   alternates: { canonical: "/si-slopcore-videos" },
 };
 
+const novaLooks = [
+  { slug: "jacket", alt: "Nova Red in a cropped black jacket and cargo pants, original AI character of SI Slopcore" },
+  { slug: "gown", alt: "Nova Red in a futuristic black gown, original AI character of SI Slopcore" },
+  { slug: "armored-dress", alt: "Nova Red in an armored dress, original AI character of SI Slopcore" },
+  { slug: "chrome-armor", alt: "Nova Red in a chrome armor suit, cyborg look of the SI Slopcore character" },
+  { slug: "circuit-suit", alt: "Nova Red in a tech-weave circuit suit, cyborg look of the SI Slopcore character" },
+  { slug: "electric-pink", alt: "Nova Red with electric pink hair, original AI character of SI Slopcore" },
+];
+
+function NovaImg({ slug, alt, sizes, priority }: { slug: string; alt: string; sizes: string; priority?: boolean }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`/art/nova-red/${slug}-720.webp`}
+      srcSet={`/art/nova-red/${slug}-360.webp 360w, /art/nova-red/${slug}-720.webp 720w`}
+      sizes={sizes}
+      width={720}
+      height={1280}
+      alt={alt}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+    />
+  );
+}
+
 function longDate(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
   return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
@@ -26,6 +51,19 @@ export default function SlopcorePage() {
         <p className="slop-sub">Original SI Slopcore music videos from All In On Musk, performed by Nova Red, our original AI character. A new track every month.</p>
         <div className="slop-eq" aria-hidden="true">{Array.from({ length: 24 }, (_, i) => <i key={i} style={{ animationDelay: `${(i * 137) % 900}ms` }} />)}</div>
       </header>
+      <section className="slop-nova" aria-labelledby="meet-nova">
+        <figure className="slop-hero">
+          <NovaImg slug="hero" alt="Nova Red, original AI character of SI Slopcore, in a black cropped top inside a neon ring" sizes="(max-width: 700px) 80vw, 320px" priority />
+          <figcaption id="meet-nova">Meet Nova Red - original AI character</figcaption>
+        </figure>
+        <ul className="slop-gallery" aria-label="Nova Red looks">
+          {novaLooks.map((l) => (
+            <li key={l.slug}>
+              <NovaImg slug={l.slug} alt={l.alt} sizes="(max-width: 700px) 30vw, 160px" />
+            </li>
+          ))}
+        </ul>
+      </section>
       {videos.length === 0 ? (
         <section className="slop-empty" aria-label="Coming soon">
           <div className="slop-vinyl" aria-hidden="true"><span /></div>
