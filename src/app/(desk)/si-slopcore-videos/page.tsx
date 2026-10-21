@@ -9,15 +9,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/si-slopcore-videos" },
 };
 
-const novaLooks = [
-  { slug: "jacket", alt: "Nova Red in a cropped black jacket and cargo pants, original AI character of SI Slopcore" },
-  { slug: "gown", alt: "Nova Red in a futuristic black gown, original AI character of SI Slopcore" },
-  { slug: "armored-dress", alt: "Nova Red in an armored dress, original AI character of SI Slopcore" },
-  { slug: "chrome-armor", alt: "Nova Red in a chrome armor suit, cyborg look of the SI Slopcore character" },
-  { slug: "circuit-suit", alt: "Nova Red in a tech-weave circuit suit, cyborg look of the SI Slopcore character" },
-  { slug: "electric-pink", alt: "Nova Red with electric pink hair, original AI character of SI Slopcore" },
-];
-
 function NovaImg({ slug, alt, sizes, priority }: { slug: string; alt: string; sizes: string; priority?: boolean }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
@@ -56,13 +47,6 @@ export default function SlopcorePage() {
           <NovaImg slug="hero" alt="Nova Red, original AI character of SI Slopcore, in a black cropped top inside a neon ring" sizes="(max-width: 700px) 80vw, 320px" priority />
           <figcaption id="meet-nova">Meet Nova Red - original AI character</figcaption>
         </figure>
-        <ul className="slop-gallery" aria-label="Nova Red looks">
-          {novaLooks.map((l) => (
-            <li key={l.slug}>
-              <NovaImg slug={l.slug} alt={l.alt} sizes="(max-width: 700px) 30vw, 160px" />
-            </li>
-          ))}
-        </ul>
       </section>
       {videos.length === 0 ? (
         <section className="slop-empty" aria-label="Coming soon">

@@ -102,6 +102,7 @@ export const machineArt: Record<string, Frame> = {
 
 /** One or more stills for the desk banner. Add a frame here when a page needs its own picture. */
 export function pageFrames(pathname: string): Frame[] {
+  if (pathname.startsWith("/si-slopcore-videos")) return [{ src: "/art/slopcore-banner.svg", alt: "SI Slopcore banner: glowing red equalizer and waveform over a circuit grid" }];
   if (pathname === "/" || pathname === "/machines") return [frames.starship, frames.robotaxi, frames.optimus];
   if (pathname.startsWith("/machines/tesla")) return [frames.cybertruck, frames.robotaxi, frames.modely];
   if (pathname.startsWith("/machines/spacex") || pathname.startsWith("/launches")) return [frames.starship, frames.heavy];
