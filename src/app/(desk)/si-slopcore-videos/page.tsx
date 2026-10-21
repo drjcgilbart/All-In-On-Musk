@@ -63,23 +63,42 @@ export default function SlopcorePage() {
       ) : (
         <ol className="slop-list">
           {videos.map((v, i) => (
-            <li key={v.youtubeId} className="slop-item">
+            <li key={v.src ?? v.youtubeId} className="slop-item">
               <div className="slop-frame">
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.youtubeId)}?rel=0`}
-                  title={v.title}
-                  loading="lazy"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
+                {v.src ? (
+                  <video controls preload="metadata" playsInline poster={v.poster} aria-label={v.title}>
+                    <source src={v.src} type="video/mp4" />
+                    {v.captions ? <track kind="captions" src={v.captions} srcLang="en" label="English" default /> : null}
+                  </video>
+                ) : v.youtubeId ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.youtubeId)}?rel=0`}
+                    title={v.title}
+                    loading="lazy"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                ) : null}
               </div>
               <div className="slop-meta">
                 <span className="slop-ep">Ep {String(videos.length - i).padStart(2, "0")}</span>
                 <time className="slop-date" dateTime={v.date}>{longDate(v.date)}</time>
+                {v.links?.map((l) => (
+                  <a key={l.href} className="slop-link" href={l.href} target="_blank" rel="noopener">
+                    {l.label} ↗
+                  </a>
+                ))}
               </div>
               <h2 className="slop-title">{v.title}</h2>
               <p className="slop-blurb">{v.blurb}</p>
+              {v.credits?.length ? (
+                <ul className="slop-credits" aria-label="Credits">
+                  {v.credits.map((c) => (
+                    <li key={c}>{c}</li>
+                  ))}
+                </ul>
+              ) : null}
             </li>
           ))}
         </ol>
