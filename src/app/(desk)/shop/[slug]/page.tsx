@@ -27,7 +27,7 @@ export default async function ProductPage({ params }: Props) {
   return (
     <div className="shop-product">
       {p.sides && p.sides.length > 1 ? (
-        <SideSwitcher name={p.name} sides={p.sides} initial={Math.max(0, p.sides.findIndex((s) => s.image === p.image))} />
+        <SideSwitcher name={p.name} sides={p.sides} />
       ) : (
         <Image className="shop-pimg" src={p.image} alt={p.selfFulfilled ? `${p.name} preview` : `${p.name} mockup`} width={1000} height={1000} sizes="(max-width: 760px) 100vw, 50vw" priority />
       )}
