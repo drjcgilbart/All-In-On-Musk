@@ -5,7 +5,7 @@ import "./slopcore.css";
 
 export const metadata: Metadata = {
   title: "SI Slopcore Videos",
-  description: "SI Slopcore Videos: a new monthly video series from All In On Musk.",
+  description: "SI Slopcore Videos: a monthly music video series from All In On Musk, performed by Nova Red.",
   alternates: { canonical: "/si-slopcore-videos" },
 };
 
@@ -21,15 +21,22 @@ export default function SlopcorePage() {
       <FleetModelAnalytics />
       <div className="slop">
       <header className="slop-head">
-        <p className="slop-kicker">Monthly series</p>
+        <p className="slop-kicker">Monthly music video series</p>
         <h1 className="page-title">SI Slopcore <span>Videos</span></h1>
-        <p className="slop-sub">A new monthly video series from All In On Musk.</p>
+        <p className="slop-sub">Original SI Slopcore music videos from All In On Musk, performed by Nova Red, our original AI character. A new track every month.</p>
+        <div className="slop-eq" aria-hidden="true">{Array.from({ length: 24 }, (_, i) => <i key={i} style={{ animationDelay: `${(i * 137) % 900}ms` }} />)}</div>
       </header>
       {videos.length === 0 ? (
         <section className="slop-empty" aria-label="Coming soon">
-          <p className="slop-empty-tag">New monthly series</p>
-          <h2>First video coming soon<span className="slop-cursor" aria-hidden="true" /></h2>
-          <p>SI Slopcore is a new monthly video series. The first episode lands here soon, then a new one every month.</p>
+          <div className="slop-vinyl" aria-hidden="true"><span /></div>
+          <div>
+            <p className="slop-empty-tag">Now loading: Ep 01</p>
+            <h2>First video coming soon<span className="slop-cursor" aria-hidden="true" /></h2>
+            <p>Nova Red is warming up. The first SI Slopcore music video drops here soon, then a new one every month.</p>
+            <ol className="slop-tracks" aria-label="Track list">
+              <li><span>01</span> Coming soon</li>
+            </ol>
+          </div>
         </section>
       ) : (
         <ol className="slop-list">

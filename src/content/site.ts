@@ -24,6 +24,7 @@ export const nav = [
   { href: "/projects", label: "Projects" },
   { href: "/race/index.html", label: "Race" },
   { href: "/shop", label: "Merch" },
+  { href: "/si-slopcore-videos", label: "SI Slopcore" },
   { href: "/about", label: "About" },
 ] as const;
 
@@ -35,7 +36,6 @@ export const moreNav = [
   { href: "/x", label: "X feed" },
   { href: "/pictures", label: "Pictures" },
   { href: "/watch", label: "Videos" },
-  { href: "/si-slopcore-videos", label: "SI Slopcore" },
 ] as const;
 
 export const tabs = [

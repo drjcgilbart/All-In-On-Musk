@@ -1,80 +1,97 @@
-/* SI Slopcore Videos: dark, sharp, with a faint grid + circuit motif. Site accents: cyan #2ee6d6, pink #ff2bd6. */
+/* SI Slopcore Videos: Nova Red theme. Deep crimson to hot red-orange glow, music motifs. */
 .slop {
-  --slop-cyan: #2ee6d6;
-  --slop-pink: #ff2bd6;
-  --slop-line: rgba(46, 230, 214, 0.28);
+  --nova: #ff2a3d;
+  --nova-hot: #ff6a2a;
+  --nova-deep: #7a0a1a;
+  --slop-line: rgba(255, 42, 61, 0.3);
   position: relative;
   isolation: isolate;
   padding: 2rem clamp(1rem, 3vw, 2rem) 2.5rem;
   border: 1px solid var(--slop-line);
-  background: #05070a;
+  background: radial-gradient(90% 70% at 85% 0%, rgba(255, 60, 40, 0.22), transparent 60%),
+    radial-gradient(70% 60% at 0% 100%, rgba(122, 10, 26, 0.45), transparent 70%), #0a0305;
   overflow: hidden;
 }
-/* Grid + circuit traces (inline SVG, ~1 KB). Kept faint so text and embeds stay primary. */
+/* Faint waveform pattern */
 .slop::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none' stroke='%232ee6d6' stroke-opacity='.16' stroke-width='1'%3E%3Cpath d='M0 40h48l16 16h40M112 0v28l-12 12M160 104h-40l-12 12v44M24 160v-36l20-20h28M88 76l20 20h52'/%3E%3Ccircle cx='104' cy='56' r='2.5' fill='%232ee6d6' fill-opacity='.35'/%3E%3Ccircle cx='72' cy='104' r='2.5' fill='%23ff2bd6' fill-opacity='.3'/%3E%3Ccircle cx='100' cy='40' r='2' fill='%232ee6d6' fill-opacity='.3'/%3E%3C/svg%3E"),
-    linear-gradient(rgba(46, 230, 214, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(46, 230, 214, 0.05) 1px, transparent 1px);
-  background-size: 160px 160px, 32px 32px, 32px 32px;
-  mask-image: radial-gradient(120% 90% at 50% 0%, #000 40%, transparent 100%);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='80' fill='none' stroke='%23ff2a3d' stroke-opacity='.14' stroke-width='1.5'%3E%3Cpath d='M0 40 Q15 10 30 40 T60 40 T90 40 Q100 20 110 40 T130 40 Q150 0 170 40 T210 40 T240 40'/%3E%3C/svg%3E");
+  background-size: 240px 80px;
+  mask-image: radial-gradient(120% 90% at 50% 0%, #000 35%, transparent 100%);
 }
-/* Slow scanline sweep; disabled for reduced motion. */
+/* Slow glow pulse; off for reduced motion. */
 .slop::after {
   content: "";
   position: absolute;
-  inset: -40% 0 auto;
-  height: 40%;
+  top: -30%; right: -20%;
+  width: 70%; height: 80%;
   z-index: -1;
-  background: linear-gradient(180deg, transparent, rgba(46, 230, 214, 0.06), transparent);
-  animation: slop-scan 9s linear infinite;
+  background: radial-gradient(circle, rgba(255, 90, 40, 0.18), transparent 65%);
+  animation: nova-pulse 6s ease-in-out infinite;
   pointer-events: none;
 }
-@keyframes slop-scan { to { transform: translateY(350%); } }
-@media (prefers-reduced-motion: reduce) { .slop::after { animation: none; display: none; } }
+@keyframes nova-pulse { 50% { opacity: 0.45; transform: scale(1.08); } }
 
-.slop-kicker, .slop-date, .slop-empty-tag, .slop-ep {
+.slop-kicker, .slop-date, .slop-empty-tag, .slop-ep, .slop-tracks {
   font-family: var(--font-mono), "IBM Plex Mono", ui-monospace, monospace;
   font-size: 0.74rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
-.slop-kicker { margin: 0; color: var(--slop-cyan); }
-.slop-kicker::before { content: "// "; color: var(--slop-pink); }
-.slop-head h1 { margin: 0.4rem 0 0.5rem; letter-spacing: -0.01em; }
-.slop-head h1 span { color: var(--slop-cyan); }
-.slop-sub { margin: 0; color: #c9d3db; max-width: 40rem; line-height: 1.55; }
+.slop-kicker { margin: 0; color: var(--nova-hot); }
+.slop-kicker::before { content: "\266A  "; color: var(--nova); }
+.slop-head h1 { margin: 0.4rem 0 0.5rem; letter-spacing: -0.01em; color: #fff4f2; }
+.slop-head h1 span { color: var(--nova); text-shadow: 0 0 18px rgba(255, 42, 61, 0.7), 0 0 42px rgba(255, 106, 42, 0.4); }
+.slop-sub { margin: 0; color: #e6cfcf; max-width: 40rem; line-height: 1.55; }
+
+/* Equalizer */
+.slop-eq { display: flex; align-items: flex-end; gap: 4px; height: 36px; margin-top: 1.25rem; max-width: 20rem; }
+.slop-eq i { flex: 1; height: 30%; border-radius: 1px; background: linear-gradient(0deg, var(--nova-deep), var(--nova), var(--nova-hot)); box-shadow: 0 0 8px rgba(255, 42, 61, 0.5); animation: nova-eq 0.9s ease-in-out infinite alternate; }
+.slop-eq i:nth-child(3n) { height: 70%; } .slop-eq i:nth-child(4n+1) { height: 50%; } .slop-eq i:nth-child(5n+2) { height: 90%; }
+@keyframes nova-eq { from { transform: scaleY(0.35); } to { transform: scaleY(1); } }
+.slop-eq i { transform-origin: bottom; }
 
 .slop-empty {
   position: relative;
   margin-top: 2rem;
-  max-width: 46rem;
-  padding: 2rem 1.5rem;
-  background: rgba(10, 14, 20, 0.88);
+  max-width: 50rem;
+  padding: 1.75rem 1.5rem;
+  display: flex; gap: 1.75rem; align-items: center; flex-wrap: wrap;
+  background: rgba(20, 5, 8, 0.88);
   border: 1px solid var(--slop-line);
-  border-left: 3px solid var(--slop-pink);
+  border-left: 3px solid var(--nova);
+  box-shadow: 0 0 40px rgba(255, 42, 61, 0.12);
 }
-.slop-empty h2 { margin: 0.4rem 0 0.6rem; font-size: clamp(1.4rem, 3.4vw, 2rem); color: #f4fbff; }
-.slop-empty p { margin: 0; color: #c9d3db; line-height: 1.6; }
-.slop-empty .slop-empty-tag { color: var(--slop-cyan); }
-.slop-cursor { display: inline-block; width: 0.6em; height: 1em; margin-left: 0.15em; vertical-align: -0.12em; background: var(--slop-pink); animation: slop-blink 1.1s steps(1) infinite; }
+.slop-empty > div:last-child { flex: 1 1 18rem; }
+.slop-empty h2 { margin: 0.4rem 0 0.6rem; font-size: clamp(1.4rem, 3.4vw, 2rem); color: #fff4f2; }
+.slop-empty p { margin: 0; color: #e6cfcf; line-height: 1.6; }
+.slop-empty .slop-empty-tag { color: var(--nova-hot); }
+.slop-cursor { display: inline-block; width: 0.6em; height: 1em; margin-left: 0.15em; vertical-align: -0.12em; background: var(--nova); box-shadow: 0 0 10px var(--nova); animation: slop-blink 1.1s steps(1) infinite; }
 @keyframes slop-blink { 50% { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .slop-cursor { animation: none; } }
+
+/* Vinyl record */
+.slop-vinyl { flex: 0 0 auto; width: 132px; height: 132px; border-radius: 50%; display: grid; place-items: center;
+  background: repeating-radial-gradient(circle, #140406 0 2px, #22080c 2px 4px);
+  box-shadow: 0 0 0 2px #2a0a10, 0 0 30px rgba(255, 42, 61, 0.35); animation: nova-spin 6s linear infinite; }
+.slop-vinyl span { width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle, #0a0305 0 4px, var(--nova-hot) 5px, var(--nova) 60%, var(--nova-deep)); }
+@keyframes nova-spin { to { transform: rotate(360deg); } }
+
+.slop-tracks { list-style: none; margin: 1.1rem 0 0; padding: 0.6rem 0 0; border-top: 1px dashed var(--slop-line); color: #e6cfcf; }
+.slop-tracks span { color: var(--nova); margin-right: 0.75rem; }
 
 .slop-list { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 2.75rem; max-width: 56rem; }
-.slop-item { background: rgba(10, 14, 20, 0.88); border: 1px solid var(--slop-line); padding: 0.75rem 0.75rem 1.1rem; }
-.slop-frame { position: relative; aspect-ratio: 16 / 9; background: #000; }
-/* corner brackets */
-.slop-frame::before, .slop-frame::after { content: ""; position: absolute; width: 18px; height: 18px; z-index: 1; pointer-events: none; }
-.slop-frame::before { top: -5px; left: -5px; border-top: 2px solid var(--slop-cyan); border-left: 2px solid var(--slop-cyan); }
-.slop-frame::after { bottom: -5px; right: -5px; border-bottom: 2px solid var(--slop-pink); border-right: 2px solid var(--slop-pink); }
+.slop-item { background: rgba(20, 5, 8, 0.88); border: 1px solid var(--slop-line); padding: 0.75rem 0.75rem 1.1rem; }
+.slop-frame { position: relative; aspect-ratio: 16 / 9; background: #000; box-shadow: 0 0 28px rgba(255, 42, 61, 0.25); }
 .slop-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .slop-meta { display: flex; gap: 1rem; align-items: baseline; margin: 0.9rem 0.25rem 0; }
-.slop-ep { color: var(--slop-pink); }
-.slop-date { color: #a8b3bd; }
-.slop-title { margin: 0.35rem 0.25rem 0.4rem; font-size: 1.3rem; color: #f4fbff; }
-.slop-blurb { margin: 0 0.25rem; color: #c9d3db; line-height: 1.55; }
+.slop-ep { color: var(--nova); }
+.slop-date { color: #c7a9a9; }
+.slop-title { margin: 0.35rem 0.25rem 0.4rem; font-size: 1.3rem; color: #fff4f2; }
+.slop-blurb { margin: 0 0.25rem; color: #e6cfcf; line-height: 1.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slop::after, .slop-eq i, .slop-vinyl, .slop-cursor { animation: none; }
+}
