@@ -4,7 +4,6 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PRODUCTS, getProduct, formatPrice } from "@/lib/shop/catalog";
 import { AddToCart } from "@/components/shop/add-to-cart";
-import { ProductViews } from "@/components/shop/product-views";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -26,11 +25,7 @@ export default async function ProductPage({ params }: Props) {
   if (!p) notFound();
   return (
     <div className="shop-product">
-      {p.backImage ? (
-        <ProductViews name={p.name} front={p.image} back={p.backImage} labels={p.type === "hats" ? ["Front", "Back"] : ["Graphic side", "Logo side"]} />
-      ) : (
-        <Image className="shop-pimg" src={p.image} alt={p.selfFulfilled ? `${p.name} preview` : `${p.name} mockup`} width={1000} height={1000} sizes="(max-width: 760px) 100vw, 50vw" priority />
-      )}
+      <Image className="shop-pimg" src={p.image} alt={p.selfFulfilled ? `${p.name} preview` : `${p.name} mockup`} width={1000} height={1000} sizes="(max-width: 760px) 100vw, 50vw" priority />
       <div>
         <Link href="/shop" className="shop-mono">← All merch</Link>
         <h1 className="page-title shop-ptitle">{p.name}</h1>

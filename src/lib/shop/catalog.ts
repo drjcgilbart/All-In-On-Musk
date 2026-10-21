@@ -34,8 +34,6 @@ export type Product = {
   description: string;
   priceCents: number;
   image: string;
-  // Optional second view (hat back) shown with a Front/Back toggle.
-  backImage?: string;
   printfulProduct: string; // human note
   variants: Variant[];
   files: PrintFile[];
@@ -84,7 +82,6 @@ export const PRODUCTS: Product[] = [
       "An embroidered dad hat for the analyst who models a trillion-dollar TAM before breakfast and still can't expense the coffee. Terms not final. Snacks are.",
     priceCents: 3000,
     image: "/shop/03-hat-musconomy-desk-funding-secured.png",
-    backImage: "/shop/back/03-hat-musconomy-desk-funding-secured.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [{ sku: "hat-desk-OS", label: "One size", printfulVariantId: 7854 }],
     // TODO: embroidery files need a digitized/flat-colour version; Printful may charge digitization.
@@ -197,7 +194,6 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the rocket edition: one tilted rocket, zero hesitation.",
     priceCents: 3000,
     image: "/shop/10-hat-shield-01-rocket.png",
-    backImage: "/shop/back/10-hat-shield-01-rocket.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh01-OS", label: "One size", printfulVariantId: 7854 },
@@ -215,7 +211,6 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the launch pad edition: tower up, pad clear, snacks staged.",
     priceCents: 3000,
     image: "/shop/11-hat-shield-02-launch-pad.png",
-    backImage: "/shop/back/11-hat-shield-02-launch-pad.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh02-OS", label: "One size", printfulVariantId: 7854 },
@@ -233,7 +228,6 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the gear edition, for anyone whose best design review was a deletion.",
     priceCents: 3000,
     image: "/shop/12-hat-shield-03-gear.png",
-    backImage: "/shop/back/12-hat-shield-03-gear.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh03-OS", label: "One size", printfulVariantId: 7854 },
@@ -251,7 +245,6 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the orbit edition: nominal trajectory, nominal vibes.",
     priceCents: 3000,
     image: "/shop/13-hat-shield-04-orbit.png",
-    backImage: "/shop/back/13-hat-shield-04-orbit.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh04-OS", label: "One size", printfulVariantId: 7854 },
@@ -269,7 +262,6 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the countdown edition, for everyone who has heard T-10 and then a hold.",
     priceCents: 3000,
     image: "/shop/14-hat-shield-05-countdown.png",
-    backImage: "/shop/back/14-hat-shield-05-countdown.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh05-OS", label: "One size", printfulVariantId: 7854 },
@@ -287,7 +279,6 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the stars edition, for the clear-sky nights that actually go.",
     priceCents: 3000,
     image: "/shop/15-hat-shield-06-stars.png",
-    backImage: "/shop/back/15-hat-shield-06-stars.png",
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh06-OS", label: "One size", printfulVariantId: 7854 },
@@ -411,7 +402,6 @@ export const PRODUCTS: Product[] = [
       "A 20 oz black stainless steel tumbler. Propellant loading, one coffee at a time.",
     priceCents: 3400,
     image: "/shop/26-tumbler-1-fuel-load.png",
-    backImage: "/shop/back/26-tumbler-1-fuel-load.png",
     printfulProduct: "Stainless Steel Tumbler, Black 20 oz (catalog product 585)",
     variants: [
       { sku: "fuel-load--20oz", label: "20 oz", printfulVariantId: 15004 },
@@ -455,7 +445,7 @@ export const PRODUCTS: Product[] = [
     type: "pins",
     name: "Full Send Shield Pin",
     tagline: "All In On Musk Desk issue",
-    description: "A 1 inch hard enamel pin in the Musconomy Desk shield. Rocket up, horizon down, full send.",
+    description: "A 1 inch hard enamel pin in the Desk shield. Rocket up, horizon down, full send.",
     priceCents: 1200,
     image: "/shop/pins/pin-2-full-send-shield.png",
     printfulProduct: "None. Hard enamel pin, made in bulk and mailed by All In On Musk (self-fulfilled)",
