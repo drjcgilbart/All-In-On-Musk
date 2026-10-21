@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/shop/product-card";
 
 export const metadata: Metadata = {
   title: "Shop",
-  description: "Unofficial Musconomy desk merch, printed on demand.",
+  description: "Unofficial All In On Musk fan merch, printed on demand.",
   alternates: { canonical: "/shop" },
 };
 

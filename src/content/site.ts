@@ -2,13 +2,13 @@
 
 export const site = {
   name: "All In On Musk",
-  seoTitle: "All In On Musk — unofficial Musconomy desk",
+  seoTitle: "All In On Musk — unofficial Musk news desk",
   updatedLabel: "September 30, 2026",
   updatedIso: "2026-09-30",
   domain: "allinonmusk.com",
   url: "https://allinonmusk.com",
   description:
-    "Unofficial Musconomy desk for Tesla, SpaceX, xAI, Neuralink, and The Boring Company. Not investment, financial, or medical advice.",
+    "Unofficial Musk news desk for Tesla, SpaceX, xAI, Neuralink, and The Boring Company. Not investment, financial, or medical advice.",
   deck: "Five companies. One bet.",
   disclaimer:
     "Unofficial fan site. Not affiliated with Elon Musk, Tesla, SpaceX, Neuralink, The Boring Company, or xAI. Not investment, financial, or medical advice.",
