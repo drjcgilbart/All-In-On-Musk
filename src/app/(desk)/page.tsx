@@ -31,7 +31,7 @@ export default async function HomePage() {
     <>
       <Tape />
       <p className="kicker">The stack</p>
-      <h1 className="hero-title">Inside the Musconomy</h1>
+      <h1 className="hero-title">Inside Elon's World of Companies</h1>
       <p className="lede">Pick a company. The official site is the second link.</p>
 
       <section className="section" id="stack" aria-labelledby="stack-title">
@@ -64,7 +64,7 @@ export default async function HomePage() {
       </section>
 
       <section className="section" aria-labelledby="today-title">
-        <h2 id="today-title">{recent.length > 0 ? "Today in the Musconomy" : "Latest on the desk"}</h2>
+        <h2 id="today-title">{recent.length > 0 ? "Today in Musk World" : "Latest on the desk"}</h2>
         {recent.length === 0 ? (
           <p className="note">Nothing sourced in the last 24 hours. The starter desk is not a wire.</p>
         ) : null}
