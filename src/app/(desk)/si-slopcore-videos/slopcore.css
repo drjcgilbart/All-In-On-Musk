@@ -114,3 +114,8 @@
   .slop-nova { grid-template-columns: 1fr; }
   .slop-hero { max-width: 320px; margin-inline: auto; width: 100%; }
 }
+
+/* Banner on this page only: show the full art on wide screens so the floor/Nova Red aren't cropped. */
+@media (min-width: 701px) {
+  .page-art img[src$="slopcore-banner.svg"] { height: auto; aspect-ratio: 1400 / 400; }
+}
