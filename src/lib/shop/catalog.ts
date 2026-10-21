@@ -34,6 +34,8 @@ export type Product = {
   description: string;
   priceCents: number;
   image: string;
+  // Two-sided printed items only: thumbnails under the main image switch between sides (first = default).
+  sides?: { label: string; image: string }[];
   printfulProduct: string; // human note
   variants: Variant[];
   files: PrintFile[];
@@ -296,6 +298,10 @@ export const PRODUCTS: Product[] = [
       "A heavy blend black hoodie with a Stable Orbit shield on the chest and HOLD HOLD HOLD across the back. For every countdown that stopped at T-10.",
     priceCents: 5000,
     image: "/shop/20-hoodie-1-hold-hold-hold.png",
+    sides: [
+      { label: "Front", image: "/shop/20-hoodie-1-hold-hold-hold-front.png" },
+      { label: "Back", image: "/shop/20-hoodie-1-hold-hold-hold.png" },
+    ],
     printfulProduct: "Gildan 18500 Unisex Heavy Blend Hoodie, Black (catalog product 146)",
     variants: [
       { sku: "hd1-S", label: "S", printfulVariantId: 5530 },

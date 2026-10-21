@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PRODUCTS, getProduct, formatPrice } from "@/lib/shop/catalog";
 import { AddToCart } from "@/components/shop/add-to-cart";
+import { SideSwitcher } from "@/components/shop/side-switcher";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,7 +26,11 @@ export default async function ProductPage({ params }: Props) {
   if (!p) notFound();
   return (
     <div className="shop-product">
-      <Image className="shop-pimg" src={p.image} alt={p.selfFulfilled ? `${p.name} preview` : `${p.name} mockup`} width={1000} height={1000} sizes="(max-width: 760px) 100vw, 50vw" priority />
+      {p.sides && p.sides.length > 1 ? (
+        <SideSwitcher name={p.name} sides={p.sides} initial={Math.max(0, p.sides.findIndex((s) => s.image === p.image))} />
+      ) : (
+        <Image className="shop-pimg" src={p.image} alt={p.selfFulfilled ? `${p.name} preview` : `${p.name} mockup`} width={1000} height={1000} sizes="(max-width: 760px) 100vw, 50vw" priority />
+      )}
       <div>
         <Link href="/shop" className="shop-mono">← All merch</Link>
         <h1 className="page-title shop-ptitle">{p.name}</h1>
