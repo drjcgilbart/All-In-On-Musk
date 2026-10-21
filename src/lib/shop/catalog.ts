@@ -84,11 +84,18 @@ export const PRODUCTS: Product[] = [
       "An embroidered dad hat for the analyst who models a trillion-dollar TAM before breakfast and still can't expense the coffee. Terms not final. Snacks are.",
     priceCents: 3000,
     image: "/shop/03-hat-musconomy-desk-funding-secured.png",
+    sides: [
+      { label: "Front", image: "/shop/03-hat-musconomy-desk-funding-secured.png" },
+      { label: "Back", image: "/shop/back/03-hat-desk-back.png" },
+    ],
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [{ sku: "hat-desk-OS", label: "One size", printfulVariantId: 7854 }],
     // TODO: embroidery files need a digitized/flat-colour version; Printful may charge digitization.
-    files: [{ type: "embroidery_front", path: "/shop/print/hat.png" }],
-    options: [{ id: "thread_colors", value: ["#FFFFFF", "#3399FF", "#CC3366"] }],
+    files: [
+      { type: "embroidery_front", path: "/shop/print/hat.png" },
+      { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
+    ],
+    options: [{ id: "thread_colors", value: ["#FFFFFF", "#3399FF", "#CC3366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
     taxCode: "txcd_30011000", // clothing
   },
   {
@@ -196,12 +203,19 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the rocket edition: one tilted rocket, zero hesitation.",
     priceCents: 3000,
     image: "/shop/10-hat-shield-01-rocket.png",
+    sides: [
+      { label: "Front", image: "/shop/10-hat-shield-01-rocket.png" },
+      { label: "Back", image: "/shop/back/10-hat-shield-01-rocket-back.png" },
+    ],
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh01-OS", label: "One size", printfulVariantId: 7854 },
     ],
-    files: [{ type: "embroidery_front", path: "/shop/print/hat-shield-01-rocket.png" }],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }],
+    files: [
+      { type: "embroidery_front", path: "/shop/print/hat-shield-01-rocket.png" },
+      { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
+    ],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -213,12 +227,19 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the launch pad edition: tower up, pad clear, snacks staged.",
     priceCents: 3000,
     image: "/shop/11-hat-shield-02-launch-pad.png",
+    sides: [
+      { label: "Front", image: "/shop/11-hat-shield-02-launch-pad.png" },
+      { label: "Back", image: "/shop/back/11-hat-shield-02-launch-pad-back.png" },
+    ],
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh02-OS", label: "One size", printfulVariantId: 7854 },
     ],
-    files: [{ type: "embroidery_front", path: "/shop/print/hat-shield-02-launch-pad.png" }],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }],
+    files: [
+      { type: "embroidery_front", path: "/shop/print/hat-shield-02-launch-pad.png" },
+      { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
+    ],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -230,12 +251,19 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the gear edition, for anyone whose best design review was a deletion.",
     priceCents: 3000,
     image: "/shop/12-hat-shield-03-gear.png",
+    sides: [
+      { label: "Front", image: "/shop/12-hat-shield-03-gear.png" },
+      { label: "Back", image: "/shop/back/12-hat-shield-03-gear-back.png" },
+    ],
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh03-OS", label: "One size", printfulVariantId: 7854 },
     ],
-    files: [{ type: "embroidery_front", path: "/shop/print/hat-shield-03-gear.png" }],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }],
+    files: [
+      { type: "embroidery_front", path: "/shop/print/hat-shield-03-gear.png" },
+      { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
+    ],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -247,12 +275,19 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the orbit edition: nominal trajectory, nominal vibes.",
     priceCents: 3000,
     image: "/shop/13-hat-shield-04-orbit.png",
+    sides: [
+      { label: "Front", image: "/shop/13-hat-shield-04-orbit.png" },
+      { label: "Back", image: "/shop/back/13-hat-shield-04-orbit-back.png" },
+    ],
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh04-OS", label: "One size", printfulVariantId: 7854 },
     ],
-    files: [{ type: "embroidery_front", path: "/shop/print/hat-shield-04-orbit.png" }],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }],
+    files: [
+      { type: "embroidery_front", path: "/shop/print/hat-shield-04-orbit.png" },
+      { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
+    ],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -264,12 +299,19 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the countdown edition, for everyone who has heard T-10 and then a hold.",
     priceCents: 3000,
     image: "/shop/14-hat-shield-05-countdown.png",
+    sides: [
+      { label: "Front", image: "/shop/14-hat-shield-05-countdown.png" },
+      { label: "Back", image: "/shop/back/14-hat-shield-05-countdown-back.png" },
+    ],
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh05-OS", label: "One size", printfulVariantId: 7854 },
     ],
-    files: [{ type: "embroidery_front", path: "/shop/print/hat-shield-05-countdown.png" }],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }],
+    files: [
+      { type: "embroidery_front", path: "/shop/print/hat-shield-05-countdown.png" },
+      { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
+    ],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
     taxCode: "txcd_30011000",
   },
   {
@@ -281,12 +323,19 @@ export const PRODUCTS: Product[] = [
       "An embroidered black dad hat with the Desk shield, the stars edition, for the clear-sky nights that actually go.",
     priceCents: 3000,
     image: "/shop/15-hat-shield-06-stars.png",
+    sides: [
+      { label: "Front", image: "/shop/15-hat-shield-06-stars.png" },
+      { label: "Back", image: "/shop/back/15-hat-shield-06-stars-back.png" },
+    ],
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [
       { sku: "hat-sh06-OS", label: "One size", printfulVariantId: 7854 },
     ],
-    files: [{ type: "embroidery_front", path: "/shop/print/hat-shield-06-stars.png" }],
-    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }],
+    files: [
+      { type: "embroidery_front", path: "/shop/print/hat-shield-06-stars.png" },
+      { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
+    ],
+    options: [{ id: "thread_colors", value: ["#000000", "#FFFFFF", "#3399FF", "#CC3366", "#333366"] }, { id: "thread_colors_back", value: ["#000000", "#FFFFFF", "#CC3333", "#E25C27"] }],
     taxCode: "txcd_30011000",
   },
   {
