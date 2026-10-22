@@ -29,7 +29,10 @@ export async function POST(req: Request) {
       retrieveSession: (id) => stripe.checkout.sessions.retrieve(id, { expand: ["line_items.data.price.product"] }),
       sendAdminFallback: sendAdminFormMail,
     });
-    return NextResponse.json({ received: true, status });
+    // Order emails never fail the order (Printful is already done), but a missed admin/customer email must be loud:
+    // logged at error level here and returned in the body Stripe shows under Developers > Webhooks > event deliveries.
+    if (status.includes("mail-failed")) logError("stripe-webhook", new Error(`Order processed but email failed: ${status}`), { event: event.id, alert: "CHECK ORDER EMAIL" });
+    return NextResponse.json({ received: true, status, ...(status.includes("mail-failed") ? { warning: "order email not sent; see logs" } : {}) });
   } catch {
     return NextResponse.json({ error: "Fulfillment failed" }, { status: 500 }); // Stripe will retry
   }

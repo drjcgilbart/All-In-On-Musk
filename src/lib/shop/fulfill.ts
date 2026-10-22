@@ -4,7 +4,7 @@ import { createPrintfulOrder, printfulLines, sessionToPrintfulOrder } from "./pr
 import { pinOrderFromSession, sendPinOrderMail } from "./notify";
 import { autoConfirm } from "./config";
 import { logError, logInfo } from "./log";
-import { ADMIN_EMAIL, adminEmail, customerEmail, orderSummary, sendMail, type PrintfulResult } from "./order-mail";
+import { ADMIN_EMAIL, adminEmail, customerEmail, orderSummary, sendMail, type Mail, type PrintfulResult } from "./order-mail";
 
 type Deps = {
   store: DedupeStore;
@@ -23,30 +23,35 @@ async function claimOnce(store: DedupeStore, key: string) {
   return true;
 }
 
-/** Order emails. Best effort: failures are logged and never break order or Printful processing. */
-async function sendOrderEmails(session: Stripe.Checkout.Session, printful: PrintfulResult, deps: Deps) {
+/** Order emails. Best effort: never breaks order or Printful processing, but every failure is logged at error level
+ *  and reported back in the webhook status (visible in Stripe's webhook delivery log and Vercel logs). Returns "" or a status suffix. */
+async function sendOrderEmails(session: Stripe.Checkout.Session, printful: PrintfulResult, deps: Deps): Promise<string> {
   const send = deps.sendEmail ?? sendMail;
   let o;
-  try { o = orderSummary(session); } catch (err) { logError("order-mail", err, { session: session.id }); return; }
+  try { o = orderSummary(session); } catch (err) { logError("order-mail", err, { session: session.id, alert: "ADMIN NOTICE NOT SENT" }); return "+admin-mail-failed"; }
   const kind = printful?.error ? "failed" : "ok";
-  const jobs: [string, string | undefined, () => { subject: string; html: string; text: string }, string | undefined][] = [
+  const jobs: [string, string | undefined, () => Mail, string | undefined][] = [
     [`mail:admin:${kind}:${session.id}`, ADMIN_EMAIL, () => adminEmail(o, printful), o.email],
   ];
   if (kind === "ok" && o.email) jobs.push([`mail:customer:${session.id}`, o.email, () => customerEmail(o), ADMIN_EMAIL]);
+  const failed: string[] = [];
   for (const [key, to, build, replyTo] of jobs) {
     if (!to) continue;
+    const who = key.split(":")[1];
     try {
       if (!(await claimOnce(deps.store, key))) continue;
       const m = build();
       let via = await send(to, m, replyTo);
       if (!via && to === ADMIN_EMAIL && deps.sendAdminFallback) via = await deps.sendAdminFallback(m.subject, m.text, replyTo);
-      if (!via) { await deps.store.remove(key); logError("order-mail", new Error("No mail provider configured (RESEND_API_KEY / ORDER_MAIL_FROM)"), { session: session.id, to: key.split(":")[1] }); continue; }
-      logInfo("order-mail", "sent", { session: session.id, to: key.split(":")[1], via });
+      if (!via) throw new Error("No mail provider configured (set RESEND_API_KEY and ORDER_MAIL_FROM)");
+      logInfo("order-mail", "sent", { session: session.id, to: who, via });
     } catch (err) {
       await deps.store.remove(key).catch(() => {});
-      logError("order-mail", err, { session: session.id, to: key.split(":")[1] });
+      failed.push(who);
+      logError("order-mail", err, { session: session.id, to: who, alert: who === "admin" ? "ADMIN NOTICE NOT SENT" : "CUSTOMER CONFIRMATION NOT SENT" });
     }
   }
+  return failed.map((w) => `+${w}-mail-failed`).join("");
 }
 
 /** Handle a verified Stripe event. Returns a short status string. Idempotent by session id. */
@@ -70,8 +75,7 @@ export async function handleStripeEvent(event: Stripe.Event, deps: Deps): Promis
     }
     // 2) Everything else goes to Printful exactly as before.
     if (!printfulLines(session).length) {
-      await sendOrderEmails(session, null, deps);
-      return "self-fulfilled";
+      return "self-fulfilled" + (await sendOrderEmails(session, null, deps));
     }
     const order = sessionToPrintfulOrder(session);
     let result;
@@ -82,8 +86,8 @@ export async function handleStripeEvent(event: Stripe.Event, deps: Deps): Promis
       throw err;
     }
     logInfo("stripe-webhook", "printful order created", { session: partial.id, printfulId: result?.id, status: result?.status });
-    await sendOrderEmails(session, { id: result?.id, status: result?.status }, deps);
-    return pins ? "created+self-fulfilled" : "created";
+    const mail = await sendOrderEmails(session, { id: result?.id, status: result?.status }, deps);
+    return (pins ? "created+self-fulfilled" : "created") + mail;
   } catch (err) {
     await deps.store.remove(partial.id); // let Stripe retry
     logError("stripe-webhook", err, { session: partial.id });
