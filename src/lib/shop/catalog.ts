@@ -86,9 +86,9 @@ export const PRODUCTS: Product[] = [
     name: "Send It: Canyon Jump 2026 Sticker",
     tagline: "Stick the landing",
     description:
-      "A kiss-cut vinyl sticker of the Canyon Jump: one roadster, a lot of thrust, and the whole fleet watching from the rim. Glossy, durable, laptop-ready. Limited edition.",
+      "A kiss-cut vinyl sticker of the Canyon Jump: one roadster, a lot of thrust, and the whole fleet watching from the rim. Glossy, durable, laptop-ready. Limited edition. About 3 × 4 in glossy kiss-cut vinyl on a 4 × 4 in backing sheet, with rounded corners and a white border.",
     priceCents: 1000,
-    image: "/shop/29-sticker-canyon-jump.webp",
+    image: "/shop/29-sticker-canyon-jump-v2.webp",
     printfulProduct: "Kiss-Cut Stickers, 4x4 in (catalog product 358); 3x4 in art, scaled to fit",
     variants: [{ sku: "stk-cj26-4in", label: "4 in", printfulVariantId: 10164 }],
     files: [{ type: "default", path: "/shop/print/sticker-canyon-jump.png" }],

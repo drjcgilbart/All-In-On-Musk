@@ -30,7 +30,7 @@ export default function CanyonJumpPost() {
           <h2>What is in the drop</h2>
           <ul className="lede">
             <li><Link href="/shop/canyon-jump-tee">Canyon Jump Tee</Link>: big front print on a soft black Bella+Canvas tee, S to 3XL.</li>
-            <li><Link href="/shop/canyon-jump-sticker">Canyon Jump Sticker</Link>: 4 in kiss-cut vinyl for the laptop lid.</li>
+            <li><Link href="/shop/canyon-jump-sticker">Canyon Jump Sticker</Link>: about 3 × 4 in glossy kiss-cut vinyl for the laptop lid.</li>
             <li><Link href="/shop/canyon-jump-poster">Canyon Jump Poster</Link>: enhanced matte, 18x24 or 12x16 in.</li>
           </ul>
           <p className="lede">Everything is printed on demand and ships in about 3 to 7 business days. When the drop is done, it is done.</p>
