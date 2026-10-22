@@ -202,7 +202,7 @@ export const PRODUCTS: Product[] = [
     tagline: "Fewer parts, fewer problems",
     description:
       "A 4 in round kiss-cut vinyl sticker for laptops, toolboxes and anything that could lose a few parts. Durable, glossy, and requirement-free.",
-    priceCents: 500,
+    priceCents: 1000,
     image: "/shop/06-sticker-best-part-is-no-part-aiom.png",
     printfulProduct: "Kiss-Cut Stickers, 4x4 in (catalog product 358)",
     variants: [{ sku: "stk-bpnp-4in", label: "4 in", printfulVariantId: 10164 }],
@@ -231,7 +231,7 @@ export const PRODUCTS: Product[] = [
     tagline: "Launch window: closed",
     description:
       "A 4 in round kiss-cut vinyl sticker for the launch-day regulars who know the forecast by heart. Weatherproof, unlike the countdown.",
-    priceCents: 500,
+    priceCents: 1000,
     image: "/shop/08-sticker-scrubbed-for-weather-again.png",
     printfulProduct: "Kiss-Cut Stickers, 4x4 in (catalog product 358)",
     variants: [{ sku: "stk-scrub-4in", label: "4 in", printfulVariantId: 10164 }],
@@ -245,7 +245,7 @@ export const PRODUCTS: Product[] = [
     tagline: "Caught it on the first try",
     description:
       "A 4 in round kiss-cut vinyl sticker for anyone who watched a tower catch a booster and called it a normal Tuesday. Glossy, durable, catch-certified.",
-    priceCents: 500,
+    priceCents: 1000,
     image: "/shop/09-sticker-chopsticks-certified.png",
     printfulProduct: "Kiss-Cut Stickers, 4x4 in (catalog product 358)",
     variants: [
