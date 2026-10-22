@@ -90,3 +90,17 @@ export async function sendPinOrderMail(o: PinOrderMail, fetchImpl: typeof fetch 
   if (!(res.ok && (data.success === true || data.success === "true"))) throw new Error(data.message || `Form mail ${res.status}`);
   return "formsubmit";
 }
+
+/** Admin-only fallback when no mail provider is configured: the same FormSubmit path the pin notices use. */
+export async function sendAdminFormMail(subject: string, text: string, replyTo?: string, fetchImpl: typeof fetch = fetch): Promise<string> {
+  const origin = siteUrl();
+  const res = await fetchImpl(`https://formsubmit.co/ajax/${ADMIN_EMAIL}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json", Origin: origin, Referer: `${origin}/shop` },
+    body: JSON.stringify({ message: text, _subject: subject, ...(replyTo ? { _replyto: replyTo } : {}), _template: "box", _captcha: "false" }),
+    signal: AbortSignal.timeout(12000),
+  });
+  const data = (await res.json().catch(() => ({}))) as { success?: boolean | string; message?: string };
+  if (!(res.ok && (data.success === true || data.success === "true"))) throw new Error(data.message || `Form mail ${res.status}`);
+  return "formsubmit";
+}

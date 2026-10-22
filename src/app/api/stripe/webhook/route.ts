@@ -4,6 +4,7 @@ import { getStripe } from "@/lib/shop/stripe";
 import { getDedupeStore } from "@/lib/shop/idempotency";
 import { handleStripeEvent } from "@/lib/shop/fulfill";
 import { logError } from "@/lib/shop/log";
+import { sendAdminFormMail } from "@/lib/shop/notify";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,6 +27,7 @@ export async function POST(req: Request) {
     const status = await handleStripeEvent(event, {
       store: getDedupeStore(),
       retrieveSession: (id) => stripe.checkout.sessions.retrieve(id, { expand: ["line_items.data.price.product"] }),
+      sendAdminFallback: sendAdminFormMail,
     });
     return NextResponse.json({ received: true, status });
   } catch {
