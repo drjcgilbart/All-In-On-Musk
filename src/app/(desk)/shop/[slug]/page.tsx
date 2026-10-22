@@ -36,7 +36,7 @@ export default async function ProductPage({ params }: Props) {
         {p.limited ? <p><span className="shop-limited">{LIMITED_LABEL}</span></p> : null}
         <h1 className="page-title shop-ptitle">{p.name}</h1>
         <p className="shop-tag shop-tag-lg">{p.tagline}</p>
-        <p className="shop-price shop-price-lg">{hasPriceRange(p) ? `${formatPrice(minPriceCents(p))} – ${formatPrice(Math.max(...p.variants.map((v) => variantPriceCents(p, v))))}` : formatPrice(p.priceCents)}</p>
+        <p className="shop-price shop-price-lg">{p.type === "tees" && hasPriceRange(p) ? <>{formatPrice(p.priceCents)} <span className="shop-tag">{p.variants.filter((v) => variantPriceCents(p, v) !== p.priceCents).map((v) => `${v.label} +${formatPrice(variantPriceCents(p, v) - p.priceCents)}`).join(", ")}</span></> : hasPriceRange(p) ? `${formatPrice(minPriceCents(p))} – ${formatPrice(Math.max(...p.variants.map((v) => variantPriceCents(p, v))))}` : formatPrice(p.priceCents)}</p>
         {p.preorder ? <p className="shop-mono shop-preorder shop-preorder-lg">{p.preorder}</p> : null}
         <p className="lede">{p.description}</p>
         <AddToCart variants={hasPriceRange(p) ? p.variants.map((v) => ({ ...v, label: `${v.label} · ${formatPrice(variantPriceCents(p, v))}` })) : p.variants} />

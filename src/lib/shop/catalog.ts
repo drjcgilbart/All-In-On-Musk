@@ -72,8 +72,8 @@ export const PRODUCTS: Product[] = [
       { sku: "tee-cj26-M", label: "M", printfulVariantId: 4017 },
       { sku: "tee-cj26-L", label: "L", printfulVariantId: 4018 },
       { sku: "tee-cj26-XL", label: "XL", printfulVariantId: 4019 },
-      { sku: "tee-cj26-2XL", label: "2XL", printfulVariantId: 4020 },
-      { sku: "tee-cj26-3XL", label: "3XL", printfulVariantId: 5295 },
+      { sku: "tee-cj26-2XL", label: "2XL", printfulVariantId: 4020, priceCents: 3200 },
+      { sku: "tee-cj26-3XL", label: "3XL", printfulVariantId: 5295, priceCents: 3400 },
     ],
     // DTG front ("default" = front on product 71). 4500x5400 transparent PNG, 12x15 in @300dpi.
     files: [{ type: "default", path: "/shop/print/tee-canyon-jump.png" }],
@@ -128,8 +128,8 @@ export const PRODUCTS: Product[] = [
       { sku: "tee-edc-M", label: "M", printfulVariantId: 505 },
       { sku: "tee-edc-L", label: "L", printfulVariantId: 536 },
       { sku: "tee-edc-XL", label: "XL", printfulVariantId: 567 },
-      { sku: "tee-edc-2XL", label: "2XL", printfulVariantId: 598 },
-      { sku: "tee-edc-3XL", label: "3XL", printfulVariantId: 629 },
+      { sku: "tee-edc-2XL", label: "2XL", printfulVariantId: 598, priceCents: 3000 },
+      { sku: "tee-edc-3XL", label: "3XL", printfulVariantId: 629, priceCents: 3200 },
     ],
     // DTG front print. TODO: confirm print-area size/position in Printful's mockup generator.
     files: [{ type: "default", path: "/shop/print/tee-main.png" }],
@@ -189,8 +189,8 @@ export const PRODUCTS: Product[] = [
       { sku: "tee-bpnp-M", label: "M", printfulVariantId: 505 },
       { sku: "tee-bpnp-L", label: "L", printfulVariantId: 536 },
       { sku: "tee-bpnp-XL", label: "XL", printfulVariantId: 567 },
-      { sku: "tee-bpnp-2XL", label: "2XL", printfulVariantId: 598 },
-      { sku: "tee-bpnp-3XL", label: "3XL", printfulVariantId: 629 },
+      { sku: "tee-bpnp-2XL", label: "2XL", printfulVariantId: 598, priceCents: 3000 },
+      { sku: "tee-bpnp-3XL", label: "3XL", printfulVariantId: 629, priceCents: 3200 },
     ],
     files: [{ type: "default", path: "/shop/print/tee-best-part-aiom.png" }],
     taxCode: "txcd_30011000", // clothing
