@@ -1,14 +1,25 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useCart } from "@/components/shop/cart";
+import { useCart, getCartId, clearCartStorage, readOrders, type LocalOrder } from "@/components/shop/cart";
 import { findVariant, formatPrice, variantPriceCents } from "@/lib/shop/catalog";
 
 export function CartView({ checkoutEnabled }: { checkoutEnabled: boolean }) {
   const { items, setQty, remove, ready } = useCart();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [orders, setOrders] = useState<LocalOrder[]>([]);
+  // Backup: if the webhook marked this cart as paid (e.g. the success page never loaded), drop it so it can't be re-billed.
+  useEffect(() => {
+    if (!ready) return;
+    const id = getCartId();
+    fetch(`/api/cart/status?id=${encodeURIComponent(id)}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d: { completed?: boolean }) => { if (d.completed && getCartId() === id) clearCartStorage(); })
+      .catch(() => {})
+      .finally(() => setOrders(readOrders()));
+  }, [ready]);
   const lines = items.flatMap((i) => {
     const f = findVariant(i.sku);
     return f ? [{ ...i, ...f }] : [];
@@ -22,7 +33,7 @@ export function CartView({ checkoutEnabled }: { checkoutEnabled: boolean }) {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: lines.map(({ sku, qty }) => ({ sku, qty })) }),
+        body: JSON.stringify({ items: lines.map(({ sku, qty }) => ({ sku, qty })), cartId: getCartId() }),
       });
       const data = (await res.json()) as { url?: string; error?: string };
       if (!res.ok || !data.url) throw new Error(data.error || "Checkout failed");
@@ -77,6 +88,17 @@ export function CartView({ checkoutEnabled }: { checkoutEnabled: boolean }) {
           {error ? <p className="shop-err" role="alert">{error}</p> : null}
         </div>
       )}
+      {orders.length ? (
+        <section className="shop-panel" aria-labelledby="past-orders-h" style={{ marginTop: 24 }}>
+          <h2 id="past-orders-h" className="shop-mono">Your orders on this device</h2>
+          {orders.map((o) => (
+            <div className="shop-row" key={o.orderNumber}>
+              <span>{new Date(o.date).toLocaleDateString()} · {o.items.map((i) => `${i.quantity}× ${i.name}${i.variant ? ` (${i.variant})` : ""}`).join(", ")}</span>
+              <span className="shop-mono">{formatPrice(o.totalCents)} · {o.orderNumber}</span>
+            </div>
+          ))}
+        </section>
+      ) : null}
     </>
   );
 }

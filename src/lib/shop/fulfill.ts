@@ -4,6 +4,7 @@ import { createPrintfulOrder, printfulLines, sessionToPrintfulOrder } from "./pr
 import { pinOrderFromSession, sendPinOrderMail } from "./notify";
 import { autoConfirm } from "./config";
 import { logError, logInfo } from "./log";
+import { markCartCompleted, validCartId } from "./carts";
 import { ADMIN_EMAIL, adminEmail, customerEmail, orderSummary, sendMail, type Mail, type PrintfulResult } from "./order-mail";
 
 type Deps = {
@@ -59,6 +60,9 @@ export async function handleStripeEvent(event: Stripe.Event, deps: Deps): Promis
   if (event.type !== "checkout.session.completed") return "ignored";
   const partial = event.data.object as Stripe.Checkout.Session;
   if (partial.payment_status !== "paid") return "unpaid";
+  // Backup for the success page: mark the shopper's cart as paid so any tab/device still holding it drops it (never re-bills).
+  const cartId = validCartId(partial.metadata?.cart_id);
+  if (cartId) await markCartCompleted(deps.store, cartId).catch((err) => logError("stripe-webhook", err, { session: partial.id, step: "mark cart completed" }));
   if (deps.store.claim) {
     if (!(await deps.store.claim(partial.id))) return "duplicate"; // atomic (Redis SET NX)
   } else {

@@ -48,3 +48,6 @@ next-env.d.ts
 /data/studio-password.json
 /data/membership-requests.json
 /public/studio-uploads/
+
+# local dedupe store (fileStore fallback)
+.data/
