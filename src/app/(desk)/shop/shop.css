@@ -240,3 +240,12 @@
 .shop-side-thumb:hover { border-color: var(--shop-hot); }
 .shop-side-thumb[aria-pressed="true"] { border: 2px solid var(--shop-cyan); color: var(--shop-cyan); padding: calc(0.35rem - 1px); }
 .shop-side-thumb:focus-visible { outline: 2px solid var(--shop-pink); outline-offset: 2px; }
+
+/* Limited edition badge + featured hero (Canyon Jump drop) */
+.shop-card { position: relative; }
+.shop-limited { display: inline-block; font-family: var(--font-mono, ui-monospace, monospace); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #0b0d10; background: linear-gradient(90deg, #ffb347, #ff2bd6); padding: 4px 9px; border-radius: 4px; }
+.shop-limited-card { position: absolute; top: 12px; left: 12px; z-index: 1; box-shadow: 0 2px 10px rgba(0,0,0,.45); }
+.shop-hero { margin: 8px 0 32px; padding: 20px; border: 1px solid var(--shop-hot, #ff2bd6); border-radius: 12px; background: radial-gradient(120% 80% at 0% 0%, rgba(255,120,60,.14), transparent 60%); }
+.shop-hero-copy { margin-bottom: 16px; max-width: 62ch; }
+.shop-hero-title { margin: 8px 0; font-size: clamp(1.6rem, 3.4vw, 2.4rem); letter-spacing: -0.02em; }
+.shop-hero-grid { margin-top: 0; }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { PRODUCTS, getProduct, formatPrice } from "@/lib/shop/catalog";
+import { PRODUCTS, getProduct, formatPrice, variantPriceCents, minPriceCents, hasPriceRange, LIMITED_LABEL } from "@/lib/shop/catalog";
 import { AddToCart } from "@/components/shop/add-to-cart";
 import { SideSwitcher } from "@/components/shop/side-switcher";
 
@@ -33,13 +33,14 @@ export default async function ProductPage({ params }: Props) {
       )}
       <div>
         <Link href="/shop" className="shop-mono">← All merch</Link>
+        {p.limited ? <p><span className="shop-limited">{LIMITED_LABEL}</span></p> : null}
         <h1 className="page-title shop-ptitle">{p.name}</h1>
         <p className="shop-tag shop-tag-lg">{p.tagline}</p>
-        <p className="shop-price shop-price-lg">{formatPrice(p.priceCents)}</p>
+        <p className="shop-price shop-price-lg">{hasPriceRange(p) ? `${formatPrice(minPriceCents(p))} – ${formatPrice(Math.max(...p.variants.map((v) => variantPriceCents(p, v))))}` : formatPrice(p.priceCents)}</p>
         {p.preorder ? <p className="shop-mono shop-preorder shop-preorder-lg">{p.preorder}</p> : null}
         <p className="lede">{p.description}</p>
-        <AddToCart variants={p.variants} />
-        {p.variants.length > 1 ? (
+        <AddToCart variants={hasPriceRange(p) ? p.variants.map((v) => ({ ...v, label: `${v.label} · ${formatPrice(variantPriceCents(p, v))}` })) : p.variants} />
+        {p.variants.length > 1 && (p.type === "tees" || p.type === "hoodies") ? (
           <details className="shop-sizechart">
             <summary className="shop-mono">Size chart (inches, approx.)</summary>
             <table>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/components/shop/cart";
-import { findVariant, formatPrice } from "@/lib/shop/catalog";
+import { findVariant, formatPrice, variantPriceCents } from "@/lib/shop/catalog";
 
 export function CartView({ checkoutEnabled }: { checkoutEnabled: boolean }) {
   const { items, setQty, remove, ready } = useCart();
@@ -13,7 +13,7 @@ export function CartView({ checkoutEnabled }: { checkoutEnabled: boolean }) {
     const f = findVariant(i.sku);
     return f ? [{ ...i, ...f }] : [];
   });
-  const subtotal = lines.reduce((n, l) => n + l.product.priceCents * l.qty, 0);
+  const subtotal = lines.reduce((n, l) => n + variantPriceCents(l.product, l.variant) * l.qty, 0);
 
   async function checkout() {
     setBusy(true);
@@ -49,7 +49,7 @@ export function CartView({ checkoutEnabled }: { checkoutEnabled: boolean }) {
               <div>
                 <div>{l.product.name}</div>
                 <div className="shop-mono">
-                  {l.variant.label} · {formatPrice(l.product.priceCents)}
+                  {l.variant.label} · {formatPrice(variantPriceCents(l.product, l.variant))}
                 </div>
               </div>
               <input aria-label={`Quantity for ${l.product.name}`} className="shop-qty" type="number" min={1} max={10} value={l.qty} onChange={(e) => setQty(l.sku, Number(e.target.value))} />

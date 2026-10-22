@@ -7,6 +7,8 @@ export type Variant = {
   sku: string; // our id, sent by the client
   label: string; // e.g. "M" or "One size"
   printfulVariantId: number;
+  priceCents?: number; // overrides the product price for this variant (e.g. poster sizes)
+  files?: PrintFile[]; // overrides the product print files for this variant (e.g. one file per poster size)
 };
 
 export type PrintFile = { type: string; path: string }; // path under /public
@@ -45,6 +47,7 @@ export type Product = {
   options?: { id: string; value: string | string[] }[];
   // Self-fulfilled items (e.g. bulk-made enamel pins) never go to Printful; the webhook emails the owner to mail them.
   selfFulfilled?: boolean;
+  limited?: boolean; // Limited edition: badge on cards and product pages, featured at the top of /shop
   preorder?: string; // shown on the card and product page, e.g. "Pre-order: ships in about 3 weeks"
 };
 
@@ -53,6 +56,63 @@ export const PIN_PREORDER = "Pre-order: ships in about 3 weeks";
 export const CURRENCY = "usd";
 
 export const PRODUCTS: Product[] = [
+  // "Send It: Canyon Jump 2026" limited edition drop (2026-10-22). Printful catalog variant ids checked 2026-10-22.
+  {
+    slug: "canyon-jump-tee",
+    type: "tees",
+    name: "Send It: Canyon Jump 2026 Tee",
+    tagline: "Cold-gas thrusters, warm hearts",
+    description:
+      "A new roadster on cold-gas thrusters clears the whole fleet over a red-rock canyon. Printed big on a soft black Bella+Canvas tee for everyone who has ever yelled 'send it' at a livestream. Limited edition.",
+    priceCents: 3000,
+    image: "/shop/28-tee-canyon-jump.webp",
+    printfulProduct: "Bella+Canvas 3001 Unisex Staple T-Shirt, Black (catalog product 71)",
+    variants: [
+      { sku: "tee-cj26-S", label: "S", printfulVariantId: 4016 },
+      { sku: "tee-cj26-M", label: "M", printfulVariantId: 4017 },
+      { sku: "tee-cj26-L", label: "L", printfulVariantId: 4018 },
+      { sku: "tee-cj26-XL", label: "XL", printfulVariantId: 4019 },
+      { sku: "tee-cj26-2XL", label: "2XL", printfulVariantId: 4020 },
+      { sku: "tee-cj26-3XL", label: "3XL", printfulVariantId: 5295 },
+    ],
+    // DTG front ("default" = front on product 71). 4500x5400 transparent PNG, 12x15 in @300dpi.
+    files: [{ type: "default", path: "/shop/print/tee-canyon-jump.png" }],
+    taxCode: "txcd_30011000", // clothing
+    limited: true,
+  },
+  {
+    slug: "canyon-jump-sticker",
+    type: "stickers",
+    name: "Send It: Canyon Jump 2026 Sticker",
+    tagline: "Stick the landing",
+    description:
+      "A kiss-cut vinyl sticker of the Canyon Jump: one roadster, a lot of thrust, and the whole fleet watching from the rim. Glossy, durable, laptop-ready. Limited edition.",
+    priceCents: 500,
+    image: "/shop/29-sticker-canyon-jump.webp",
+    printfulProduct: "Kiss-Cut Stickers, 4x4 in (catalog product 358); 3x4 in art, scaled to fit",
+    variants: [{ sku: "stk-cj26-4in", label: "4 in", printfulVariantId: 10164 }],
+    files: [{ type: "default", path: "/shop/print/sticker-canyon-jump.png" }],
+    taxCode: "txcd_99999999",
+    limited: true,
+  },
+  {
+    slug: "canyon-jump-poster",
+    type: "posters",
+    name: "Send It: Canyon Jump 2026 Poster",
+    tagline: "Full send, framed",
+    description:
+      "The Canyon Jump on enhanced matte paper: a red-rock sunset, a roadster riding cold-gas thrusters, and the fleet lined up below. Two sizes. Limited edition.",
+    priceCents: 2500,
+    image: "/shop/30-poster-canyon-jump.webp",
+    printfulProduct: "Enhanced Matte Paper Poster (in), 18x24 / 12x16 (catalog product 1)",
+    variants: [
+      { sku: "poster-cj26-1824", label: "18x24 in", printfulVariantId: 1, priceCents: 2500, files: [{ type: "default", path: "/shop/print/poster-canyon-jump-18x24.jpg" }] },
+      { sku: "poster-cj26-1216", label: "12x16 in", printfulVariantId: 1349, priceCents: 2200, files: [{ type: "default", path: "/shop/print/poster-canyon-jump-12x16.jpg" }] },
+    ],
+    files: [{ type: "default", path: "/shop/print/poster-canyon-jump-18x24.jpg" }],
+    taxCode: "txcd_99999999",
+    limited: true,
+  },
   {
     slug: "excellent-data-tee",
     type: "tees",
@@ -568,6 +628,25 @@ export function findVariant(sku: string): { product: Product; variant: Variant }
   }
   return undefined;
 }
+
+export function variantPriceCents(product: Product, variant: Variant) {
+  return variant.priceCents ?? product.priceCents;
+}
+
+export function variantFiles(product: Product, variant: Variant) {
+  return variant.files ?? product.files;
+}
+
+/** Lowest variant price, for cards ("from $22"). */
+export function minPriceCents(product: Product) {
+  return Math.min(...product.variants.map((v) => variantPriceCents(product, v)));
+}
+
+export function hasPriceRange(product: Product) {
+  return new Set(product.variants.map((v) => variantPriceCents(product, v))).size > 1;
+}
+
+export const LIMITED_LABEL = "Limited edition";
 
 export function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;

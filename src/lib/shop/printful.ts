@@ -1,6 +1,6 @@
 import type Stripe from "stripe";
 import { createHash } from "crypto";
-import { findVariant } from "./catalog";
+import { findVariant, variantFiles, variantPriceCents } from "./catalog";
 import { siteUrl } from "./config";
 
 /** Printful external_id is length-limited (TODO: confirm 32 vs 64); derive a stable short id from the session id. */
@@ -66,8 +66,8 @@ export function sessionToPrintfulOrder(session: Stripe.Checkout.Session): Printf
       quantity: li.quantity ?? 1,
       external_id: sku!,
       name: `${found.product.name} (${found.variant.label})`,
-      retail_price: (found.product.priceCents / 100).toFixed(2),
-      files: found.product.files.map((f) => ({ type: f.type, url: printFileUrl(f.path) })),
+      retail_price: (variantPriceCents(found.product, found.variant) / 100).toFixed(2),
+      files: variantFiles(found.product, found.variant).map((f) => ({ type: f.type, url: printFileUrl(f.path) })),
       ...(found.product.options ? { options: found.product.options } : {}),
     };
   });

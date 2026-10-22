@@ -1,4 +1,4 @@
-import { CURRENCY, findVariant } from "./catalog";
+import { CURRENCY, findVariant, variantPriceCents } from "./catalog";
 
 export type CartLine = { sku: string; qty: number };
 export const MAX_QTY = 10;
@@ -21,12 +21,13 @@ export function buildLineItems(input: unknown, opts: { taxBehavior?: "exclusive"
   let subtotal = 0;
   const lineItems = [...merged].map(([sku, qty]) => {
     const { product, variant } = findVariant(sku)!;
-    subtotal += product.priceCents * qty;
+    const unit = variantPriceCents(product, variant);
+    subtotal += unit * qty;
     return {
       quantity: qty,
       price_data: {
         currency: CURRENCY,
-        unit_amount: product.priceCents,
+        unit_amount: unit,
         ...(opts.taxBehavior ? { tax_behavior: opts.taxBehavior } : {}),
         product_data: {
           name: `${product.name} · ${product.tagline}`,
