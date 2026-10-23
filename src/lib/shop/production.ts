@@ -1,4 +1,4 @@
-import { PRODUCTS, variantFiles, type Product, type Variant } from "./catalog";
+import { PRODUCTS, variantFiles, type PrintFile, type Product, type Variant } from "./catalog";
 import { siteUrl } from "./config";
 
 /** Human-readable placement for each Printful file type we use. */
@@ -6,7 +6,8 @@ const PLACEMENT: Record<string, string> = {
   default: "Main print area (front print for tees, the whole sticker or poster)",
   front: "Front print (DTG)",
   back: "Back print (DTG)",
-  embroidery_front: "Front embroidery (hat front panel, max 4\" x 1.75\")",
+  embroidery_front: "Front embroidery (legacy hat front template, max 4\" x 1.75\")",
+  embroidery_front_large: "Front embroidery (Printful's current hat front placement, 5.5\" x 2\" area = 1650 x 600 px @ 300 DPI)",
   embroidery_back: "Back embroidery (above the strap, max 2\" x 1\", 600 x 300 px @ 300 DPI)",
   embroidery_patch_front: "Embroidered patch (3\" circle)",
 };
@@ -24,14 +25,14 @@ export type ProductionPlan = {
   name: string;
   vendor: "printful" | "self";
   vendorProduct: string;
-  files: { type: string; placement: string; url: string }[];
+  files: { type: string; placement: string; url: string; size?: string }[];
   colors: { option: string; threads: string[] }[];
   color: string; // garment/blank colour from the catalog note, or "n/a"
   flags: string[];
 };
 
 function threadsFor(p: Product, fileType: string) {
-  const opt = fileType === "embroidery_back" ? "thread_colors_back" : fileType === "embroidery_patch_front" ? "thread_colors_patch_front" : "thread_colors";
+  const opt = fileType === "embroidery_back" ? "thread_colors_back" : fileType === "embroidery_front_large" ? "thread_colors_front_large" : fileType === "embroidery_patch_front" ? "thread_colors_patch_front" : "thread_colors";
   const o = p.options?.find((x) => x.id === opt);
   return o ? { option: opt, threads: (Array.isArray(o.value) ? o.value : [o.value]).map((h) => `${h} ${THREAD_NAMES[h] ?? "(unknown thread)"}`) } : null;
 }
@@ -40,6 +41,13 @@ function threadsFor(p: Product, fileType: string) {
 export function productColor(p: Product): string {
   const m = p.printfulProduct.match(/,\s*(Black|White|Navy|Grey|Gray|Heather[A-Za-z ]*|Red|Blue|Green)\b/i);
   return m ? m[1] : "n/a";
+}
+
+/** "4.81\" x 1.75\" at true size, centred (left 104 px, top 37 px in a 1650 x 600 px area)" */
+function positionText(q: NonNullable<PrintFile["position"]>) {
+  const inch = (px: number) => (px / 300).toFixed(2).replace(/0$/, "");
+  const full = q.width === q.area_width && q.height === q.area_height;
+  return `${inch(q.width)}" x ${inch(q.height)}" at true size (${q.width} x ${q.height} px @ 300 DPI), ${full ? "filling the area" : "centred"}: left ${q.left} px, top ${q.top} px in the ${q.area_width} x ${q.area_height} px area`;
 }
 
 /** Production plan for a product; pass the ordered variant so per-size print files (e.g. poster sizes) are used. */
@@ -60,7 +68,7 @@ export function productionPlan(p: Product, v?: Variant): ProductionPlan {
   return {
     slug: p.slug, name: p.name, vendor, vendorProduct: p.printfulProduct,
     color: productColor(p),
-    files: files.map((f) => ({ type: f.type, placement: PLACEMENT[f.type] ?? f.type, url: siteUrl() + f.path })),
+    files: files.map((f) => ({ type: f.type, placement: PLACEMENT[f.type] ?? f.type, url: siteUrl() + f.path, ...(f.position ? { size: positionText(f.position) } : {}) })),
     colors, flags,
   };
 }

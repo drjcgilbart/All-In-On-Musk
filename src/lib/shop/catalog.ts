@@ -11,7 +11,9 @@ export type Variant = {
   files?: PrintFile[]; // overrides the product print files for this variant (e.g. one file per poster size)
 };
 
-export type PrintFile = { type: string; path: string }; // path under /public
+/** Printful file position (v1 orders API), in print-area pixels. */
+export type PrintPosition = { area_width: number; area_height: number; width: number; height: number; top: number; left: number; limit_to_print_area?: boolean };
+export type PrintFile = { type: string; path: string; position?: PrintPosition }; // path under /public
 
 export type ProductType = "tees" | "hoodies" | "hats" | "stickers" | "patches" | "posters" | "water-bottles" | "tumblers" | "pins";
 
@@ -141,21 +143,30 @@ export const PRODUCTS: Product[] = [
     name: "All In On Musk Desk",
     tagline: "Funding secured (for snacks)",
     description:
-      "An embroidered dad hat for the analyst who models a trillion-dollar TAM before breakfast and still can't expense the coffee. Terms not final. Snacks are.",
+      "An embroidered black dad hat with the All In On Musk shield up front: ALL IN ON MUSK over FUNDING SECURED (FOR SNACKS), with our standard rocket. The AIM rocket mark is stitched on the back above the strap. Terms not final. Snacks are.",
     priceCents: 3000,
-    image: "/shop/03-hat-musconomy-desk-funding-secured.png",
+    image: "/shop/03-hat-all-in-on-musk-desk-front-back.png",
     sides: [
-      { label: "Front", image: "/shop/03-hat-musconomy-desk-funding-secured.png" },
-      { label: "Back", image: "/shop/back/03-hat-desk-back.png" },
+      { label: "Front + back", image: "/shop/03-hat-all-in-on-musk-desk-front-back.png" },
+      { label: "Front", image: "/shop/03-hat-all-in-on-musk-desk-front.png" },
+      { label: "Back", image: "/shop/back/03-hat-all-in-on-musk-desk-back.png" },
     ],
     printfulProduct: "Yupoong 6245CM Classic Dad Hat, Black (catalog product 206)",
     variants: [{ sku: "hat-desk-OS", label: "One size", printfulVariantId: 7854 }],
-    // TODO: embroidery files need a digitized/flat-colour version; Printful may charge digitization.
+    // Embroidery-safe shield v5 front (1442x525 px @300 DPI = 4.81" x 1.75") on Printful's CURRENT front
+    // placement, embroidery_front_large (5.5" x 2" area = 1650x600 px), true size, centred.
+    // Back: AIM v2 (600x300 px = 2" x 1"), fills the embroidery_back area.
     files: [
-      { type: "embroidery_front", path: "/shop/print/hat.png" },
-      { type: "embroidery_back", path: "/shop/print/hat-back-aim.png" },
+      { type: "embroidery_front_large", path: "/shop/print/hat-desk-front-shield-v5.png",
+        position: { area_width: 1650, area_height: 600, width: 1442, height: 525, top: 37, left: 104, limit_to_print_area: true } },
+      { type: "embroidery_back", path: "/shop/print/hat-desk-back-aim-v2.png",
+        position: { area_width: 600, area_height: 300, width: 600, height: 300, top: 0, left: 0, limit_to_print_area: true } },
     ],
-    options: [{ id: "thread_colors", value: ["#FFFFFF", "#3399FF", "#CC3366"] }, { id: "thread_colors_back", value: ["#CC3333", "#FFFFFF", "#E25C27", "#96A1A8", "#3399FF"] }],
+    // Front: 1695 Aqua/Teal, 1801 White, 1910 Flamingo, 1839 Red, 1718 Grey. Back: 1839 Red, 1801 White, 1910 Flamingo, 1695 Aqua/Teal, 1987 Orange.
+    options: [
+      { id: "thread_colors_front_large", value: ["#3399FF", "#FFFFFF", "#CC3366", "#CC3333", "#96A1A8"] },
+      { id: "thread_colors_back", value: ["#CC3333", "#FFFFFF", "#CC3366", "#3399FF", "#E25C27"] },
+    ],
     taxCode: "txcd_30011000", // clothing
   },
   {

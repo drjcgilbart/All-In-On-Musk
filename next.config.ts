@@ -10,7 +10,6 @@ const nextConfig: NextConfig = {
     return [
       { source: "/journal", destination: "/news", permanent: true },
       { source: "/journal/:slug*", destination: "/news", permanent: true },
-      { source: "/shop/musconomy-desk-hat", destination: "/shop/all-in-on-musk-desk-hat", permanent: true },
       { source: "/race", destination: "/race/index.html", permanent: false },
       { source: "/race/", destination: "/race/index.html", permanent: false },
     ];

@@ -87,7 +87,7 @@ export function adminEmail(o: OrderSummary, printful: PrintfulResult): Mail {
     const flags = plan.flags.map((f) => `<div style="color:#ff2bd6">FLAG: ${esc(f)}</div>`).join("");
     for (const f of plan.files) attachments.push({ filename: `${String(idx + 1).padStart(2, "0")}-${plan.slug}-${f.type}${(f.url.match(/\.[a-z0-9]+$/i) ?? [".png"])[0]}`, path: f.url });
     const files = plan.files.length
-      ? `<div style="margin-top:8px">Camera-ready files (attached when small enough; always linked here):</div><ul>${plan.files.map((f) => `<li>${esc(f.placement)} [${esc(f.type)}]: ${A(f.url)}</li>`).join("")}</ul>`
+      ? `<div style="margin-top:8px">Camera-ready files (attached when small enough; always linked here):</div><ul>${plan.files.map((f) => `<li>${esc(f.placement)} [${esc(f.type)}]${f.size ? `, ${esc(f.size)}` : ""}: ${A(f.url)}</li>`).join("")}</ul>`
       : `<div style="color:#ff2bd6;margin-top:8px"><b>No production file on record for this item.</b></div>`;
     const colors = plan.colors.length ? `<div>Thread colours:</div><ul>${plan.colors.map((c) => `<li>${esc(c.option)}: ${c.threads.map(esc).join(", ")}</li>`).join("")}</ul>` : "";
     let how: string;
