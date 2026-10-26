@@ -71,11 +71,11 @@ export async function handleStripeEvent(event: Stripe.Event, deps: Deps): Promis
   }
   try {
     const session = await deps.retrieveSession(partial.id);
-    // 1) Self-fulfilled pins: email the owner first. If this throws, nothing has been created yet, so a Stripe retry is safe.
+    // 1) Self-fulfilled items (pins + woven patches): email the owner first. If this throws, nothing has been created yet, so a Stripe retry is safe.
     const pins = pinOrderFromSession(session);
     if (pins) {
       const via = await (deps.sendPinMail ?? sendPinOrderMail)(pins);
-      logInfo("stripe-webhook", "pin order emailed", { session: partial.id, via, lines: pins.items.length });
+      logInfo("stripe-webhook", "self-fulfill order emailed", { session: partial.id, via, lines: pins.items.length });
     }
     // 2) Everything else goes to Printful exactly as before.
     if (!printfulLines(session).length) {

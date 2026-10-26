@@ -15,7 +15,7 @@ export type PinOrderMail = {
 
 type Ship = { name?: string | null; address?: Stripe.Address | null } | null | undefined;
 
-/** Build the owner notification for the self-fulfilled (pin) part of a paid session. Returns null if there are none. */
+/** Build the owner notification for the self-fulfilled part of a paid session (pins + woven patches). Returns null if there are none. */
 export function pinOrderFromSession(session: Stripe.Checkout.Session): PinOrderMail | null {
   const items = selfFulfilledLines(session);
   if (!items.length) return null;
@@ -41,9 +41,10 @@ function esc(v: string) {
 }
 
 export function pinOrderLetter(o: PinOrderMail) {
-  const subject = `Pin order ${o.orderNumber} to mail: ${o.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}`;
+  const subject = `Self-fulfill order ${o.orderNumber} to mail: ${o.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}`;
   const lines = [
-    "A paid order includes pre-order pins you mail yourself (not sent to Printful).",
+    "A paid order includes self-fulfilled items you mail yourself (not sent to Printful).",
+    "Enamel pins: pull from stock. Woven sew-on crest patches: order from Panda Patches, then mail.",
     "",
     `Order number: ${o.orderNumber}`,
     `Stripe checkout session: ${o.sessionId}`,
@@ -54,10 +55,10 @@ export function pinOrderLetter(o: PinOrderMail) {
     "Ship to:",
     ...o.address.map((l) => `  ${l}`),
     "",
-    "Pins:",
+    "Items to mail:",
     ...o.items.map((i) => `  ${i.quantity} x ${i.name} (${i.label})`),
     "",
-    "Pre-order: promised to ship in about 3 weeks.",
+    "Pre-order: pins about 3 weeks; woven crest patches about 2–3 weeks.",
   ];
   const text = lines.join("\n");
   const html = `<pre style="font-family:monospace">${esc(text)}</pre>`;
@@ -91,7 +92,7 @@ export async function sendPinOrderMail(o: PinOrderMail, fetchImpl: typeof fetch 
   return "formsubmit";
 }
 
-/** Admin-only fallback when no mail provider is configured: the same FormSubmit path the pin notices use. */
+/** Admin-only fallback when no mail provider is configured: the same FormSubmit path the self-fulfill notices use. */
 export async function sendAdminFormMail(subject: string, text: string, replyTo?: string, fetchImpl: typeof fetch = fetch): Promise<string> {
   const origin = siteUrl();
   const res = await fetchImpl(`https://formsubmit.co/ajax/${ADMIN_EMAIL}`, {

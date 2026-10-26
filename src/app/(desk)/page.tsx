@@ -120,7 +120,7 @@ export default async function HomePage() {
           <Link className="plain-card span-6 merch-card" href="/shop">
             <p className="kicker">Shop</p>
             <h3>Desk merch</h3>
-            <p>Tees, a dad hat and a mission patch. Printed to order. Unofficial fan merch.</p>
+            <p>Tees, sew-on crest patches, pins and more. Printed or mailed to order. Unofficial fan merch.</p>
           </Link>
         </div>
       </section>

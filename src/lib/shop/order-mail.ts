@@ -56,7 +56,7 @@ export function customerEmail(o: OrderSummary) {
   const body = `<p style="margin-top:0">Thanks, ${esc(o.customerName.split(" ")[0] || "friend")}! We got your order and it's going into production.</p>
 <p style="font-family:Menlo,Consolas,monospace;font-size:13px;color:#2ee6d6">ORDER ${esc(o.orderNumber)}</p>${itemsTable(o)}
 <p style="margin-bottom:4px;color:#a8b3bd;font-size:13px">SHIPPING TO</p><p style="margin-top:0">${o.address.map(esc).join("<br>")}</p>
-<p>Items are printed or stitched on demand and usually ship in about 3-7 business days (pre-order pins ship in about 3 weeks). You'll get tracking when it ships.</p>
+<p>Items are printed or stitched on demand and usually ship in about 3-7 business days (pre-order pins about 3 weeks; woven crest patches about 2–3 weeks). You'll get tracking when it ships.</p>
 <p><a href="${siteUrl()}/shop" style="color:#ff2bd6">Back to the shop</a></p>`;
   const text = [`Thanks! We got your All In On Musk order ${o.orderNumber}.`, "", ...o.lines.map((l) => `${l.quantity} x ${l.name} (${l.variant}) ${$(l.amountCents)}`),
     `Shipping ${$(o.shippingCents)}`, ...(o.taxCents ? [`Tax ${$(o.taxCents)}`] : []), `Total ${$(o.totalCents)}`, "", "Shipping to:", ...o.address, "", `Questions: ${ADMIN_EMAIL}`].join("\n");
@@ -102,7 +102,10 @@ export function adminEmail(o: OrderSummary, printful: PrintfulResult): Mail {
 <li>If the order is missing or failed: click <b>New order</b>, pick ${esc(plan.vendorProduct)}, choose size ${esc(l.variant || "n/a")}, upload the files below to the same placements${plan.colors.length ? ", set the thread colours" : ""}, enter the ship-to address, set external ID ${esc(o.orderNumber)}, then <b>Confirm order</b>.</li>
 </ol>`;
     } else {
-      how = `<div style="margin-top:6px">Producer: <b>none</b>. ${esc(plan.vendorProduct)}.</div><ol><li>Pick ${l.quantity} from stock.</li><li>Pack and mail it to the ship-to address below (USPS First-Class or Ground Advantage).</li><li>Reply to the customer with tracking. Pre-order: promised to ship in about 3 weeks.</li></ol>`;
+      const panda = /Panda Patches|woven damask/i.test(plan.vendorProduct);
+      how = panda
+        ? `<div style="margin-top:6px">Producer: <b>self (Panda Patches)</b>. ${esc(plan.vendorProduct)}.</div><ol><li>Order ${l.quantity} woven sew-on crest patch(es) from <b>Panda Patches</b> (damask, merrowed border, ~2.57×3.00 in) using the linked art / your Panda mockups — do <b>not</b> send this to Printful.</li><li>When the patches arrive, pack and mail to the ship-to address below (USPS First-Class or Ground Advantage).</li><li>Reply to the customer with tracking. Pre-order: promised to ship in about 2–3 weeks.</li></ol>`
+        : `<div style="margin-top:6px">Producer: <b>none</b>. ${esc(plan.vendorProduct)}.</div><ol><li>Pick ${l.quantity} from stock.</li><li>Pack and mail it to the ship-to address below (USPS First-Class or Ground Advantage).</li><li>Reply to the customer with tracking. Pre-order: promised to ship in about 3 weeks.</li></ol>`;
     }
     return `<li style="margin-bottom:18px">${head}${flags}${how}${files}${colors}</li>`;
   }).join("");

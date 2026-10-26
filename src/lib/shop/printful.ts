@@ -31,7 +31,7 @@ function lineSku(li: Stripe.LineItem) {
   return typeof product === "object" ? product?.metadata?.sku : undefined;
 }
 
-/** Split a session's line items: self-fulfilled (pins) vs Printful. Unknown skus stay on the Printful side so they still error loudly. */
+/** Split a session's line items: self-fulfilled (pins + woven patches) vs Printful. Unknown skus stay on the Printful side so they still error loudly. */
 export function selfFulfilledLines(session: Stripe.Checkout.Session) {
   return (session.line_items?.data ?? []).flatMap((li) => {
     const sku = lineSku(li);
