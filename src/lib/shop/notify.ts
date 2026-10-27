@@ -15,7 +15,7 @@ export type PinOrderMail = {
 
 type Ship = { name?: string | null; address?: Stripe.Address | null } | null | undefined;
 
-/** Build the owner notification for the self-fulfilled part of a paid session (pins + woven patches). Returns null if there are none. */
+/** Build the owner notification for the self-fulfilled part of a paid session (pins + woven patches + crest die-cut stickers). Returns null if there are none. */
 export function pinOrderFromSession(session: Stripe.Checkout.Session): PinOrderMail | null {
   const items = selfFulfilledLines(session);
   if (!items.length) return null;
@@ -44,7 +44,7 @@ export function pinOrderLetter(o: PinOrderMail) {
   const subject = `Self-fulfill order ${o.orderNumber} to mail: ${o.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}`;
   const lines = [
     "A paid order includes self-fulfilled items you mail yourself (not sent to Printful).",
-    "Enamel pins: pull from stock. Woven sew-on crest patches: order from Panda Patches, then mail.",
+    "Enamel pins: pull from stock. Woven sew-on crest patches: order from Panda Patches, then mail. Crest die-cut stickers: order from CustomStickers.com, then mail.",
     "",
     `Order number: ${o.orderNumber}`,
     `Stripe checkout session: ${o.sessionId}`,
@@ -58,7 +58,7 @@ export function pinOrderLetter(o: PinOrderMail) {
     "Items to mail:",
     ...o.items.map((i) => `  ${i.quantity} x ${i.name} (${i.label})`),
     "",
-    "Pre-order: pins about 3 weeks; woven crest patches about 2–3 weeks.",
+    "Pre-order: pins about 3 weeks; woven crest patches about 2–3 weeks; crest die-cut stickers about 1–2 weeks.",
   ];
   const text = lines.join("\n");
   const html = `<pre style="font-family:monospace">${esc(text)}</pre>`;

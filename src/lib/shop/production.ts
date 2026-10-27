@@ -47,7 +47,7 @@ export function productionPlan(p: Product, v?: Variant): ProductionPlan {
   const files = v ? variantFiles(p, v) : p.files;
   const flags: string[] = [];
   const vendor = p.selfFulfilled ? "self" : "printful";
-  if (vendor === "self") flags.push("Self-fulfilled: not sent to Printful. Mail enamel pins from stock, or order woven crest patches from Panda Patches, then ship to the customer.");
+  if (vendor === "self") flags.push("Self-fulfilled: not sent to Printful. Mail enamel pins from stock, order woven crest patches from Panda Patches, or order crest die-cut stickers from CustomStickers.com, then ship to the customer.");
   if (!files.length) flags.push("No production/print file on record for this item.");
   for (const f of files) if (!PLACEMENT[f.type]) flags.push(`Unknown placement type "${f.type}".`);
   const colors: ProductionPlan["colors"] = [];

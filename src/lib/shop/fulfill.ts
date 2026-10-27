@@ -71,7 +71,7 @@ export async function handleStripeEvent(event: Stripe.Event, deps: Deps): Promis
   }
   try {
     const session = await deps.retrieveSession(partial.id);
-    // 1) Self-fulfilled items (pins + woven patches): email the owner first. If this throws, nothing has been created yet, so a Stripe retry is safe.
+    // 1) Self-fulfilled items (pins + woven patches + crest die-cut stickers): email the owner first. If this throws, nothing has been created yet, so a Stripe retry is safe.
     const pins = pinOrderFromSession(session);
     if (pins) {
       const via = await (deps.sendPinMail ?? sendPinOrderMail)(pins);
