@@ -298,7 +298,7 @@ export const PRODUCTS: Product[] = [
     preorder: STICKER_PREORDER,
   },
   {
-    slug: "best-part-is-no-part-sticker",
+    slug: "best-part-is-no-part-crest-sticker",
     type: "stickers",
     name: "Best Part Is No Part Sticker",
     tagline: "Delete, then fly",
