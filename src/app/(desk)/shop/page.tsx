@@ -3,10 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { PRODUCTS, PRODUCT_TYPES, type ProductType } from "@/lib/shop/catalog";
 import { ProductCard } from "@/components/shop/product-card";
+import { DailyDrop } from "@/components/shop/daily-drop";
 
 export const metadata: Metadata = {
   title: "Shop",
-  description: "Unofficial All In On Musk fan merch, printed on demand.",
+  description: "Unofficial All In On Musk fan merch.",
   alternates: { canonical: "/shop" },
 };
 
@@ -28,9 +29,11 @@ export default async function ShopPage({ searchParams }: Props) {
 
   return (
     <>
-      <p className="kicker">Supply depot {"\u00b7"} printed on demand</p>
+      <p className="kicker">Supply depot {"\u00b7"} fan merch</p>
       <h1 className="page-title">Merch for the desk</h1>
       <p className="lede">{PRODUCTS.length} items. All tested. Results: excellent data was collected.</p>
+
+      {!active ? <DailyDrop /> : null}
 
       {featured.length && !active ? (
         <section className="shop-hero" aria-labelledby="shop-hero-h">
