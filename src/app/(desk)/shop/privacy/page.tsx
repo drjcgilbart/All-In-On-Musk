@@ -54,7 +54,7 @@ export default function PrivacyPage() {
       <section className="section shop-policy" aria-labelledby="p-contact">
         <h2 id="p-contact">Questions or deletion requests</h2>
         <p>
-          Email <a href="mailto:admin@allinonmusk.com">admin@allinonmusk.com</a>. We keep order records only as long as needed for
+          Email <a href="mailto:jonvale@allinonmusk.com">jonvale@allinonmusk.com</a>. We keep order records only as long as needed for
           fulfilment, returns, tax and accounting.
         </p>
         <p className="shop-tag">General policy text, not legal advice. Last updated October 2026.</p>

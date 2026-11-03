@@ -1,5 +1,5 @@
 import type Stripe from "stripe";
-import { ADMIN_EMAIL } from "@/lib/membership/mail";
+import { ADMIN_EMAIL, CONTACT_EMAIL } from "@/lib/membership/mail";
 import { findVariant, formatPrice } from "./catalog";
 import { externalIdFor } from "./printful";
 import { productionPlan } from "./production";
@@ -42,7 +42,7 @@ const shell = (title: string, body: string) => `<!doctype html><html><body style
 <tr><td style="padding:22px 28px;border-bottom:2px solid #2ee6d6"><div style="font-size:20px;font-weight:700;letter-spacing:3px;color:#f4fbff">ALL IN ON MUSK</div>
 <div style="font-family:Menlo,Consolas,monospace;font-size:12px;letter-spacing:2px;color:#2ee6d6;margin-top:4px">${esc(title)}</div></td></tr>
 <tr><td style="padding:24px 28px;font-size:15px;line-height:1.5">${body}</td></tr>
-<tr><td style="padding:16px 28px;border-top:1px solid #1d4f4b;font-size:12px;color:#a8b3bd">Unofficial fan merch. Not affiliated with, endorsed by, or sponsored by Elon Musk or any of his companies.<br>Questions? Reply to this email or write to <a href="mailto:${ADMIN_EMAIL}" style="color:#2ee6d6">${ADMIN_EMAIL}</a>.</td></tr>
+<tr><td style="padding:16px 28px;border-top:1px solid #1d4f4b;font-size:12px;color:#a8b3bd">Unofficial fan merch. Not affiliated with, endorsed by, or sponsored by Elon Musk or any of his companies.<br>Questions? Reply to this email or write to <a href="mailto:${CONTACT_EMAIL}" style="color:#2ee6d6">${CONTACT_EMAIL}</a>.</td></tr>
 </table></td></tr></table></body></html>`;
 const itemsTable = (o: OrderSummary) => `<table role="presentation" width="100%" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-size:14px;color:#f4fbff">
 <tr style="color:#a8b3bd;text-align:left"><th align="left">Item</th><th align="left">Size / option</th><th align="right">Qty</th><th align="right">Amount</th></tr>
@@ -59,7 +59,7 @@ export function customerEmail(o: OrderSummary) {
 <p>Items are printed or stitched on demand and usually ship in about 3-7 business days (pre-order pins about 3 weeks; woven crest patches about 2–3 weeks; crest die-cut stickers about 1–2 weeks). You'll get tracking when it ships.</p>
 <p><a href="${siteUrl()}/shop" style="color:#ff2bd6">Back to the shop</a></p>`;
   const text = [`Thanks! We got your All In On Musk order ${o.orderNumber}.`, "", ...o.lines.map((l) => `${l.quantity} x ${l.name} (${l.variant}) ${$(l.amountCents)}`),
-    `Shipping ${$(o.shippingCents)}`, ...(o.taxCents ? [`Tax ${$(o.taxCents)}`] : []), `Total ${$(o.totalCents)}`, "", "Shipping to:", ...o.address, "", `Questions: ${ADMIN_EMAIL}`].join("\n");
+    `Shipping ${$(o.shippingCents)}`, ...(o.taxCents ? [`Tax ${$(o.taxCents)}`] : []), `Total ${$(o.totalCents)}`, "", "Shipping to:", ...o.address, "", `Questions: ${CONTACT_EMAIL}`].join("\n");
   return { subject, html: shell("ORDER CONFIRMATION", body), text };
 }
 
@@ -156,4 +156,4 @@ export async function sendMail(to: string, m: Mail, replyTo?: string, fetchImpl:
   if (!res.ok) throw new Error(`Mail provider ${res.status}: ${(await res.text().catch(() => "")).slice(0, 180)}`);
   return "resend";
 }
-export { ADMIN_EMAIL };
+export { ADMIN_EMAIL, CONTACT_EMAIL };
