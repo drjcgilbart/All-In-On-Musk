@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { PRODUCTS, PRODUCT_TYPES, type ProductType } from "@/lib/shop/catalog";
 import { ProductCard } from "@/components/shop/product-card";
+import { ShopVisitPing } from "@/components/shop/visit-ping";
 
 export const metadata: Metadata = {
   title: "Shop",
@@ -28,6 +29,7 @@ export default async function ShopPage({ searchParams }: Props) {
 
   return (
     <>
+      <ShopVisitPing />
       <p className="kicker">Supply depot {"\u00b7"} printed on demand</p>
       <h1 className="page-title">Merch for the desk</h1>
       <p className="lede">{PRODUCTS.length} items. All tested. Results: excellent data was collected.</p>
