@@ -1,4 +1,5 @@
 export const ADMIN_EMAIL = "admin@allinonmusk.com";
+export const CONTACT_EMAIL = "jonvale@allinonmusk.com";
 const TO = ADMIN_EMAIL;
 
 export type MembershipMail = {
