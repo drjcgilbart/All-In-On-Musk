@@ -303,6 +303,32 @@ button.nav-btn {
   max-width: 42rem;
 }
 
+.home-shop-cta {
+  margin: 1rem 0 1.4rem;
+}
+
+.home-shop-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 1.35rem;
+  border: 1px solid #2ee6d6;
+  background: #2ee6d6;
+  color: #041018;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.home-shop-btn:hover,
+.home-shop-btn:focus-visible {
+  background: transparent;
+  color: #2ee6d6;
+}
+
 .tape {
   margin: 1.4rem 0 1.6rem;
   border-top: 1px solid #1a3a44;

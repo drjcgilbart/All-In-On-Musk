@@ -33,6 +33,11 @@ export default async function HomePage() {
       <p className="kicker">The stack</p>
       <h1 className="hero-title">Inside Elon's World of Companies</h1>
       <p className="lede">Pick a company. The official site is the second link.</p>
+      <p className="home-shop-cta">
+        <Link className="home-shop-btn" href="/shop">
+          Shop
+        </Link>
+      </p>
 
       <section className="section" id="stack" aria-labelledby="stack-title">
         <h2 id="stack-title" className="sr">
