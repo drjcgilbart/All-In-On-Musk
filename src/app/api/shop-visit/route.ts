@@ -4,7 +4,9 @@ import { TOTAL_KEY, dayKey, lastNyDates, nyDate } from "@/lib/shop/visits";
 
 /**
  * POST: count one /shop page load (INCR total + today's NY-date key). Stores nothing personal.
- * GET:  read counts (total + last 30 days). Requires `Authorization: Bearer ${CRON_SECRET}`.
+ * GET:  read counts (total + last 30 days). Requires
+ *       `Authorization: Bearer ${CRON_SECRET}` or `Authorization: Bearer ${SHOP_STATS_KEY}`
+ *       (SHOP_STATS_KEY is read-only for this endpoint; it does not authorize other routes).
  */
 export const dynamic = "force-dynamic";
 
@@ -26,13 +28,19 @@ export async function POST() {
   return new Response(null, { status: 204, headers: noStore });
 }
 
-function authorized(req: Request) {
-  const secret = process.env.CRON_SECRET?.trim();
+function bearerMatches(req: Request, secret: string | undefined): boolean {
   const given = req.headers.get("authorization");
-  if (!secret || !given) return false;
+  if (!secret?.trim() || !given) return false;
   const a = createHash("sha256").update(given).digest();
-  const b = createHash("sha256").update(`Bearer ${secret}`).digest();
+  const b = createHash("sha256").update(`Bearer ${secret.trim()}`).digest();
   return timingSafeEqual(a, b);
+}
+
+function authorized(req: Request) {
+  // Evaluate both so timing does not short-circuit on the first match.
+  const cronOk = bearerMatches(req, process.env.CRON_SECRET);
+  const statsOk = bearerMatches(req, process.env.SHOP_STATS_KEY);
+  return cronOk || statsOk;
 }
 
 export async function GET(req: Request) {
