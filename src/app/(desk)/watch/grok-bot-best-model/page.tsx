@@ -145,7 +145,7 @@ const otherCredits = [
   "Fonts: Barlow Condensed, Inter, Geist Mono, Oswald (SIL Open Font License).",
 ];
 
-const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
+const ext = {} as const;
 
 export default function GrokBotBestModelPage() {
   return (

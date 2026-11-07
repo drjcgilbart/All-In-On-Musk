@@ -1,4 +1,5 @@
 import { getNewsVideos } from "@/lib/channelRss";
+import { InlineVideo } from "@/components/inline-video";
 import { NewsVideoPlayer } from "@/components/news-video-player";
 import "@/app/(desk)/journal/journal.css";
 
@@ -11,22 +12,32 @@ export async function NewsVideos({ limit = 6, layout = "grid", heading = "Latest
       <h2 id="news-videos-title">{heading}</h2>
       <p className="note">
         New from the @allinonmusk channel.{" "}
-        <a href={moreHref ?? "https://www.youtube.com/@allinonmusk"} {...(moreHref ? {} : { target: "_blank", rel: "noopener noreferrer" })}>
+        <a href={moreHref ?? "https://www.youtube.com/@allinonmusk"}>
           {moreHref ? "More on News" : "All videos on YouTube"}
         </a>
       </p>
       {layout === "player" ? <NewsVideoPlayer videos={videos} /> : (
       <div className="nv-grid">
         {videos.map((v) => {
-          const external = v.href.startsWith("http");
-          return (
-            <a className="plain-card nv-card" href={v.href} key={v.id} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+          const youtubeId = /^[\w-]{11}$/.test(v.id) ? v.id : "";
+          const meta = (
+            <>
+              <p className="idx">{v.kind === "short" ? "Short" : "Video"} · {v.dateLabel}</p>
+              <h3>{v.title}</h3>
+            </>
+          );
+          return youtubeId ? (
+            <div className="plain-card nv-card" key={v.id}>
+              <InlineVideo youtubeId={youtubeId} title={v.title} thumbnailUrl={v.thumbnailUrl} isShort={v.kind === "short"} className="nv-thumb nv-poster" />
+              {meta}
+            </div>
+          ) : (
+            <a className="plain-card nv-card" href={v.href} key={v.id}>
               <span className="nv-thumb">
                 <img src={v.thumbnailUrl} alt="" loading="lazy" />
                 <span className="nv-play" aria-hidden="true">▶</span>
               </span>
-              <p className="idx">{v.kind === "short" ? "Short" : "Video"} · {v.dateLabel}</p>
-              <h3>{v.title}</h3>
+              {meta}
             </a>
           );
         })}

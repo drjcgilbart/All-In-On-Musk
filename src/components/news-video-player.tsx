@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import type { RssVideo } from "@/lib/channelRss";
+import { InlineVideo } from "@/components/inline-video";
 
-/** Same look as the old Journal Videos section: latest upload large; the poster is the one link to YouTube, the rest in a drop-down. */
+/** Same look as the old Journal Videos section: latest upload large; the poster plays in place, the rest in a drop-down. */
 function Section({ list, isShort }: { list: RssVideo[]; isShort: boolean }) {
   const [current, setCurrent] = useState(list[0]);
   const [open, setOpen] = useState(false);
@@ -17,17 +18,21 @@ function Section({ list, isShort }: { list: RssVideo[]; isShort: boolean }) {
         <span>{list.length} {list.length === 1 ? "upload" : "uploads"}</span>
       </div>
       <div className={isShort ? "journal-player is-short" : "journal-player"}>
-        <a
-          className="watch-frame nvp-poster"
-          href={current.href}
-          {...(current.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          aria-label={`Watch ${current.title} on YouTube`}
-        >
-          {youtubeId ? (
-            <img src={isShort ? `https://i.ytimg.com/vi/${youtubeId}/oar2.jpg` : current.thumbnailUrl} alt="" onError={(e) => { (e.target as HTMLImageElement).src = current.thumbnailUrl; }} />
-          ) : current.thumbnailUrl ? <img src={current.thumbnailUrl} alt="" /> : null}
-          <span className="jv-play" aria-hidden="true" />
-        </a>
+        {youtubeId ? (
+          <InlineVideo
+            key={current.id}
+            youtubeId={youtubeId}
+            title={current.title}
+            thumbnailUrl={current.thumbnailUrl}
+            posterUrl={isShort ? `https://i.ytimg.com/vi/${youtubeId}/oar2.jpg` : undefined}
+            isShort={isShort}
+          />
+        ) : (
+          <a className="watch-frame nvp-poster" href={current.href} aria-label={`Open ${current.title}`}>
+            {current.thumbnailUrl ? <img src={current.thumbnailUrl} alt="" /> : null}
+            <span className="jv-play" aria-hidden="true" />
+          </a>
+        )}
         <div className="journal-player-copy">
           <p className="jv-latest">{current.id === list[0].id ? `Latest ${label}` : `Now showing`}</p>
           <p className="idx"><span className="chip">{label}</span>{current.dateLabel}</p>
