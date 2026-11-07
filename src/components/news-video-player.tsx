@@ -3,11 +3,10 @@
 import { useState } from "react";
 import type { RssVideo } from "@/lib/channelRss";
 
-/** Same look as the old Journal Videos section: latest upload large and playable, the rest in a drop-down. */
+/** Same look as the old Journal Videos section: latest upload large; the poster is the one link to YouTube, the rest in a drop-down. */
 function Section({ list, isShort }: { list: RssVideo[]; isShort: boolean }) {
   const [current, setCurrent] = useState(list[0]);
   const [open, setOpen] = useState(false);
-  const [playing, setPlaying] = useState(false);
   const rest = list.filter((v) => v.id !== current.id);
   const youtubeId = /^[\w-]{11}$/.test(current.id) ? current.id : "";
   const label = isShort ? "Short" : "Video";
@@ -18,34 +17,21 @@ function Section({ list, isShort }: { list: RssVideo[]; isShort: boolean }) {
         <span>{list.length} {list.length === 1 ? "upload" : "uploads"}</span>
       </div>
       <div className={isShort ? "journal-player is-short" : "journal-player"}>
-        {youtubeId && playing ? (
-          <div className="watch-frame">
-            <iframe
-              key={youtubeId}
-              src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&playsinline=1&autoplay=1`}
-              title={current.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        ) : youtubeId ? (
-          <button type="button" className="watch-frame nvp-poster" onClick={() => setPlaying(true)} aria-label={`Play ${current.title}`}>
+        <a
+          className="watch-frame nvp-poster"
+          href={current.href}
+          {...(current.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          aria-label={`Watch ${current.title} on YouTube`}
+        >
+          {youtubeId ? (
             <img src={isShort ? `https://i.ytimg.com/vi/${youtubeId}/oar2.jpg` : current.thumbnailUrl} alt="" onError={(e) => { (e.target as HTMLImageElement).src = current.thumbnailUrl; }} />
-            <span className="jv-play" aria-hidden="true" />
-          </button>
-        ) : (
-          <a className="watch-frame nvp-poster" href={current.href}>
-            {current.thumbnailUrl ? <img src={current.thumbnailUrl} alt="" /> : null}
-            <span className="jv-play" aria-hidden="true" />
-          </a>
-        )}
+          ) : current.thumbnailUrl ? <img src={current.thumbnailUrl} alt="" /> : null}
+          <span className="jv-play" aria-hidden="true" />
+        </a>
         <div className="journal-player-copy">
-          <p className="jv-latest">{current.id === list[0].id ? `Latest ${label}` : `Now playing`}</p>
+          <p className="jv-latest">{current.id === list[0].id ? `Latest ${label}` : `Now showing`}</p>
           <p className="idx"><span className="chip">{label}</span>{current.dateLabel}</p>
           <h3>{current.title}</h3>
-          <p>
-            {current.href.startsWith("/") ? <a href={current.href}>Open the video page</a> : <a href={current.href} target="_blank" rel="noopener noreferrer">Watch on YouTube</a>}
-          </p>
         </div>
       </div>
       {rest.length > 0 ? (
@@ -58,7 +44,6 @@ function Section({ list, isShort }: { list: RssVideo[]; isShort: boolean }) {
                   type="button"
                   onClick={() => {
                     setCurrent(v);
-                    setPlaying(true);
                     setOpen(false);
                     document.getElementById(isShort ? "news-shorts" : "news-long")?.scrollIntoView({ behavior: "smooth", block: "start" });
                   }}
