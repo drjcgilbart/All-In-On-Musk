@@ -19,7 +19,7 @@ export async function NewsVideos({ limit = 6, layout = "grid", heading = "Latest
       {layout === "player" ? <NewsVideoPlayer videos={videos} /> : (
       <div className="nv-grid">
         {videos.map((v) => {
-          const youtubeId = /^[\w-]{11}$/.test(v.id) ? v.id : "";
+          const youtubeId = v.youtubeId;
           const meta = (
             <>
               <p className="idx">{v.kind === "short" ? "Short" : "Video"} · {v.dateLabel}</p>

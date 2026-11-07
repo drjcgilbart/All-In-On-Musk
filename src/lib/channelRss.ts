@@ -12,6 +12,9 @@ export type RssVideo = {
   dateLabel: string;
   thumbnailUrl: string;
   kind: "video" | "short";
+  /** YouTube video id ("" when there is none). Every video renders through <InlineVideo>, which embeds by id. */
+  youtubeId: string;
+  /** On-site page only (e.g. /watch/...); never a YouTube URL. "" when the video has no page of its own. */
   href: string;
 };
 
@@ -59,7 +62,8 @@ export async function getChannelRss(limit = 6): Promise<RssVideo[]> {
         dateLabel: dateLabel(publishedAt),
         thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
         kind,
-        href: WATCH_PAGES[id] ?? (kind === "short" ? `https://www.youtube.com/shorts/${id}` : `https://www.youtube.com/watch?v=${id}`),
+        youtubeId: id,
+        href: WATCH_PAGES[id] ?? "",
       });
     }
     return videos.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, limit);
@@ -78,6 +82,7 @@ export async function getNewsVideos(limit = 6): Promise<RssVideo[]> {
     dateLabel: dateLabel(clip.publishedAt),
     thumbnailUrl: clip.thumbnailUrl || (clip.youtubeId ? `https://i.ytimg.com/vi/${clip.youtubeId}/hqdefault.jpg` : ""),
     kind: "video" as const,
+    youtubeId: clip.youtubeId || "",
     href: `/watch/${clip.slug}`,
   }));
   const byId = new Map<string, RssVideo>();

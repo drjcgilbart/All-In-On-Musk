@@ -9,7 +9,7 @@ function Section({ list, isShort }: { list: RssVideo[]; isShort: boolean }) {
   const [current, setCurrent] = useState(list[0]);
   const [open, setOpen] = useState(false);
   const rest = list.filter((v) => v.id !== current.id);
-  const youtubeId = /^[\w-]{11}$/.test(current.id) ? current.id : "";
+  const youtubeId = current.youtubeId;
   const label = isShort ? "Short" : "Video";
   return (
     <div className="jv-block nvp-block" id={isShort ? "news-shorts" : "news-long"}>

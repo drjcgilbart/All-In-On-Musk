@@ -1,3 +1,4 @@
+import { InlineVideo } from "@/components/inline-video";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { storyDate } from "@/components/story-body";
@@ -33,14 +34,7 @@ export default async function ClipPage({ params }: Props) {
       <h1 className="page-title">{clip.title}</h1>
       <p className="note">{storyDate(clip.publishedAt)}{clip.tags.length ? ` · ${clip.tags.join(" · ")}` : ""}</p>
       {clip.youtubeId ? (
-        <div className="watch-frame">
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${clip.youtubeId}`}
-            title={clip.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
+        <InlineVideo youtubeId={clip.youtubeId} title={clip.title} thumbnailUrl={clip.thumbnailUrl || `https://i.ytimg.com/vi/${clip.youtubeId}/hqdefault.jpg`} />
       ) : null}
       {clip.description ? <p className="lede">{clip.description}</p> : null}
     </>
