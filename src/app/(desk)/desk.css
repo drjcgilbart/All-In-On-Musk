@@ -50,6 +50,13 @@
   align-items: center;
 }
 
+/* Musk Today makes the desktop bar wrap just above the 1100px rail breakpoint. */
+@media (min-width: 1100px) and (max-width: 1200px) {
+  .top-links {
+    column-gap: 0.45rem;
+  }
+}
+
 .top-links > a,
 .top-links > .mega {
   display: inline-flex;

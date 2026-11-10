@@ -20,6 +20,7 @@ export const nav = [
   { href: "/machines", label: "Machines" },
   { href: "/markets", label: "Markets" },
   { href: "/news", label: "News" },
+  { href: "/musk-today", label: "Musk Today" },
   { href: "/merger", label: "Merger" },
   { href: "/projects", label: "Projects" },
   { href: "/race/index.html", label: "Race" },
