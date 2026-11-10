@@ -1,3 +1,6 @@
 {
-  "crons": [{ "path": "/api/news-refresh", "schedule": "0 11 * * *" }]
+  "crons": [
+    { "path": "/api/news-refresh", "schedule": "0 11 * * *" },
+    { "path": "/api/musk-today/refresh", "schedule": "15 9 * * *" }
+  ]
 }
