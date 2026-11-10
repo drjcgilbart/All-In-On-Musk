@@ -26,50 +26,76 @@ export function LoginDesk() {
       .catch(() => setAdmin(false));
   }, []);
 
+  async function notifyAdminFromBrowser() {
+    const mailed = await fetch("https://formsubmit.co/ajax/admin@allinonmusk.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        phone,
+        area,
+        message: `Free membership request for All In On Musk.\nName: ${name}\nEmail: ${email}\nPhone: ${phone || "(none)"}\nCity / area: ${area || "(none)"}\nA password was set with this request and is not included in this email.`,
+        _subject: `Free membership request from ${name}`,
+        _replyto: email,
+        _template: "table",
+        _captcha: "false",
+      }),
+    });
+    const payload = await mailed.json().catch(() => ({}));
+    const mailData = payload && typeof payload === "object" ? (payload as { success?: boolean | string; message?: string }) : {};
+    return {
+      sent: mailed.ok && (mailData.success === true || mailData.success === "true"),
+      activation: /activat/i.test(String(mailData.message || "")),
+      message: String(mailData.message || ""),
+    };
+  }
+
   async function requestMembership(event: React.FormEvent) {
     event.preventDefault();
     setBusy("join");
     setJoinMsg(null);
     try {
-      const response = await fetch("/api/membership", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, phone, area, company }),
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || "Request failed");
+      let response: Response;
+      try {
+        response = await fetch("/api/membership", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password, phone, area, company }),
+        });
+      } catch {
+        const fallback = await notifyAdminFromBrowser();
+        if (!fallback.sent) throw new Error("The request could not be sent. Try again in a minute.");
+        setJoinMsg({ kind: "ok", text: "Request sent. The admin will review your free membership." });
+        setPassword("");
+        return;
+      }
+      const payload = await response.json().catch(() => ({}));
+      const data = payload && typeof payload === "object" ? (payload as { error?: string; message?: string; mailed?: boolean; stored?: boolean; mailDetail?: string }) : {};
+      if (response.status === 400 || response.status === 429) {
+        throw new Error(data.error || "Request failed");
+      }
       let message = data.message || "Request sent. The admin will review your free membership.";
       const waitingOnActivation = /activat/i.test(String(data.mailDetail || ""));
-      if (!data.mailed && !waitingOnActivation) {
-        const mailed = await fetch("https://formsubmit.co/ajax/admin@allinonmusk.com", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            name,
-            email,
-            phone,
-            area,
-            message: `Free membership request for All In On Musk.\nName: ${name}\nEmail: ${email}\nPhone: ${phone || "(none)"}\nCity / area: ${area || "(none)"}\nA password was set with this request and is not included in this email.`,
-            _subject: `Free membership request from ${name}`,
-            _replyto: email,
-            _template: "table",
-            _captcha: "false",
-          }),
-        });
-        const mailData = await mailed.json().catch(() => ({}));
-        const sent = mailed.ok && (mailData.success === true || mailData.success === "true");
-        if (sent) {
-          await fetch("/api/membership", {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, detail: String(mailData.message || "Sent from the membership form.") }),
-          }).catch(() => undefined);
+      const serverStored = response.ok && data.stored !== false;
+      if (data.mailed === false && !waitingOnActivation) {
+        const fallback = await notifyAdminFromBrowser();
+        if (fallback.sent) {
+          if (serverStored) {
+            await fetch("/api/membership", {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, detail: fallback.message || "Sent from the membership form." }),
+            }).catch(() => undefined);
+          }
           message = "Request sent. The admin will review your free membership.";
-        } else if (/activat/i.test(String(mailData.message || ""))) {
+        } else if (!serverStored) {
+          throw new Error(data.error || fallback.message || "The request could not be sent. Try again in a minute.");
+        } else if (fallback.activation) {
           message = "Request saved. The admin will review your free membership.";
-        } else {
-          message = mailData.message || message;
         }
+      } else if (!response.ok) {
+        throw new Error(data.error || "Request failed");
       }
       setJoinMsg({ kind: message.startsWith("Request") ? "ok" : "err", text: message });
       setPassword("");
@@ -112,7 +138,7 @@ export function LoginDesk() {
         <section className="join-card">
           <h2>Free membership</h2>
           <p className="note">The request goes to the admin. A membership request does not open the admin desk.</p>
-          {joinMsg ? <p className={`join-msg ${joinMsg.kind}`}>{joinMsg.text}</p> : null}
+          {joinMsg ? <p className={`join-msg ${joinMsg.kind}`} role="status">{joinMsg.text}</p> : null}
           <form onSubmit={requestMembership}>
             <label>
               Full name
@@ -156,7 +182,7 @@ export function LoginDesk() {
           ) : (
             <p className="note">Sign in with your email address and password. This sign-in is only for the person who runs the desk.</p>
           )}
-          {deskMsg ? <p className={`join-msg ${deskMsg.kind}`}>{deskMsg.text}</p> : null}
+          {deskMsg ? <p className={`join-msg ${deskMsg.kind}`} role="status">{deskMsg.text}</p> : null}
           <form onSubmit={signIn}>
             <label>
               Email
