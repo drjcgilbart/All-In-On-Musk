@@ -23,6 +23,7 @@ const paths = [
   "/energy",
   "/glossary",
   "/x",
+  "/musk-today",
   "/race/index.html",
   "/shop",
   "/shop/returns",
@@ -34,7 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...paths.map((path) => ({
       url: `${site.url}${path}`,
       lastModified: site.updatedIso,
-      changeFrequency: path === "/markets" || path === "/news" ? ("daily" as const) : ("weekly" as const),
+      changeFrequency: path === "/markets" || path === "/news" || path === "/musk-today" ? ("daily" as const) : ("weekly" as const),
       priority: path === "" ? 1 : 0.6,
     })),
     ...machines.map((machine) => ({

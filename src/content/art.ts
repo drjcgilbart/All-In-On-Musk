@@ -117,7 +117,7 @@ export function pageFrames(pathname: string): Frame[] {
   if (pathname.startsWith("/merger")) return [frames.heavy, frames.racks];
   if (pathname.startsWith("/about")) return [frames.campus];
   if (pathname.startsWith("/pictures")) return [frames.modely, frames.robotaxi, frames.borer];
-  if (pathname.startsWith("/journal") || pathname.startsWith("/glossary") || pathname.startsWith("/x")) return [frames.console];
+  if (pathname.startsWith("/journal") || pathname.startsWith("/glossary") || pathname.startsWith("/x") || pathname.startsWith("/musk-today")) return [frames.console];
   if (pathname.startsWith("/login") || pathname.startsWith("/admin") || pathname.startsWith("/studio")) return [frames.console];
   return [frames.campus];
 }
