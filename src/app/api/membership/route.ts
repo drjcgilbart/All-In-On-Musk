@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { sendMembershipMail } from "@/lib/membership/mail";
+import { membershipAck, sendMembershipMail } from "@/lib/membership/mail";
 import { hashMembershipPassword, markLatestMembershipMailed, saveMembershipRequest, type MembershipRequest } from "@/lib/membership/store";
 import { randomBytes } from "crypto";
 
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   }
   const body = await request.json().catch(() => ({}));
   if (clean((body as { company?: string }).company, 80)) {
-    return NextResponse.json({ ok: true, message: "Request sent. The admin will review it." });
+    return NextResponse.json({ ok: true, mailed: true, message: "Request sent. The admin will review it." });
   }
   const name = clean((body as { name?: string }).name, 80);
   const email = clean((body as { email?: string }).email, 120).toLowerCase();
@@ -75,18 +75,6 @@ export async function POST(request: Request) {
   } catch {
     stored = false;
   }
-  if (!mail.ok && !stored) {
-    return NextResponse.json({ error: "The request could not be sent. Try again in a minute." }, { status: 503 });
-  }
-  const needsActivation = /activat/i.test(mail.detail);
-  return NextResponse.json({
-    ok: true,
-    mailed: mail.ok,
-    mailDetail: mail.detail,
-    message: mail.ok
-      ? "Request sent. The admin will review your free membership."
-      : needsActivation
-        ? "Request saved. The admin will review your free membership."
-        : "Your request is saved on this desk. The email to the admin did not send, so try again later if you do not hear back.",
-  });
+  const ack = membershipAck({ mailOk: mail.ok, stored, mailDetail: mail.detail });
+  return NextResponse.json(ack.body, { status: ack.status });
 }
