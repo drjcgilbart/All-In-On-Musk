@@ -1,3 +1,4 @@
+import { InlineVideo } from "@/components/inline-video";
 import type { Metadata } from "next";
 import { slopcoreVideos } from "@/content/slopcore-videos";
 import { FleetModelAnalytics } from "../projects/florida-fleet-model/ga";
@@ -71,21 +72,14 @@ export default function SlopcorePage() {
                     {v.captions ? <track kind="captions" src={v.captions} srcLang="en" label="English" default /> : null}
                   </video>
                 ) : v.youtubeId ? (
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.youtubeId)}?rel=0`}
-                    title={v.title}
-                    loading="lazy"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
+                  <InlineVideo youtubeId={v.youtubeId} title={v.title} thumbnailUrl={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`} className="slop-poster" />
                 ) : null}
               </div>
               <div className="slop-meta">
                 <span className="slop-ep">Ep {String(videos.length - i).padStart(2, "0")}</span>
                 <time className="slop-date" dateTime={v.date}>{longDate(v.date)}</time>
                 {v.links?.map((l) => (
-                  <a key={l.href} className="slop-link" href={l.href} target="_blank" rel="noopener">
+                  <a key={l.href} className="slop-link" href={l.href}>
                     {l.label} ↗
                   </a>
                 ))}

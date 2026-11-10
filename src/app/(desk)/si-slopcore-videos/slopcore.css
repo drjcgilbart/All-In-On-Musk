@@ -126,3 +126,6 @@
 .slop-link { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--nova-hot); border: 1px solid var(--slop-line); padding: 0.2rem 0.5rem; text-decoration: none; }
 .slop-link:hover, .slop-link:focus-visible { color: #fff4f2; border-color: var(--nova); box-shadow: 0 0 12px rgba(255, 42, 61, 0.45); }
 .slop-credits { list-style: none; margin: 0.9rem 0.25rem 0; padding: 0.7rem 0 0; border-top: 1px dashed var(--slop-line); display: grid; gap: 0.25rem; color: #c7a9a9; font-size: 0.85rem; line-height: 1.45; }
+.slop-poster { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: #000; cursor: pointer; }
+.slop-poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.slop-poster .jv-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }

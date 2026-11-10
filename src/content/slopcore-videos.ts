@@ -30,10 +30,6 @@ export const slopcoreVideos: SlopcoreVideo[] = [
     date: "2026-10-21",
     blurb:
       "What if an AI pop star wrote a peak-time techno anthem about Starship? Nova Red sings the real story: Flight 14's first orbit, 26 Starlink V3 satellites, ~18,000 heat-shield tiles, three booster catches by the Chopsticks, and the planned Flight 15 attempt to catch BOTH stages.",
-    links: [
-      { label: "Watch on YouTube", href: "https://youtu.be/GwetAoVQPNI" },
-      { label: "Watch the Short", href: "https://www.youtube.com/shorts/7otYop5w_sA" },
-    ],
     credits: [
       "Song made with Suno",
       "Visuals AI-generated (original). No real SpaceX footage or photos are used.",

@@ -145,7 +145,7 @@ const otherCredits = [
   "Fonts: Barlow Condensed, Inter, Geist Mono, Oswald (SIL Open Font License).",
 ];
 
-const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
+const ext = {} as const;
 
 export default function GrokBotBestModelPage() {
   return (
@@ -168,9 +168,6 @@ export default function GrokBotBestModelPage() {
       <WatchPlayer videoId={videoId} title={pageTitle} />
 
       <p className="piece-links">
-        <a href={videoUrl} {...ext}>
-          Watch on YouTube
-        </a>
         <a href={`${channelUrl}?sub_confirmation=1`} {...ext}>
           Subscribe
         </a>
@@ -182,9 +179,7 @@ export default function GrokBotBestModelPage() {
         <ol className="mark-list">
           {chapters.map((item) => (
             <li key={item.t}>
-              <a href={`${videoUrl}&t=${item.t}s`} {...ext}>
-                <span className="idx">{item.label}</span> {item.title}
-              </a>
+              <span className="idx">{item.label}</span> {item.title}
             </li>
           ))}
         </ol>
@@ -246,9 +241,6 @@ export default function GrokBotBestModelPage() {
           Opinion and commentary only, not financial advice. Not affiliated with SpaceX, Tesla, Anthropic, Midjourney or Suno.
         </p>
         <p className="piece-links">
-          <a href={videoUrl} {...ext}>
-            Watch on YouTube
-          </a>
           <a href={`${channelUrl}?sub_confirmation=1`} {...ext}>
             Subscribe
           </a>
