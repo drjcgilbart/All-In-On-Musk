@@ -45,6 +45,7 @@ next-env.d.ts
 
 # studio catalog and local picture uploads
 /data/studio.json
+/data/musk-today.json
 /data/studio-password.json
 /data/membership-requests.json
 /public/studio-uploads/

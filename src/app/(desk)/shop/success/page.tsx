@@ -33,7 +33,7 @@ export default async function SuccessPage({ searchParams }: Props) {
         <h1 className="page-title">We could not confirm this order yet</h1>
         <p className="lede">
           We could not verify a paid order for this link, so your cart was left as it is. If you just paid, your receipt email is the
-          confirmation. Questions: <a href="mailto:admin@allinonmusk.com">admin@allinonmusk.com</a>.
+          confirmation. Questions: <a href="mailto:jonvale@allinonmusk.com">jonvale@allinonmusk.com</a>.
         </p>
         <Link className="shop-btn" href="/shop/cart">Back to the cart</Link>
       </>
@@ -65,7 +65,7 @@ export default async function SuccessPage({ searchParams }: Props) {
         {o.taxCents ? <div className="shop-row"><span>Tax</span><span className="shop-mono">{formatPrice(o.taxCents)}</span></div> : null}
         <div className="shop-row shop-total"><strong>Total paid</strong><span className="shop-price shop-price-lg">{formatPrice(o.totalCents)}</span></div>
       </div>
-      <p className="shop-tag">Keep the order number for any questions: <a href="mailto:admin@allinonmusk.com">admin@allinonmusk.com</a>.</p>
+      <p className="shop-tag">Keep the order number for any questions: <a href="mailto:jonvale@allinonmusk.com">jonvale@allinonmusk.com</a>.</p>
       <Link className="shop-btn" href="/shop">Back to the shop</Link>
     </>
   );

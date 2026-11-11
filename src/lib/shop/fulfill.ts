@@ -5,7 +5,7 @@ import { pinOrderFromSession, sendPinOrderMail } from "./notify";
 import { autoConfirm } from "./config";
 import { logError, logInfo } from "./log";
 import { markCartCompleted, validCartId } from "./carts";
-import { ADMIN_EMAIL, adminEmail, customerEmail, orderSummary, sendMail, type Mail, type PrintfulResult } from "./order-mail";
+import { ADMIN_EMAIL, CONTACT_EMAIL, adminEmail, customerEmail, orderSummary, sendMail, type Mail, type PrintfulResult } from "./order-mail";
 
 type Deps = {
   store: DedupeStore;
@@ -34,7 +34,7 @@ async function sendOrderEmails(session: Stripe.Checkout.Session, printful: Print
   const jobs: [string, string | undefined, () => Mail, string | undefined][] = [
     [`mail:admin:${kind}:${session.id}`, ADMIN_EMAIL, () => adminEmail(o, printful), o.email],
   ];
-  if (kind === "ok" && o.email) jobs.push([`mail:customer:${session.id}`, o.email, () => customerEmail(o), ADMIN_EMAIL]);
+  if (kind === "ok" && o.email) jobs.push([`mail:customer:${session.id}`, o.email, () => customerEmail(o), CONTACT_EMAIL]);
   const failed: string[] = [];
   for (const [key, to, build, replyTo] of jobs) {
     if (!to) continue;

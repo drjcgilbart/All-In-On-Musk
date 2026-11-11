@@ -18,7 +18,7 @@ export default function ReturnsPage() {
         <h2 id="r-defects">Misprints, damage and defects</h2>
         <p>
           If your order arrives misprinted, damaged or defective, email{" "}
-          <a href="mailto:admin@allinonmusk.com">admin@allinonmusk.com</a> within <strong>30 days of delivery</strong> with your order
+          <a href="mailto:jonvale@allinonmusk.com">jonvale@allinonmusk.com</a> within <strong>30 days of delivery</strong> with your order
           email, a short description and a clear photo of the problem. We will send a free reprint or a full refund, your choice.
           You do not need to send the item back.
         </p>
@@ -49,7 +49,7 @@ export default function ReturnsPage() {
       <section className="section shop-policy" aria-labelledby="r-contact">
         <h2 id="r-contact">Contact</h2>
         <p>
-          <a href="mailto:admin@allinonmusk.com">admin@allinonmusk.com</a>. Refunds go back to the original payment method and
+          <a href="mailto:jonvale@allinonmusk.com">jonvale@allinonmusk.com</a>. Refunds go back to the original payment method and
           usually appear within 5 to 10 business days.
         </p>
         <p className="shop-tag">General policy text, not legal advice. Last updated October 2026.</p>

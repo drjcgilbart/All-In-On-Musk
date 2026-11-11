@@ -15,7 +15,15 @@ export const metadata: Metadata = {
 export default async function AdminPage() {
   const jar = await cookies();
   const authed = await studioTokenMatches(jar.get(STUDIO_COOKIE)?.value);
-  const requests = authed ? await listMembershipRequests() : [];
+  let requests: Awaited<ReturnType<typeof listMembershipRequests>> = [];
+  let requestsUnavailable = false;
+  if (authed) {
+    try {
+      requests = await listMembershipRequests();
+    } catch {
+      requestsUnavailable = true;
+    }
+  }
   return (
     <>
       <StudioClient authed={authed} mode="admin" />
@@ -23,9 +31,11 @@ export default async function AdminPage() {
         <section className="section" aria-labelledby="requests-title">
           <h2 id="requests-title">Membership requests</h2>
           <p className="note">
-            New requests are emailed to admin@allinonmusk.com. Requests saved on this computer are listed here. The password is kept with the request and is not shown.
+            New requests are emailed to admin@allinonmusk.com. Saved requests are listed here. The password is kept with the request and is not shown.
           </p>
-          {requests.length ? (
+          {requestsUnavailable ? (
+            <p className="note">Saved requests could not be loaded. Try again in a minute.</p>
+          ) : requests.length ? (
             <div className="request-list">
               {requests.map((item) => (
                 <article className="request-row" key={item.id}>

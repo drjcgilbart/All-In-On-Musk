@@ -50,6 +50,13 @@
   align-items: center;
 }
 
+/* Musk Today makes the desktop bar wrap just above the 1100px rail breakpoint. */
+@media (min-width: 1100px) and (max-width: 1200px) {
+  .top-links {
+    column-gap: 0.45rem;
+  }
+}
+
 .top-links > a,
 .top-links > .mega {
   display: inline-flex;
@@ -301,6 +308,32 @@ button.nav-btn {
 .deck-line {
   color: var(--desk-muted);
   max-width: 42rem;
+}
+
+.home-shop-cta {
+  margin: 1rem 0 1.4rem;
+}
+
+.home-shop-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 1.35rem;
+  border: 1px solid #2ee6d6;
+  background: #2ee6d6;
+  color: #041018;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.home-shop-btn:hover,
+.home-shop-btn:focus-visible {
+  background: transparent;
+  color: #2ee6d6;
 }
 
 .tape {
@@ -606,6 +639,65 @@ a.plain-card {
 .mark-list a:hover,
 .timeline a:hover {
   color: #2ee6d6;
+}
+
+.page-title.musk-today-title {
+  line-height: 1.05;
+  max-width: 11em;
+  text-wrap: balance;
+}
+
+.musk-today-status {
+  margin: 0.35rem 0 0;
+  max-width: 42rem;
+}
+
+.musk-today-list {
+  list-style: decimal;
+  margin: 1.1rem 0 0;
+  padding: 0 0 0 1.5rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.musk-today-list li {
+  border-top: 1px solid #1a3a44;
+  padding-top: 0.75rem;
+  min-width: 0;
+}
+
+.musk-today-list li::marker {
+  color: #2ee6d6;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.musk-today-list a {
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.musk-today-list a:hover,
+.musk-today-list a:focus-visible {
+  color: #2ee6d6;
+}
+
+.musk-today-list .mono {
+  margin: 0.35rem 0 0;
+  color: var(--desk-muted);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 760px) {
+  .page-title.musk-today-title {
+    font-size: clamp(1.85rem, 8.5vw, 2.4rem);
+    line-height: 1.05;
+    max-width: none;
+  }
+
+  .musk-today-list {
+    padding-left: 1.35rem;
+  }
 }
 
 .ship-still {
