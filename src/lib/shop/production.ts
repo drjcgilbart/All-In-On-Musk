@@ -66,3 +66,29 @@ export function productionPlan(p: Product, v?: Variant): ProductionPlan {
 }
 
 export const PRODUCTION_MAP = () => PRODUCTS.map((p) => productionPlan(p));
+
+/** Production brief for a daily-drop line. The print files are the checkout snapshot, not the catalog. */
+export function dropProductionPlan(input: {
+  sku: string;
+  name: string;
+  printfulProductId: string;
+  printfulVariantId: string;
+  color: string;
+  files: { type: string; url: string }[];
+  sample: boolean;
+}): ProductionPlan {
+  const flags: string[] = [];
+  if (input.sample) flags.push("Sample drop. This item is not for sale on the live shop.");
+  if (!input.files.length) flags.push("No production/print file on record for this item.");
+  for (const f of input.files) if (!PLACEMENT[f.type]) flags.push(`Unknown placement type "${f.type}".`);
+  return {
+    slug: input.sku,
+    name: input.name,
+    vendor: "printful",
+    vendorProduct: `Daily drop, Printful catalog product ${input.printfulProductId}, variant ${input.printfulVariantId}`,
+    color: input.color || "n/a",
+    files: input.files.map((f) => ({ type: f.type, placement: PLACEMENT[f.type] ?? f.type, url: f.url })),
+    colors: [],
+    flags,
+  };
+}

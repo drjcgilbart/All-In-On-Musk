@@ -2,21 +2,52 @@
   "drops": [
     {
       "number": 0,
-      "title": "Placeholder Drop",
-      "placeholder": true,
-      "starts_at": "2026-11-02T00:00:00-05:00",
-      "ends_at": "2026-11-04T06:00:00-05:00",
-      "description": "Preview only. This is sample content to show how a Daily Drop looks on the shop. Nothing here is for sale.",
+      "title": "Sample Drop",
+      "sample": true,
+      "starts_at": "2026-11-11T09:00:00-05:00",
+      "ends_at": "2026-12-31T09:00:00-05:00",
+      "description": "Sample for this preview: a tee, a mug, and a sticker. Not for sale on the live shop. The window is extended so the preview stays up. A real daily drop ends 24 hours after it starts.",
       "items": [
-        { "type": "tee", "name": "Placeholder Tee", "price": 2800, "printful_product_id": 0,
-          "variants": [{ "id": 0, "size": "M", "color": "Black" }, { "id": 0, "size": "L", "color": "Black" }],
-          "print_files": [], "mockups": ["/drops/000/tee.svg"] },
-        { "type": "mug", "name": "Placeholder Mug", "price": 1800, "printful_product_id": 0,
-          "variants": [{ "id": 0, "size": "11oz", "color": "White" }],
-          "print_files": [], "mockups": ["/drops/000/mug.svg"] },
-        { "type": "sticker", "name": "Placeholder Sticker", "price": 500, "printful_product_id": 0,
-          "variants": [{ "id": 0, "size": "3x3", "color": "White" }],
-          "print_files": [], "mockups": ["/drops/000/sticker.svg"] }
+        {
+          "type": "tee",
+          "name": "Sample Drop Tee",
+          "tagline": "Preview only",
+          "description": "Sample artwork on a black Bella+Canvas tee, shown so this preview has a live Daily Drop. Not for sale on the live shop.",
+          "price": 2800,
+          "printful_product_id": 71,
+          "variants": [
+            { "id": 4016, "size": "S", "color": "Black" },
+            { "id": 4017, "size": "M", "color": "Black" },
+            { "id": 4018, "size": "L", "color": "Black" },
+            { "id": 4019, "size": "XL", "color": "Black" },
+            { "id": 4020, "size": "2XL", "color": "Black", "price": 3000 },
+            { "id": 5295, "size": "3XL", "color": "Black", "price": 3200 }
+          ],
+          "print_files": [{ "type": "default", "path": "/drops/000/tee-print.svg" }],
+          "mockups": ["/drops/000/tee.svg"]
+        },
+        {
+          "type": "mug",
+          "name": "Sample Drop Mug",
+          "tagline": "Preview only",
+          "description": "Sample artwork on an 11 oz white mug. Not for sale on the live shop.",
+          "price": 1800,
+          "printful_product_id": 19,
+          "variants": [{ "id": 1320, "size": "11 oz", "color": "White" }],
+          "print_files": [{ "type": "default", "path": "/drops/000/mug-print.svg" }],
+          "mockups": ["/drops/000/mug.svg"]
+        },
+        {
+          "type": "sticker",
+          "name": "Sample Drop Sticker",
+          "tagline": "Preview only",
+          "description": "Sample artwork on a 3×3 in kiss-cut sticker. Not for sale on the live shop.",
+          "price": 1000,
+          "printful_product_id": 358,
+          "variants": [{ "id": 10163, "size": "3x3 in", "color": "White" }],
+          "print_files": [{ "type": "default", "path": "/drops/000/sticker-print.svg" }],
+          "mockups": ["/drops/000/sticker.svg"]
+        }
       ]
     }
   ]

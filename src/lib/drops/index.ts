@@ -1,87 +1,131 @@
-// Daily Drops: data-driven. Source of truth is src/data/drops.json; an optional Redis/KV
-// value at key "shop:drops" (same JSON shape, or a bare array) overrides it at runtime.
-// Retired drops (now >= ends_at) are never returned.
+// Daily Drops. The committed file is the fallback. A Redis value at "shop:drops"
+// (the same JSON object, or a bare array) replaces it entirely at request time.
+// An invalid override is ignored and logged. An empty drops array is valid and
+// means "no drops", which does not fall back to the file.
+import { cache } from "react";
 import fileData from "@/data/drops.json";
 import { redisFromEnv } from "@/lib/shop/idempotency";
+import { logError } from "@/lib/shop/log";
+import {
+  DROPS_KV_KEY,
+  DROP_FILES_PREFIX,
+  decodeFilesValue,
+  describeDropSku,
+  dropPhase,
+  filesMetadataValue,
+  isActive,
+  validateDrops,
+  type Drop,
+  type DropQuote,
+  type ShopClock,
+} from "./schema";
 
-export const DROPS_KV_KEY = "shop:drops";
+export {
+  DROPS_KV_KEY,
+  dropItemPath,
+  dropLabel,
+  dropSku,
+  isDropSku,
+  resolveDropPurchase,
+  describeDropSku,
+  dropPhase,
+  variantLabel,
+} from "./schema";
+export type { Drop, DropItem, DropPhase, DropPurchase, ShopClock } from "./schema";
 
-export type DropVariant = { id: number; size: string; color: string };
-export type DropItem = {
-  type: "tee" | "mug" | "sticker";
-  name: string;
-  price: number; // cents
-  printful_product_id: number;
-  variants: DropVariant[];
-  print_files: { type: string; path: string }[] | string[];
-  mockups: string[];
-};
-export type Drop = {
-  number: number;
-  title: string;
-  starts_at: string; // ISO with ET offset, e.g. 2026-11-02T09:00:00-05:00
-  ends_at: string;
-  description: string;
-  placeholder?: boolean; // placeholder drops are never purchasable
-  items: DropItem[];
-};
-
-function normalize(raw: unknown): Drop[] {
-  const list = Array.isArray(raw) ? raw : (raw as { drops?: unknown })?.drops;
-  if (!Array.isArray(list)) return [];
-  return list.filter(
-    (d): d is Drop =>
-      !!d && typeof d.number === "number" && typeof d.title === "string" &&
-      !Number.isNaN(Date.parse(d.starts_at)) && !Number.isNaN(Date.parse(d.ends_at)) && Array.isArray(d.items),
-  );
+export function shopClock(now = Date.now()): ShopClock {
+  const production = process.env.VERCEL_ENV === "production";
+  const key = process.env.STRIPE_SECRET_KEY ?? "";
+  // A live Stripe key must not be able to sell the committed sample, on production or on a preview that shares it.
+  const allowSamplePurchase = !production && !key.startsWith("sk_live");
+  return { now, production, allowSamplePurchase };
 }
 
-export async function loadDrops(): Promise<Drop[]> {
+function fileDrops(): Drop[] {
+  const parsed = validateDrops(fileData);
+  if (!parsed.ok) {
+    logError("drops", new Error(parsed.error), { source: "file" });
+    return [];
+  }
+  return parsed.drops;
+}
+
+export const loadDrops = cache(async (): Promise<Drop[]> => {
+  const fallback = fileDrops();
   try {
     const redis = redisFromEnv();
-    if (redis) {
-      const v = await redis.get(DROPS_KV_KEY);
-      if (v) {
-        const parsed = normalize(typeof v === "string" ? JSON.parse(v) : v);
-        if (parsed.length) return parsed;
-      }
+    if (!redis) return fallback;
+    const value = await redis.get(DROPS_KV_KEY);
+    if (value == null || value === "") return fallback;
+    const raw = typeof value === "string" ? JSON.parse(value) : value;
+    const parsed = validateDrops(raw);
+    if (!parsed.ok) {
+      logError("drops", new Error(parsed.error), { source: "redis" });
+      return fallback;
     }
-  } catch {
-    /* fall back to file */
+    return parsed.drops;
+  } catch (err) {
+    logError("drops", err, { source: "redis" });
+    return fallback;
   }
-  return normalize(fileData);
-}
+});
 
-export function isActive(d: Drop, now = Date.now()) {
-  return Date.parse(d.starts_at) <= now && now < Date.parse(d.ends_at);
+function visible(drop: Drop, clock: ShopClock) {
+  return dropPhase(drop, clock) !== "hidden";
 }
 
 export async function getActiveDrop(now = Date.now()): Promise<Drop | null> {
-  const active = (await loadDrops()).filter((d) => isActive(d, now));
+  const clock = shopClock(now);
+  const active = (await loadDrops()).filter((d) => visible(d, clock) && isActive(d, clock.now));
   active.sort((a, b) => Date.parse(b.starts_at) - Date.parse(a.starts_at));
   return active[0] ?? null;
 }
 
-export const dropLabel = (n: number) => `#${String(n).padStart(3, "0")}`;
+/** Most recently ended drop that this deploy is allowed to show. */
+export async function getEndedDrop(now = Date.now()): Promise<Drop | null> {
+  const clock = shopClock(now);
+  const ended = (await loadDrops()).filter((d) => visible(d, clock) && Date.parse(d.ends_at) <= clock.now);
+  ended.sort((a, b) => Date.parse(b.ends_at) - Date.parse(a.ends_at));
+  return ended[0] ?? null;
+}
 
-// Drop item SKUs: "drop-<number>-<itemIndex>-<variantIndex>"
-export const dropSku = (n: number, i: number, v: number) => `drop-${n}-${i}-${v}`;
-export const isDropSku = (sku: unknown): sku is string => typeof sku === "string" && sku.startsWith("drop-");
+export async function getDropItemPage(numberRaw: string, itemRaw: string, now = Date.now()) {
+  if (!/^\d{1,4}$/.test(numberRaw) || !/^\d{1,2}$/.test(itemRaw)) return null;
+  const number = Number(numberRaw);
+  const itemIndex = Number(itemRaw);
+  const clock = shopClock(now);
+  const drop = (await loadDrops()).find((d) => d.number === number);
+  const item = drop?.items[itemIndex];
+  if (!drop || !item || !visible(drop, clock)) return null;
+  return { drop, item, itemIndex, phase: dropPhase(drop, clock), clock };
+}
 
-/** Server-side check for drop SKUs in a cart. Returns an error message, or null if OK. */
-export async function checkDropSkus(items: unknown, now = Date.now()): Promise<string | null> {
-  if (!Array.isArray(items)) return null;
-  const skus = items.map((r) => (r as { sku?: unknown })?.sku).filter(isDropSku);
-  if (!skus.length) return null;
+export async function quoteDropSkus(skus: string[], now = Date.now()): Promise<DropQuote[]> {
+  const clock = shopClock(now);
   const drops = await loadDrops();
-  for (const sku of skus) {
-    const m = /^drop-(\d+)-(\d+)-(\d+)$/.exec(sku);
-    const d = m && drops.find((x) => x.number === Number(m[1]));
-    const item = d && d.items[Number(m![2])];
-    if (!d || !item || !item.variants[Number(m![3])]) return "That drop item isn't available.";
-    if (!isActive(d, now)) return "That drop has ended.";
-    if (d.placeholder) return "That drop item isn't available.";
+  return skus.filter((s) => typeof s === "string").slice(0, 20).map((sku) => describeDropSku(drops, sku, clock));
+}
+
+/** Inline print-file URLs on the Stripe product when they fit; otherwise spill to Redis for the webhook. */
+export async function filesMetadata(files: { type: string; url: string }[]): Promise<Record<string, string>> {
+  const packed = filesMetadataValue(files);
+  if (packed.mode === "inline") return { files: packed.files };
+  const redis = redisFromEnv();
+  if (!redis) throw new Error("Drop print files need the shop cache, which is not configured.");
+  const { randomBytes } = await import("crypto");
+  const ref = randomBytes(9).toString("base64url");
+  await redis.set(`${DROP_FILES_PREFIX}${ref}`, JSON.stringify(files), { ex: 60 * 60 * 24 * 21 });
+  return { files_ref: ref };
+}
+
+export async function filesFromMetadata(meta: Record<string, string | undefined> | null | undefined) {
+  if (!meta) return null;
+  if (meta.files) return decodeFilesValue(meta.files);
+  if (meta.files_ref && /^[A-Za-z0-9_-]{8,32}$/.test(meta.files_ref)) {
+    const redis = redisFromEnv();
+    if (!redis) return null;
+    const value = await redis.get(`${DROP_FILES_PREFIX}${meta.files_ref}`);
+    return decodeFilesValue(value);
   }
-  // Drop items are not yet wired into pricing/fulfillment; refuse rather than mis-charge.
-  return "Drop items can't be checked out yet.";
+  return null;
 }

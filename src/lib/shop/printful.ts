@@ -1,5 +1,7 @@
 import type Stripe from "stripe";
 import { createHash } from "crypto";
+import { filesFromMetadata } from "@/lib/drops";
+import { printfulLineFromSnapshot } from "@/lib/drops/schema";
 import { findVariant, variantFiles, variantPriceCents } from "./catalog";
 import { siteUrl } from "./config";
 
@@ -26,6 +28,13 @@ function printFileUrl(path: string): string {
   return url;
 }
 
+/** Absolute URL Printful can download. Site paths pick up the preview bypass; https URLs are used as given. */
+export function absolutePrintUrl(file: { path?: string; url?: string }): string {
+  if (file.url) return file.url;
+  if (file.path) return printFileUrl(file.path);
+  throw new Error("print file has no location");
+}
+
 function lineSku(li: Stripe.LineItem) {
   const product = li.price?.product as Stripe.Product | string | undefined;
   return typeof product === "object" ? product?.metadata?.sku : undefined;
@@ -46,8 +55,15 @@ export function printfulLines(session: Stripe.Checkout.Session) {
   });
 }
 
-/** Map a completed Stripe session (with expanded line_items.data.price.product) to a Printful order body. */
-export function sessionToPrintfulOrder(session: Stripe.Checkout.Session): PrintfulOrder {
+function productMeta(li: Stripe.LineItem) {
+  const product = li.price?.product as Stripe.Product | string | undefined;
+  return typeof product === "object" ? product?.metadata : undefined;
+}
+
+/** Map a completed Stripe session (with expanded line_items.data.price.product) to a Printful order body.
+ *  Catalog lines resolve from the catalog. Drop lines use the snapshot written at checkout, so a drop
+ *  retired after payment still fulfills. */
+export async function sessionToPrintfulOrder(session: Stripe.Checkout.Session): Promise<PrintfulOrder> {
   type Ship = { name?: string | null; address?: Stripe.Address | null } | null | undefined;
   const loose = session as unknown as { collected_information?: { shipping_details?: Ship }; shipping_details?: Ship };
   const details = loose.collected_information?.shipping_details ?? loose.shipping_details;
@@ -56,21 +72,40 @@ export function sessionToPrintfulOrder(session: Stripe.Checkout.Session): Printf
   const lines = printfulLines(session);
   if (!lines.length) throw new Error("Session has no Printful line items");
 
-  const items = lines.map((li) => {
-    const product = li.price?.product as Stripe.Product | string | undefined;
-    const sku = typeof product === "object" ? product?.metadata?.sku : undefined;
+  const items = [];
+  for (const li of lines) {
+    const meta = productMeta(li);
+    const sku = meta?.sku;
     const found = sku ? findVariant(sku) : undefined;
-    if (!found) throw new Error(`Unmapped line item sku=${sku ?? "none"}`);
-    return {
-      variant_id: found.variant.printfulVariantId,
+    if (found) {
+      items.push({
+        variant_id: found.variant.printfulVariantId,
+        quantity: li.quantity ?? 1,
+        external_id: sku!,
+        name: `${found.product.name} (${found.variant.label})`,
+        retail_price: (variantPriceCents(found.product, found.variant) / 100).toFixed(2),
+        files: variantFiles(found.product, found.variant).map((f) => ({ type: f.type, url: printFileUrl(f.path) })),
+        ...(found.product.options ? { options: found.product.options } : {}),
+      });
+      continue;
+    }
+    const variantId = Number(meta?.pf_variant);
+    const files = await filesFromMetadata(meta);
+    if (!sku || !Number.isInteger(variantId) || variantId <= 0 || !files?.length) {
+      throw new Error(`Unmapped line item sku=${sku ?? "none"}`);
+    }
+    const unit = li.price?.unit_amount;
+    if (typeof unit !== "number") throw new Error(`Drop line ${sku} has no price`);
+    items.push(printfulLineFromSnapshot({
+      sku,
       quantity: li.quantity ?? 1,
-      external_id: sku!,
-      name: `${found.product.name} (${found.variant.label})`,
-      retail_price: (variantPriceCents(found.product, found.variant) / 100).toFixed(2),
-      files: variantFiles(found.product, found.variant).map((f) => ({ type: f.type, url: printFileUrl(f.path) })),
-      ...(found.product.options ? { options: found.product.options } : {}),
-    };
-  });
+      unitAmountCents: unit,
+      name: meta?.item_name || "Drop item",
+      label: meta?.label || "",
+      printfulVariantId: variantId,
+      files,
+    }));
+  }
 
   return {
     external_id: externalIdFor(session.id),

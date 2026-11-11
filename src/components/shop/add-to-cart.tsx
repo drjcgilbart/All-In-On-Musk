@@ -2,9 +2,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Variant } from "@/lib/shop/catalog";
-import { useCart } from "./cart";
+import { useCart, type CartSnap } from "./cart";
 
-export function AddToCart({ variants }: { variants: Variant[] }) {
+export function AddToCart({ variants, snaps }: { variants: Variant[]; snaps?: Record<string, CartSnap> }) {
   const single = variants.length === 1;
   const [sku, setSku] = useState<string | null>(single ? variants[0].sku : null);
   const [added, setAdded] = useState(false);
@@ -32,7 +32,7 @@ export function AddToCart({ variants }: { variants: Variant[] }) {
           disabled={!sku}
           onClick={() => {
             if (sku) {
-              add(sku);
+              add(sku, 1, snaps?.[sku]);
               setAdded(true);
             }
           }}

@@ -6,7 +6,6 @@ import { getStripe } from "@/lib/shop/stripe";
 import { automaticTax, checkoutEnabled, shipCountries, shippingRateCents, SHIPPING_TAX_CODE } from "@/lib/shop/config";
 import { logError } from "@/lib/shop/log";
 import { returnOrigin, validCartId } from "@/lib/shop/carts";
-import { checkDropSkus } from "@/lib/drops";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,12 +20,9 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-  // Drop items: enforce the drop window (and placeholder flag) server-side.
-  const dropErr = await checkDropSkus(body?.items);
-  if (dropErr) return NextResponse.json({ error: dropErr }, { status: 400 });
   try {
     const tax = automaticTax();
-    const { lineItems } = buildLineItems(body?.items, { taxBehavior: tax ? "exclusive" : undefined }); // server-side prices only
+    const { lineItems } = await buildLineItems(body?.items, { taxBehavior: tax ? "exclusive" : undefined }); // server-side prices only
     // Pre-order pins in the cart: say so honestly on Stripe's shipping option.
     const hasPin = lineItems.some((li) => findVariant(li.price_data.product_data.metadata.sku)?.product.selfFulfilled);
     const stripe = getStripe();

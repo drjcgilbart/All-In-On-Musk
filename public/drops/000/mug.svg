@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><rect width="600" height="600" fill="#05070a"/><rect x="20" y="20" width="560" height="560" fill="none" stroke="#2ee6d6" stroke-width="4" stroke-dasharray="16 12"/><text x="300" y="280" fill="#2ee6d6" font-family="monospace" font-size="40" text-anchor="middle">PLACEHOLDER</text><text x="300" y="340" fill="#a8b3bd" font-family="monospace" font-size="30" text-anchor="middle">mug · Drop #000</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#10151c"/>
+  <rect x="250" y="210" width="300" height="280" rx="24" fill="#f4fbff"/>
+  <rect x="300" y="150" width="70" height="80" rx="16" fill="none" stroke="#f4fbff" stroke-width="16"/>
+  <rect x="430" y="150" width="70" height="80" rx="16" fill="none" stroke="#f4fbff" stroke-width="16"/>
+  <text x="400" y="340" fill="#10151c" font-family="ui-monospace,monospace" font-size="28" text-anchor="middle">SAMPLE</text>
+  <text x="400" y="378" fill="#c4007a" font-family="ui-monospace,monospace" font-size="22" text-anchor="middle">DROP #000</text>
+  <text x="400" y="620" fill="#a8b3bd" font-family="ui-monospace,monospace" font-size="22" text-anchor="middle">MUG · PREVIEW ONLY</text>
+</svg>
