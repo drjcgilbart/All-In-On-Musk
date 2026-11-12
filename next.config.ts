@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.dirname(fileURLToPath(import.meta.url)),
   },
+  outputFileTracingIncludes: {
+    "/": ["./content/letter/**/*"],
+    "/news": ["./content/letter/**/*"],
+    "/letter": ["./content/letter/**/*"],
+    "/letter/*": ["./content/letter/**/*"],
+  },
   async redirects() {
     return [
       { source: "/journal", destination: "/news", permanent: true },

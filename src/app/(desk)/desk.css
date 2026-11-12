@@ -50,11 +50,10 @@
   align-items: center;
 }
 
-/* Musk Today makes the desktop bar wrap just above the 1100px rail breakpoint. */
-@media (min-width: 1100px) and (max-width: 1200px) {
-  .top-links {
-    column-gap: 0.45rem;
-  }
+.top-links > a,
+.top-links > .mega,
+.top-links > button {
+  white-space: nowrap;
 }
 
 .top-links > a,
@@ -63,6 +62,20 @@
   align-items: center;
   height: 44px;
   line-height: 1;
+}
+
+/* The letter name is long. Keep one row from the rail breakpoint through a laptop width. */
+@media (min-width: 1100px) {
+  .topbar,
+  .top-links {
+    flex-wrap: nowrap;
+  }
+
+  .top-links > a,
+  .top-links > .mega,
+  .top-links > button {
+    flex-shrink: 0;
+  }
 }
 
 .top-tools {
@@ -206,6 +219,38 @@ button.nav-btn {
   border-color: var(--desk-line-hot);
 }
 
+/* Comes after the base nav type so the long letter label still fits on one row. */
+@media (min-width: 1100px) and (max-width: 1440px) {
+  .desk .topbar {
+    gap: 0.5rem;
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+
+  .desk .word {
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+  }
+
+  .desk .top-links {
+    column-gap: 0.28rem;
+  }
+
+  .desk .top-links a,
+  .desk .top-links button.nav-btn,
+  .desk .top-tools .nav-btn,
+  .desk .search-btn {
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+  }
+
+  .desk .nav-btn,
+  .desk .search-btn {
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+  }
+}
+
 .rail {
   display: none;
 }
@@ -314,7 +359,8 @@ button.nav-btn {
   margin: 1rem 0 1.4rem;
 }
 
-.home-shop-btn {
+.home-shop-btn,
+.letter-cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -331,7 +377,9 @@ button.nav-btn {
 }
 
 .home-shop-btn:hover,
-.home-shop-btn:focus-visible {
+.home-shop-btn:focus-visible,
+.letter-cta:hover,
+.letter-cta:focus-visible {
   background: transparent;
   color: #2ee6d6;
 }
@@ -535,6 +583,197 @@ button.nav-btn {
 
 .news-card h3 a:hover {
   color: #2ee6d6;
+}
+
+.letter-card {
+  border: 1px solid var(--desk-line-hot);
+  background: rgba(10, 14, 20, 0.65);
+  padding: 1.05rem 1.1rem 1.15rem;
+  margin: 0 0 1.1rem;
+}
+
+.letter-card h2,
+.letter-card h3 {
+  margin: 0.3rem 0 0.45rem;
+  font-size: clamp(1.45rem, 2.4vw, 2rem);
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+.letter-card h2 a:hover,
+.letter-card h3 a:hover,
+.letter-archive h2 a:hover,
+.letter-body a:hover {
+  color: #2ee6d6;
+}
+
+.letter-card > p {
+  max-width: 42rem;
+  color: var(--desk-muted);
+}
+
+.letter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.1rem;
+  margin-top: 0.95rem;
+}
+
+.letter-quiet,
+.letter-pager a {
+  color: #2ee6d6;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.letter-quiet:hover,
+.letter-quiet:focus-visible,
+.letter-pager a:hover,
+.letter-pager a:focus-visible {
+  color: var(--desk-ink);
+}
+
+.letter-meta {
+  margin-top: 0.8rem;
+}
+
+.letter-meta time,
+.letter-meta span {
+  white-space: nowrap;
+}
+
+.letter-body {
+  max-width: 42rem;
+  margin-top: 1.3rem;
+}
+
+.letter-body p,
+.letter-body li {
+  line-height: 1.55;
+}
+
+.letter-body h2,
+.letter-body h3,
+.letter-body h4 {
+  margin: 1.35rem 0 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.letter-body h2 {
+  font-size: 1.45rem;
+}
+
+.letter-body h3 {
+  font-size: 1.2rem;
+}
+
+.letter-body a,
+.letter-archive h2 a {
+  color: inherit;
+}
+
+.letter-body ul,
+.letter-body ol {
+  margin: 0.35rem 0 1rem;
+  padding-left: 1.2rem;
+}
+
+.letter-body li + li {
+  margin-top: 0.3rem;
+}
+
+.letter-body code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.9em;
+}
+
+.letter-body blockquote {
+  margin: 0.8rem 0;
+}
+
+.letter-rule {
+  border: 0;
+  border-top: 1px solid #1a3a44;
+  margin: 1.2rem 0;
+}
+
+.letter-pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.2rem;
+  margin-top: 2rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid #1a3a44;
+}
+
+.letter-archive h2 {
+  margin: 0.3rem 0;
+  font-size: 1.35rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+.letter-archive p {
+  max-width: 42rem;
+  color: var(--desk-muted);
+}
+
+.letter-body .watch-frame {
+  position: relative;
+  margin: 1rem 0 1.4rem;
+  padding-top: 56.25%;
+  border: 1px solid var(--desk-line);
+  background: #05070a;
+}
+
+.letter-body .watch-frame iframe,
+.letter-body .watch-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+.letter-body button.watch-frame {
+  display: block;
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.letter-body .jv-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3.4rem;
+  height: 3.4rem;
+  transform: translate(-50%, -50%);
+  border: 1px solid #2ee6d6;
+  border-radius: 50%;
+  background: rgba(5, 7, 10, 0.72);
+}
+
+.letter-body .jv-play::after {
+  content: "";
+  position: absolute;
+  left: 54%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 0.6rem 0 0.6rem 1rem;
+  border-color: transparent transparent transparent #2ee6d6;
 }
 
 .news-card p,
@@ -844,6 +1083,10 @@ a.plain-card {
 }
 
 @media (max-width: 1099px) {
+  .desk {
+    --rail-w: 12.25rem;
+  }
+
   .top-links {
     display: none;
   }
@@ -865,7 +1108,7 @@ a.plain-card {
     top: 0;
     bottom: 0;
     left: 0;
-    width: 11.25rem;
+    width: var(--rail-w);
     overflow: auto;
     padding: calc(4.4rem + env(safe-area-inset-top)) 0.85rem 1rem;
     background: #05070a;
@@ -875,6 +1118,7 @@ a.plain-card {
   .rail a,
   .rail button {
     padding: 0.42rem 0;
+    white-space: nowrap;
   }
 
   .rail button {
@@ -900,8 +1144,8 @@ a.plain-card {
   }
 
   .desk-main {
-    width: min(1360px, calc(100% - 11.25rem - 1.6rem));
-    margin-left: 11.25rem;
+    width: min(1360px, calc(100% - var(--rail-w) - 1.6rem));
+    margin-left: var(--rail-w);
     padding-left: 1rem;
     padding-right: 0.8rem;
   }
