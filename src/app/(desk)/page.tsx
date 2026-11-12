@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Chip } from "@/components/chip";
+import { LetterCard } from "@/components/letter-card";
 import { NewsVideos } from "@/components/news-videos";
 import { NewsList } from "@/components/news-list";
 import { Tape } from "@/components/tape";
+import { LETTER_NAME } from "@/content/letter";
 import { machineArt } from "@/content/art";
 import { machines } from "@/content/machines";
 import { getLiveNews, latestByTag } from "@/lib/liveNews";
 import { bench, milestones, watchlist } from "@/content/records";
+import { getCurrentIssue } from "@/lib/letter";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -21,6 +24,7 @@ const DAY = 86_400_000;
 export const revalidate = 21600;
 
 export default async function HomePage() {
+  const letter = getCurrentIssue();
   const news = await getLiveNews(10);
   const latest = await latestByTag(["Tesla", "SpaceX", "Neuralink", "Boring", "xAI"]);
   const tagFor: Record<string, string> = { tesla: "Tesla", spacex: "SpaceX", neuralink: "Neuralink", boring: "Boring", xai: "xAI", terafab: "Tesla" };
@@ -69,7 +73,8 @@ export default async function HomePage() {
       </section>
 
       <section className="section" aria-labelledby="today-title">
-        <h2 id="today-title">{recent.length > 0 ? "Today in Musk World" : "Latest on the desk"}</h2>
+        <h2 id="today-title">{letter || recent.length > 0 ? LETTER_NAME : "Latest on the desk"}</h2>
+        {letter ? <LetterCard issue={letter} titleAs="h3" /> : null}
         {recent.length === 0 ? (
           <p className="note">Nothing sourced in the last 24 hours. The starter desk is not a wire.</p>
         ) : null}

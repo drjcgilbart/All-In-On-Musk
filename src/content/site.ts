@@ -1,3 +1,5 @@
+import { LETTER_NAME, LETTER_PATH } from "@/content/letter";
+
 /** Public copy. The site stays unnamed. */
 
 export const site = {
@@ -20,6 +22,7 @@ export const nav = [
   { href: "/machines", label: "Machines" },
   { href: "/markets", label: "Markets" },
   { href: "/news", label: "News" },
+  { href: LETTER_PATH, label: LETTER_NAME },
   { href: "/musk-today", label: "Musk Today" },
   { href: "/merger", label: "Merger" },
   { href: "/projects", label: "Projects" },

@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
+import { LETTER_ARCHIVE_PATH, LETTER_PATH, letterIssuePath } from "@/content/letter";
 import { machines } from "@/content/machines";
 import { site } from "@/content/site";
+import { listIssues } from "@/lib/letter";
 import { PRODUCTS } from "@/lib/shop/catalog";
 
 const paths = [
@@ -31,6 +33,8 @@ const paths = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const issues = listIssues();
+  const letterUpdated = issues[0]?.date ?? site.updatedIso;
   return [
     ...paths.map((path) => ({
       url: `${site.url}${path}`,
@@ -48,6 +52,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${site.url}/shop/${product.slug}`,
       lastModified: site.updatedIso,
       changeFrequency: "weekly" as const,
+      priority: 0.6,
+    })),
+    {
+      url: `${site.url}${LETTER_PATH}`,
+      lastModified: letterUpdated,
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${site.url}${LETTER_ARCHIVE_PATH}`,
+      lastModified: letterUpdated,
+      changeFrequency: "daily" as const,
+      priority: 0.5,
+    },
+    ...issues.map((issue) => ({
+      url: `${site.url}${letterIssuePath(issue.date)}`,
+      lastModified: issue.date,
+      changeFrequency: "yearly" as const,
       priority: 0.6,
     })),
   ];
