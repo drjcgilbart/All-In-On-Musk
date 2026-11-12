@@ -11,12 +11,13 @@ export function LetterView({ issue, onPermalink }: { issue: LetterIssue; onPerma
       <p className="kicker">
         <Link href={LETTER_PATH}>{LETTER_NAME}</Link>
       </p>
-      <h1 className="page-title">{issue.title}</h1>
+      <h1 className="page-title letter-title">{issue.title}</h1>
       <p className="lede">{issue.summary}</p>
       <p className="mono letter-meta">
         {issue.chip ? <Chip chip={issue.chip} /> : null}
         <time dateTime={issue.date}>{letterDateLabel(issue.date)}</time>
-        {onPermalink ? null : <span> · Current issue</span>}
+        {issue.issue ? <span>{issue.issue}</span> : null}
+        {onPermalink ? null : <span>Current issue</span>}
       </p>
       <LetterMarkdown source={issue.body} />
       <nav className="letter-pager" aria-label="Issues">

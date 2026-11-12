@@ -7,8 +7,14 @@ export type LetterChip = (typeof LETTER_CHIPS)[number];
 
 export type LetterIssue = {
   date: string;
+  /** Display headline. Frontmatter `subject`, or `title` when there is no subject. */
   title: string;
+  /** Card preview. Frontmatter `preview`, or `summary` when there is no preview. */
   summary: string;
+  /** Issue label such as "Issue 001", when the file has one. */
+  issue?: string;
+  /** Dated path from frontmatter, when it is a site path. */
+  permalink?: string;
   chip?: LetterChip;
   body: string;
 };
@@ -22,7 +28,7 @@ export type Inline =
   | { type: "chip"; chip: LetterChip };
 
 export type Block =
-  | { type: "heading"; level: 2 | 3 | 4; inlines: Inline[] }
+  | { type: "heading"; level: 2 | 3 | 4; mast?: boolean; inlines: Inline[] }
   | { type: "paragraph"; inlines: Inline[] }
   | { type: "list"; ordered: boolean; items: Inline[][] }
   | { type: "quote"; inlines: Inline[] }
@@ -78,25 +84,49 @@ export function parseLetterFile(filename: string, raw: string): LetterIssue {
   if (data.date && data.date !== date) {
     throw new Error(`content/letter/${filename}: date ${data.date} does not match the file name`);
   }
-  const title = (data.title || "").trim();
+  const title = (data.subject || data.title || "").trim();
   if (!title) throw new Error(`content/letter/${filename}: missing title`);
-  const summary = (data.summary || data.preview || "").trim();
+  const summary = (data.preview || data.summary || "").trim();
   if (!summary) throw new Error(`content/letter/${filename}: missing summary`);
   if (data.chip && !parseChip(data.chip)) {
     throw new Error(`content/letter/${filename}: chip must be Confirmed, Reported, Rumor, or Placeholder`);
   }
-  return { date, title, summary, chip: parseChip(data.chip), body };
+  const issue = (data.issue || "").trim() || undefined;
+  const permalink = data.permalink && data.permalink.startsWith("/") && !data.permalink.startsWith("//") ? data.permalink : undefined;
+  return { date, title, summary, issue, permalink, chip: parseChip(data.chip), body };
 }
 
 export function safeUrl(url: string) {
   if (url.startsWith("/") && !url.startsWith("//") && !url.startsWith("/\\")) return url;
   try {
     const parsed = new URL(url);
-    if (parsed.protocol === "https:" || parsed.protocol === "http:") return parsed.href;
+    if (parsed.protocol === "mailto:") {
+      const address = decodeURIComponent(parsed.pathname);
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address) ? `mailto:${address}` : null;
+    }
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return null;
+    const host = parsed.hostname.toLowerCase().replace(/^www\./, "");
+    if (host === "allinonmusk.com") {
+      const local = `${parsed.pathname}${parsed.search}${parsed.hash}` || "/";
+      return local.startsWith("/") ? local : `/${local}`;
+    }
+    return parsed.href;
   } catch {
     return null;
   }
-  return null;
+}
+
+/** Inline code that is only desk labels, including pairs such as "Confirmed / Reported". */
+export function chipsInCode(text: string): LetterChip[] | null {
+  const parts = text.split(/\s*\/\s*/).map((part) => part.trim()).filter(Boolean);
+  if (!parts.length) return null;
+  const chips: LetterChip[] = [];
+  for (const part of parts) {
+    const chip = LETTER_CHIPS.find((item) => item.toLowerCase() === part.toLowerCase());
+    if (!chip || chip === "Placeholder") return null;
+    chips.push(chip);
+  }
+  return chips;
 }
 
 export function youtubeIdFromUrl(url: string) {
@@ -132,7 +162,16 @@ export function parseInline(text: string): Inline[] {
     if (match[1]) nodes.push({ type: "chip", chip: match[1] as LetterChip });
     else if (match[2]) nodes.push({ type: "strong", text: match[2] });
     else if (match[3]) nodes.push({ type: "em", text: match[3] });
-    else if (match[4]) nodes.push({ type: "code", text: match[4] });
+    else if (match[4]) {
+      const chips = chipsInCode(match[4]);
+      if (!chips) nodes.push({ type: "code", text: match[4] });
+      else {
+        chips.forEach((chip, chipIndex) => {
+          if (chipIndex > 0) nodes.push({ type: "text", text: " / " });
+          nodes.push({ type: "chip", chip });
+        });
+      }
+    }
     else if (match[5] && match[6]) {
       const href = safeUrl(match[6]);
       nodes.push(href ? { type: "link", text: match[5], href } : { type: "text", text: match[5] });
@@ -177,8 +216,9 @@ export function parseMarkdown(source: string): Block[] {
     }
     const heading = /^(#{1,3})\s+(.+)$/.exec(line);
     if (heading) {
-      const level = (heading[1].length === 1 ? 2 : heading[1].length === 2 ? 3 : 4) as 2 | 3 | 4;
-      blocks.push({ type: "heading", level, inlines: parseInline(heading[2].trim()) });
+      const depth = heading[1].length;
+      const level = (depth <= 2 ? 2 : 3) as 2 | 3;
+      blocks.push({ type: "heading", level, mast: depth === 1, inlines: parseInline(heading[2].trim()) });
       i += 1;
       continue;
     }

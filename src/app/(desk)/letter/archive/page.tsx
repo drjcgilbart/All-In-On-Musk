@@ -25,6 +25,7 @@ export default function LetterArchivePage() {
           <li key={issue.date}>
             <p className="mono">
               {issue.chip ? <Chip chip={issue.chip} /> : null}
+              {issue.issue ? <span>{issue.issue} · </span> : null}
               <time dateTime={issue.date}>{letterDateLabel(issue.date)}</time>
             </p>
             <h2>

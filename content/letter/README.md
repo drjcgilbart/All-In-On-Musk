@@ -6,19 +6,21 @@ The public name and the base path live in `src/content/letter.ts` (`LETTER_NAME`
 
 ```yaml
 ---
-title: Short title
+title: Today in Musk World: YYYY-MM-DD
 date: YYYY-MM-DD
-summary: One or two sentences for the homepage and the news card.
-chip: Reported
+issue: Issue 001
+subject: The headline shown on the page and the cards
+preview: One or two sentences for the homepage and the news card.
+permalink: /letter/YYYY-MM-DD
 ---
 ```
 
-`date` must match the file name. `summary` can also be named `preview`. `chip` is optional: `Confirmed`, `Reported`, or `Rumor`. `Placeholder` is only for a stand-in issue.
+`date` must match the file name. `subject` is the display headline. `preview` is the card text (`summary` still works if there is no preview). `permalink` is the dated path. `chip` is optional: `Confirmed`, `Reported`, or `Rumor`.
 
-Write Markdown under the frontmatter. Raw HTML is shown as text, not rendered. Inline labels: `[Confirmed]`, `[Reported]`, `[Rumor]`. A YouTube link on its own line is a click-to-play embed:
+Write Markdown under the frontmatter. Raw HTML is shown as text, not rendered. Desk labels in inline code render as chips: `` `Confirmed` ``, `` `Reported` ``, `` `Rumor` ``, and pairs such as `` `Confirmed / Reported` ``. Bracket labels still work: `[Confirmed]`, `[Reported]`, `[Rumor]`. A YouTube link on its own line is a click-to-play embed:
 
 ```
 https://www.youtube.com/watch?v=VIDEO_ID
 ```
 
-`2026-11-12.md` is a placeholder. Leave it, and add the real issue 1 as a new date.
+A link to `https://allinonmusk.com/shop` is rendered as `/shop`.

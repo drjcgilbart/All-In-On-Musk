@@ -595,16 +595,16 @@ button.nav-btn {
 .letter-card h2,
 .letter-card h3 {
   margin: 0.3rem 0 0.45rem;
-  font-size: clamp(1.45rem, 2.4vw, 2rem);
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
   letter-spacing: -0.03em;
   text-transform: uppercase;
-  line-height: 0.95;
+  line-height: 1.05;
+  text-wrap: balance;
 }
 
 .letter-card h2 a:hover,
 .letter-card h3 a:hover,
-.letter-archive h2 a:hover,
-.letter-body a:hover {
+.letter-archive h2 a:hover {
   color: #2ee6d6;
 }
 
@@ -637,7 +637,15 @@ button.nav-btn {
 }
 
 .letter-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.7rem;
   margin-top: 0.8rem;
+}
+
+.letter-meta > * + *::before {
+  content: "· ";
 }
 
 .letter-meta time,
@@ -655,26 +663,67 @@ button.nav-btn {
   line-height: 1.55;
 }
 
+.page-title.letter-title {
+  font-size: clamp(1.85rem, 4.4vw, 3.3rem);
+  line-height: 0.98;
+  max-width: 18em;
+  text-wrap: balance;
+}
+
+@media (max-width: 760px) {
+  .page-title.letter-title {
+    font-size: clamp(1.55rem, 7.4vw, 2.05rem);
+    line-height: 1.02;
+  }
+}
+
 .letter-body h2,
-.letter-body h3,
-.letter-body h4 {
-  margin: 1.35rem 0 0.45rem;
-  text-transform: uppercase;
+.letter-body h3 {
+  margin: 1.7rem 0 0.55rem;
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1.08;
 }
 
 .letter-body h2 {
-  font-size: 1.45rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid #1a3a44;
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  text-transform: uppercase;
+}
+
+.letter-body h2.letter-mast {
+  margin-top: 0.2rem;
+  padding-top: 0;
+  border-top: 0;
+  color: #2ee6d6;
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
 }
 
 .letter-body h3 {
-  font-size: 1.2rem;
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+  text-transform: none;
 }
 
 .letter-body a,
 .letter-archive h2 a {
-  color: inherit;
+  color: #2ee6d6;
+  overflow-wrap: anywhere;
+}
+
+.letter-body a:hover,
+.letter-body a:focus-visible {
+  color: var(--desk-ink);
+}
+
+.letter-body a.letter-cta {
+  color: #041018;
+  margin-top: 0.4rem;
+}
+
+.letter-body a.letter-cta:hover,
+.letter-body a.letter-cta:focus-visible {
+  color: #2ee6d6;
 }
 
 .letter-body ul,

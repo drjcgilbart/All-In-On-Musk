@@ -11,8 +11,14 @@ function Inlines({ items }: { items: Inline[] }) {
     if (item.type === "code") return <code key={key}>{item.text}</code>;
     if (item.type === "chip") return <Chip key={key} chip={item.chip} />;
     const external = item.href.startsWith("http");
+    const shop = item.href === "/shop";
     return (
-      <a key={key} href={item.href} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+      <a
+        key={key}
+        href={item.href}
+        className={shop ? "letter-cta" : undefined}
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
         {item.text}
       </a>
     );
@@ -26,9 +32,9 @@ export function LetterMarkdown({ source }: { source: string }) {
     <div className="letter-body">
       {blocks.map((block, index) => {
         if (block.type === "heading") {
-          const Tag = block.level === 2 ? "h2" : block.level === 3 ? "h3" : "h4";
+          const Tag = block.level === 2 ? "h2" : "h3";
           return (
-            <Tag key={index}>
+            <Tag key={index} className={block.mast ? "letter-mast" : undefined}>
               <Inlines items={block.inlines} />
             </Tag>
           );
