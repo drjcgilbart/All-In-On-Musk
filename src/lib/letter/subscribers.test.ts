@@ -56,7 +56,7 @@ test("token unsubscribe works and an email lookup stays neutral", async () => {
   const removed = await unsubscribeFromLetter(store, { token: row.token }, "1.1.1.1");
   assert.equal(removed.ok, true);
   if (removed.ok) assert.match(removed.message, /off the list/);
-  assert.equal((await store.findByEmail("reader@example.com"))?.status, "unsubscribed");
+  assert.equal(await store.findByEmail("reader@example.com"), null);
   const missing = await unsubscribeFromLetter(store, { email: "nobody@example.com" }, "8.8.8.8");
   assert.equal(missing.ok, true);
   if (missing.ok) assert.match(missing.message, /If that address is on the list/);

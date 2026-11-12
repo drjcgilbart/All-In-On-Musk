@@ -198,7 +198,7 @@ export function getLetterSubscriberStore(env: NodeJS.ProcessEnv = process.env) {
   return redisLetterStore(redis, letterRedisPrefix({ VERCEL_ENV: env.VERCEL_ENV }));
 }
 
-export type SubscribeResult = { ok: true } | { ok: false; status: number; error: string };
+export type SubscribeResult = { ok: true; token?: string } | { ok: false; status: number; error: string };
 export type UnsubscribeResult =
   | { ok: true; message: string }
   | { ok: false; status: number; error: string };
@@ -223,30 +223,24 @@ export async function subscribeToLetter(
       existing.name = name;
       await store.save(existing);
     }
-    return { ok: true };
+    return { ok: true, token: existing.token };
   }
   if (existing) {
     existing.status = "active";
     existing.unsubscribedAt = undefined;
     if (name) existing.name = name;
     await store.save(existing);
-    return { ok: true };
+    return { ok: true, token: existing.token };
   }
+  const token = letterToken();
   await store.save({
     email,
     name,
     createdAt: new Date().toISOString(),
-    token: letterToken(),
+    token,
     status: "active",
   });
-  return { ok: true };
-}
-
-async function markUnsubscribed(store: LetterSubscriberStore, row: LetterSubscriber) {
-  if (row.status === "unsubscribed") return;
-  row.status = "unsubscribed";
-  row.unsubscribedAt = new Date().toISOString();
-  await store.save(row);
+  return { ok: true, token };
 }
 
 export async function unsubscribeFromLetter(
@@ -262,13 +256,13 @@ export async function unsubscribeFromLetter(
     if (!validLetterToken(token)) return { ok: false, status: 400, error: "That link does not match a subscription." };
     const row = await store.findByToken(token);
     if (!row) return { ok: false, status: 400, error: "That link does not match a subscription." };
-    await markUnsubscribed(store, row);
+    await store.forget(row.email);
     return { ok: true, message: "You're off the list." };
   }
   const email = normalizeLetterEmail(input.email || "");
   if (!email) return { ok: false, status: 400, error: "Enter a valid email." };
   const row = await store.findByEmail(email);
-  if (row) await markUnsubscribed(store, row);
+  if (row) await store.forget(row.email);
   return { ok: true, message: NEUTRAL_REMOVAL };
 }
 

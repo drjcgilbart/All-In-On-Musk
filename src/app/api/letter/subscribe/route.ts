@@ -18,7 +18,17 @@ export async function POST(request: Request) {
   try {
     const result = await subscribeToLetter(store, body, clientIp(request));
     if (!result.ok) return NextResponse.json({ error: result.error }, { status: result.status, headers: noStore });
-    return NextResponse.json({ ok: true }, { headers: noStore });
+    const response = NextResponse.json({ ok: true }, { headers: noStore });
+    if (result.token) {
+      response.cookies.set("aiom_letter", result.token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 400,
+      });
+    }
+    return response;
   } catch {
     return NextResponse.json({ error: "The list is not available right now." }, { status: 503, headers: noStore });
   }
