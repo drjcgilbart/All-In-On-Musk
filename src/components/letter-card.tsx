@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Chip } from "@/components/chip";
+import { LetterSubscribeForm } from "@/components/letter-subscribe-form";
 import { LETTER_ARCHIVE_PATH, LETTER_NAME, LETTER_PATH, letterDateLabel } from "@/content/letter";
 import type { LetterIssue } from "@/lib/letter";
 
@@ -33,6 +34,7 @@ export function LetterCard({
           Past issues
         </Link>
       </p>
+      <LetterSubscribeForm compact />
     </article>
   );
 }

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { LetterView } from "@/components/letter-view";
 import { LETTER_NAME, letterIssuePath } from "@/content/letter";
 import { getIssue, listIssues } from "@/lib/letter";
+import { letterAlternates } from "@/lib/letter/meta";
 
 export const dynamicParams = false;
 
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ date: str
   return {
     title: issue.title,
     description: issue.summary,
-    alternates: { canonical: letterIssuePath(issue.date) },
+    alternates: letterAlternates(letterIssuePath(issue.date)),
   };
 }
 

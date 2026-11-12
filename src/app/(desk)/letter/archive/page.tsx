@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Chip } from "@/components/chip";
-import { LETTER_ARCHIVE_PATH, LETTER_NAME, LETTER_PATH, letterDateLabel, letterIssuePath } from "@/content/letter";
+import { LETTER_ARCHIVE_PATH, LETTER_NAME, LETTER_PATH, LETTER_RSS_PATH, letterDateLabel, letterIssuePath } from "@/content/letter";
 import { listIssues } from "@/lib/letter";
+import { letterAlternates } from "@/lib/letter/meta";
 
 export const metadata: Metadata = {
   title: "Archive",
   description: `Past issues of ${LETTER_NAME}.`,
-  alternates: { canonical: LETTER_ARCHIVE_PATH },
+  alternates: letterAlternates(LETTER_ARCHIVE_PATH),
 };
 
 export default function LetterArchivePage() {
@@ -18,7 +19,9 @@ export default function LetterArchivePage() {
         <Link href={LETTER_PATH}>{LETTER_NAME}</Link>
       </p>
       <h1 className="page-title">Archive.</h1>
-      <p className="lede">Newest first.</p>
+      <p className="lede">
+        Newest first. <Link className="letter-quiet" href={LETTER_RSS_PATH}>RSS</Link>
+      </p>
       {issues.length === 0 ? <p className="note">No issues yet.</p> : null}
       <ol className="mark-list letter-archive">
         {issues.map((issue) => (
