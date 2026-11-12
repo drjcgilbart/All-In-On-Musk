@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { Chip } from "@/components/chip";
 import { LetterMarkdown } from "@/components/letter-markdown";
+import { LetterShare } from "@/components/letter-share";
+import { LetterSubscribeForm } from "@/components/letter-subscribe-form";
 import { LETTER_ARCHIVE_PATH, LETTER_NAME, LETTER_PATH, letterDateLabel, letterIssuePath } from "@/content/letter";
 import { issueNeighbors, type LetterIssue } from "@/lib/letter";
+import { site } from "@/content/site";
 
 export function LetterView({ issue, onPermalink }: { issue: LetterIssue; onPermalink: boolean }) {
   const { newer, older } = issueNeighbors(issue.date);
@@ -19,6 +22,7 @@ export function LetterView({ issue, onPermalink }: { issue: LetterIssue; onPerma
         {issue.issue ? <span>{issue.issue}</span> : null}
         {onPermalink ? null : <span>Current issue</span>}
       </p>
+      <LetterShare url={`${site.url}${letterIssuePath(issue.date)}`} title={issue.title} />
       <LetterMarkdown source={issue.body} />
       <nav className="letter-pager" aria-label="Issues">
         {newer ? <Link href={letterIssuePath(newer.date)}>Newer · {letterDateLabel(newer.date)}</Link> : null}
@@ -30,6 +34,7 @@ export function LetterView({ issue, onPermalink }: { issue: LetterIssue; onPerma
           <Link href={letterIssuePath(issue.date)}>{letterDateLabel(issue.date)}</Link>
         )}
       </nav>
+      <LetterSubscribeForm />
     </article>
   );
 }

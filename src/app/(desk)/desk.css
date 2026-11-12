@@ -726,6 +726,137 @@ button.nav-btn {
   color: #2ee6d6;
 }
 
+.letter-subscribe {
+  margin-top: 1.4rem;
+  max-width: 36rem;
+}
+
+.letter-subscribe.compact {
+  margin-top: 0.9rem;
+}
+
+.letter-subscribe form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.45rem;
+  align-items: end;
+}
+
+.letter-field {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+  color: var(--desk-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.letter-field.name {
+  grid-column: 1 / -1;
+}
+
+.letter-optional {
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.letter-subscribe input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--desk-line);
+  background: #05070a;
+  color: var(--desk-ink);
+  font: inherit;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.letter-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.letter-privacy,
+.letter-subscribe-done,
+.letter-subscribe-error {
+  grid-column: 1 / -1;
+  margin: 0.45rem 0 0;
+  max-width: 40rem;
+  color: var(--desk-muted);
+  font-size: 0.85rem;
+}
+
+.letter-subscribe-done {
+  color: var(--desk-ink);
+}
+
+.letter-subscribe-error {
+  color: #ffb4b4;
+}
+
+.letter-privacy a {
+  color: #2ee6d6;
+}
+
+.letter-share {
+  margin: 1rem 0 0.4rem;
+  max-width: 42rem;
+}
+
+.letter-share div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.letter-share input {
+  flex: 1 1 16rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--desk-line);
+  background: #05070a;
+  color: var(--desk-muted);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+}
+
+.letter-share button {
+  min-height: 44px;
+  padding: 0 0.8rem;
+  border: 1px solid var(--desk-line);
+  background: transparent;
+  color: var(--desk-ink);
+  font: inherit;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.letter-share button:hover,
+.letter-share button:focus-visible {
+  border-color: var(--desk-line-hot);
+  color: #2ee6d6;
+}
+
+@media (max-width: 760px) {
+  .letter-subscribe form {
+    grid-template-columns: 1fr;
+  }
+
+  .letter-subscribe .letter-cta,
+  .letter-share button {
+    width: 100%;
+  }
+}
+
 .letter-body ul,
 .letter-body ol {
   margin: 0.35rem 0 1rem;

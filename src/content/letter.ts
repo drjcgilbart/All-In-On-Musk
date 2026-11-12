@@ -9,6 +9,12 @@ export const LETTER_NAME = "Today in Musk World" as const;
 export const LETTER_PATH = "/letter" as const;
 
 export const LETTER_ARCHIVE_PATH = `${LETTER_PATH}/archive` as const;
+export const LETTER_SUBSCRIBE_PATH = `${LETTER_PATH}/subscribe` as const;
+export const LETTER_UNSUBSCRIBE_PATH = `${LETTER_PATH}/unsubscribe` as const;
+export const LETTER_RSS_PATH = `${LETTER_PATH}/rss.xml` as const;
+
+/** Same public desk address already used on the shop. */
+export const LETTER_CONTACT_EMAIL = "jonvale@allinonmusk.com" as const;
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
 
