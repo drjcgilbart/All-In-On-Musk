@@ -1,21 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { connection } from "next/server";
 import { PRODUCTS, PRODUCT_TYPES, type ProductType } from "@/lib/shop/catalog";
 import { ProductCard } from "@/components/shop/product-card";
+import { DailyDrop } from "@/components/shop/daily-drop";
 import { ShopVisitPing } from "@/components/shop/visit-ping";
 
 export const metadata: Metadata = {
   title: "Shop",
-  description: "Unofficial All In On Musk fan merch, printed on demand.",
+  description: "Unofficial All In On Musk fan merch.",
   alternates: { canonical: "/shop" },
 };
 
-type Props = { searchParams: Promise<{ type?: string | string[] }> };
+export const dynamic = "force-dynamic";
+
+type Props = { searchParams: Promise<{ type?: string | string[]; asOf?: string | string[] }> };
+
+function one(v: string | string[] | undefined) {
+  return Array.isArray(v) ? v[0] : v;
+}
+
+function shopDisplayNow(asOf: string | undefined) {
+  const preview = process.env.VERCEL_ENV !== "production" && !!asOf && !Number.isNaN(Date.parse(asOf));
+  return { now: preview ? Date.parse(asOf) : Date.now(), asOf: preview ? asOf : undefined };
+}
 
 export default async function ShopPage({ searchParams }: Props) {
-  const raw = (await searchParams).type;
-  const wanted = Array.isArray(raw) ? raw[0] : raw;
+  await connection();
+  const sp = await searchParams;
+  const wanted = one(sp.type);
   const active = PRODUCT_TYPES.find((t) => t.id === wanted)?.id as ProductType | undefined;
   // Always grouped by type in PRODUCT_TYPES order (tees, hoodies, hats, stickers, patches, posters, water bottles, tumblers).
   const order = (t: ProductType) => PRODUCT_TYPES.findIndex((x) => x.id === t);
@@ -26,6 +40,8 @@ export default async function ShopPage({ searchParams }: Props) {
   const examples = PRODUCT_TYPES.map((t) => ({ ...t, product: PRODUCTS.find((p) => p.type === t.id) })).filter((t) => t.product);
   const featured = PRODUCTS.filter((p) => p.limited);
   const activeLabel = PRODUCT_TYPES.find((t) => t.id === active)?.label;
+  const asOfRaw = one(sp.asOf);
+  const clock = shopDisplayNow(asOfRaw);
 
   return (
     <>
@@ -33,6 +49,13 @@ export default async function ShopPage({ searchParams }: Props) {
       <p className="kicker">Supply depot {"\u00b7"} printed on demand</p>
       <h1 className="page-title">Merch for the desk</h1>
       <p className="lede">{PRODUCTS.length} items. All tested. Results: excellent data was collected.</p>
+
+      {clock.asOf ? (
+        <p className="shop-mono drop-clock-note">
+          Showing the shop as of {new Date(clock.now).toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "medium", timeStyle: "short" })} ET. Checkout uses the real time.
+        </p>
+      ) : null}
+      {!active ? <DailyDrop now={clock.now} asOf={clock.asOf} /> : null}
 
       {featured.length && !active ? (
         <section className="shop-hero" aria-labelledby="shop-hero-h">

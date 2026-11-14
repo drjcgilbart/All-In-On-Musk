@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   }
   try {
     const tax = automaticTax();
-    const { lineItems } = buildLineItems(body?.items, { taxBehavior: tax ? "exclusive" : undefined }); // server-side prices only
+    const { lineItems } = await buildLineItems(body?.items, { taxBehavior: tax ? "exclusive" : undefined }); // server-side prices only
     // Pre-order pins in the cart: say so honestly on Stripe's shipping option.
     const hasPin = lineItems.some((li) => findVariant(li.price_data.product_data.metadata.sku)?.product.selfFulfilled);
     const stripe = getStripe();
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       shipping_options: [
         {
           shipping_rate_data: {
-            display_name: hasPin ? "Pre-order: pins ship in about 3 weeks" : "Standard (print on demand)",
+            display_name: hasPin ? "Pre-order: pins ship in about 3 weeks" : "Standard shipping",
             type: "fixed_amount",
             fixed_amount: { amount: shippingRateCents(), currency: "usd" },
             // Shipping is taxable in Florida when the item is; Stripe Tax uses this code.
