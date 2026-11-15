@@ -13,6 +13,7 @@ const paths = [
   "/pictures",
   "/watch",
   "/watch/grok-bot-best-model",
+  "/podcast",
   "/si-slopcore-videos",
   "/merger",
   "/projects",

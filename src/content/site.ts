@@ -16,6 +16,9 @@ export const site = {
     "Unofficial fan site. Not affiliated with Elon Musk, Tesla, SpaceX, Neuralink, The Boring Company, or xAI. Not investment, financial, or medical advice.",
 } as const;
 
+export const podcastUrl = "https://open.spotify.com/show/5lt5NyoKlprgjsQB1g65iV";
+export const podcastEmbedUrl = "https://open.spotify.com/embed/show/5lt5NyoKlprgjsQB1g65iV?utm_source=generator";
+
 export const nav = [
   { href: "/", label: "Home" },
   { href: "/#stack", label: "Stack" },
@@ -24,6 +27,7 @@ export const nav = [
   { href: "/news", label: "News" },
   { href: LETTER_PATH, label: LETTER_NAME },
   { href: "/musk-today", label: "Musk Today" },
+  { href: "/podcast", label: "Podcast" },
   { href: "/merger", label: "Merger" },
   { href: "/projects", label: "Projects" },
   { href: "/race/index.html", label: "Race" },

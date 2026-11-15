@@ -24,3 +24,7 @@ https://www.youtube.com/watch?v=VIDEO_ID
 ```
 
 A link to `https://allinonmusk.com/shop` is rendered as `/shop`.
+
+The letter view adds this line under every issue. Leave it out of the markdown:
+
+Prefer to listen? The All In On Musk podcast is on [Spotify](https://open.spotify.com/show/5lt5NyoKlprgjsQB1g65iV).

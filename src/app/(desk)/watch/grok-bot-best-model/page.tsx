@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { podcastUrl } from "@/content/site";
 import { WatchPlayer } from "./watch-player";
 import "../../journal/journal.css";
 
@@ -168,6 +169,9 @@ export default function GrokBotBestModelPage() {
       <WatchPlayer videoId={videoId} title={pageTitle} />
 
       <p className="piece-links">
+        <a href={podcastUrl} {...ext}>
+          Listen on Spotify
+        </a>
         <a href={videoUrl} {...ext}>
           Watch on YouTube
         </a>
