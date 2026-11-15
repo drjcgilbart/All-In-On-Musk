@@ -621,6 +621,19 @@ button.nav-btn {
   margin-top: 0.95rem;
 }
 
+.letter-listen {
+  margin: 1.6rem 0 0;
+}
+
+.letter-listen a {
+  color: #2ee6d6;
+}
+
+.letter-listen a:hover,
+.letter-listen a:focus-visible {
+  color: var(--desk-ink);
+}
+
 .letter-quiet,
 .letter-pager a {
   color: #2ee6d6;

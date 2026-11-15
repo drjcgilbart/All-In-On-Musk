@@ -5,7 +5,7 @@ import { LetterShare } from "@/components/letter-share";
 import { LetterSubscribeForm } from "@/components/letter-subscribe-form";
 import { LETTER_ARCHIVE_PATH, LETTER_NAME, LETTER_PATH, letterDateLabel, letterIssuePath } from "@/content/letter";
 import { issueNeighbors, type LetterIssue } from "@/lib/letter";
-import { site } from "@/content/site";
+import { podcastUrl, site } from "@/content/site";
 
 export function LetterView({ issue, onPermalink }: { issue: LetterIssue; onPermalink: boolean }) {
   const { newer, older } = issueNeighbors(issue.date);
@@ -24,6 +24,13 @@ export function LetterView({ issue, onPermalink }: { issue: LetterIssue; onPerma
       </p>
       <LetterShare url={`${site.url}${letterIssuePath(issue.date)}`} title={issue.title} />
       <LetterMarkdown source={issue.body} />
+      <p className="note letter-listen">
+        Prefer to listen? The All In On Musk podcast is on{" "}
+        <a href={podcastUrl} target="_blank" rel="noopener noreferrer">
+          Spotify
+        </a>
+        .
+      </p>
       <nav className="letter-pager" aria-label="Issues">
         {newer ? <Link href={letterIssuePath(newer.date)}>Newer · {letterDateLabel(newer.date)}</Link> : null}
         {older ? <Link href={letterIssuePath(older.date)}>Older · {letterDateLabel(older.date)}</Link> : null}

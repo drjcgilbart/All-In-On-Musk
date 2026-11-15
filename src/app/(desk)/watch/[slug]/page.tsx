@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { storyDate } from "@/components/story-body";
+import { podcastUrl } from "@/content/site";
 import { readCatalog } from "@/lib/studio/catalog";
 import "../../journal/journal.css";
 
@@ -33,14 +34,21 @@ export default async function ClipPage({ params }: Props) {
       <h1 className="page-title">{clip.title}</h1>
       <p className="note">{storyDate(clip.publishedAt)}{clip.tags.length ? ` · ${clip.tags.join(" · ")}` : ""}</p>
       {clip.youtubeId ? (
-        <div className="watch-frame">
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${clip.youtubeId}`}
-            title={clip.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
+        <>
+          <div className="watch-frame">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${clip.youtubeId}`}
+              title={clip.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+          <p className="piece-links">
+            <a href={podcastUrl} target="_blank" rel="noopener noreferrer">
+              Listen on Spotify
+            </a>
+          </p>
+        </>
       ) : null}
       {clip.description ? <p className="lede">{clip.description}</p> : null}
     </>
