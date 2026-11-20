@@ -1,0 +1,55 @@
+import Link from "next/link";
+import { ReleaseImage } from "@/components/release-image";
+import { listReleases, type Release } from "@/lib/releases";
+
+function kindLabel(kind: Release["kind"]) {
+  return kind === "letter" ? "Letter" : "Video";
+}
+
+function Featured({ release }: { release: Release }) {
+  return (
+    <Link className="release-feature" href={release.href}>
+      {release.image ? <ReleaseImage src={release.image} fallback={release.imageFallback} alt={release.title} /> : null}
+      <span className="release-copy">
+        <p className="kicker">
+          {kindLabel(release.kind)} · <time dateTime={new Date(release.at).toISOString()}>{release.dateLabel}</time>
+        </p>
+        <h3>{release.title}</h3>
+        <p className="release-blurb">{release.blurb}</p>
+      </span>
+    </Link>
+  );
+}
+
+function Row({ release }: { release: Release }) {
+  return (
+    <li>
+      <Link className="release-row" href={release.href}>
+        <p className="mono">
+          {kindLabel(release.kind)} · <time dateTime={new Date(release.at).toISOString()}>{release.dateLabel}</time>
+        </p>
+        <strong>{release.title}</strong>
+        <p className="release-line">{release.blurb}</p>
+      </Link>
+    </li>
+  );
+}
+
+/** One big card for the newest letter or channel video, then older releases as compact rows. */
+export async function LatestRelease() {
+  const { featured, earlier } = await listReleases();
+  if (!featured) return null;
+  return (
+    <section className="section latest-release" aria-labelledby="latest-release-title">
+      <h2 id="latest-release-title">Latest</h2>
+      <Featured release={featured} />
+      {earlier.length > 0 ? (
+        <ol className="release-rows">
+          {earlier.map((release) => (
+            <Row key={`${release.kind}-${release.id}`} release={release} />
+          ))}
+        </ol>
+      ) : null}
+    </section>
+  );
+}

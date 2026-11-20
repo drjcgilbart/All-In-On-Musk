@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { LatestRelease } from "@/components/latest-release";
 import { LetterSubscribeForm } from "@/components/letter-subscribe-form";
 import { LetterView } from "@/components/letter-view";
 import { LETTER_NAME, LETTER_PATH } from "@/content/letter";
 import { getCurrentIssue } from "@/lib/letter";
 import { letterAlternates } from "@/lib/letter/meta";
 import { letterShareMetadata } from "@/lib/letter/share";
+
+export const revalidate = 1800;
 
 export async function generateMetadata(): Promise<Metadata> {
   const issue = getCurrentIssue();
@@ -35,5 +38,10 @@ export default function LetterPage() {
       </>
     );
   }
-  return <LetterView issue={issue} onPermalink={false} />;
+  return (
+    <>
+      <LatestRelease />
+      <LetterView issue={issue} onPermalink={false} />
+    </>
+  );
 }

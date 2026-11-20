@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JournalVideos } from "@/components/journal-videos";
+import { LatestRelease } from "@/components/latest-release";
 import { storyDate, youtubeThumb } from "@/components/story-body";
 import { readCatalog } from "@/lib/studio/catalog";
 import type { Clip } from "@/lib/studio/types";
@@ -42,6 +43,7 @@ export default async function WatchPage() {
         <a href="/news">News</a>
         <a href="/pictures">Pictures</a>
       </p>
+      <LatestRelease />
       <section className="section" id="journal-videos">
         <h2>Journal Videos</h2>
         <p className="note">Latest uploads from @allinonmusk.</p>

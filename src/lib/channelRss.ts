@@ -11,6 +11,7 @@ export type RssVideo = {
   publishedAt: string;
   dateLabel: string;
   thumbnailUrl: string;
+  summary: string;
   kind: "video" | "short";
   href: string;
 };
@@ -21,6 +22,11 @@ export const VIDEO_REVALIDATE = 1800;
 const WATCH_PAGES: Record<string, string> = {
   evW52aF0x1I: "/watch/grok-bot-best-model",
 };
+
+/** On-site page for a channel upload. Never a youtube.com link. */
+export function watchPathForVideo(id: string) {
+  return WATCH_PAGES[id] ?? `/watch/${id}`;
+}
 
 const decode = (s: string) =>
   s.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"')
@@ -52,14 +58,16 @@ export async function getChannelRss(limit = 6): Promise<RssVideo[]> {
       const link = pick(entry, /<link rel="alternate" href="([^"]+)"/);
       if (!id || !title) continue;
       const kind = link.includes("/shorts/") ? "short" : "video";
+      const summary = pick(entry, /<media:description>([\s\S]*?)<\/media:description>/).replace(/\s+/g, " ").slice(0, 280);
       videos.push({
         id,
         title: title.replace(/\s*#shorts\b/gi, "").trim(),
         publishedAt,
         dateLabel: dateLabel(publishedAt),
         thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+        summary,
         kind,
-        href: WATCH_PAGES[id] ?? (kind === "short" ? `https://www.youtube.com/shorts/${id}` : `https://www.youtube.com/watch?v=${id}`),
+        href: watchPathForVideo(id),
       });
     }
     return videos.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, limit);
@@ -77,6 +85,7 @@ export async function getNewsVideos(limit = 6): Promise<RssVideo[]> {
     publishedAt: clip.publishedAt,
     dateLabel: dateLabel(clip.publishedAt),
     thumbnailUrl: clip.thumbnailUrl || (clip.youtubeId ? `https://i.ytimg.com/vi/${clip.youtubeId}/hqdefault.jpg` : ""),
+    summary: clip.description,
     kind: "video" as const,
     href: `/watch/${clip.slug}`,
   }));
