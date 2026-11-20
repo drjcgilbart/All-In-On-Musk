@@ -4,6 +4,7 @@ import { LetterView } from "@/components/letter-view";
 import { LETTER_NAME, LETTER_PATH } from "@/content/letter";
 import { getCurrentIssue } from "@/lib/letter";
 import { letterAlternates } from "@/lib/letter/meta";
+import { letterShareMetadata } from "@/lib/letter/share";
 
 export async function generateMetadata(): Promise<Metadata> {
   const issue = getCurrentIssue();
@@ -18,6 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: issue.title,
     description: issue.summary,
     alternates: letterAlternates(LETTER_PATH),
+    ...letterShareMetadata(issue, LETTER_PATH),
   };
 }
 

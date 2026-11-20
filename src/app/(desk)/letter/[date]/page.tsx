@@ -4,6 +4,7 @@ import { LetterView } from "@/components/letter-view";
 import { LETTER_NAME, letterIssuePath } from "@/content/letter";
 import { getIssue, listIssues } from "@/lib/letter";
 import { letterAlternates } from "@/lib/letter/meta";
+import { letterShareMetadata } from "@/lib/letter/share";
 
 export const dynamicParams = false;
 
@@ -15,10 +16,12 @@ export async function generateMetadata({ params }: { params: Promise<{ date: str
   const { date } = await params;
   const issue = getIssue(date);
   if (!issue) return { title: LETTER_NAME };
+  const pagePath = letterIssuePath(issue.date);
   return {
     title: issue.title,
     description: issue.summary,
-    alternates: letterAlternates(letterIssuePath(issue.date)),
+    alternates: letterAlternates(pagePath),
+    ...letterShareMetadata(issue, pagePath),
   };
 }
 
