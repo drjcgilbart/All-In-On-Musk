@@ -1,30 +1,58 @@
 import type Stripe from "stripe";
+import { filesFromMetadata } from "@/lib/drops";
 import { ADMIN_EMAIL, CONTACT_EMAIL } from "@/lib/membership/mail";
 import { findVariant, formatPrice } from "./catalog";
 import { externalIdFor } from "./printful";
-import { productionPlan } from "./production";
+import { dropProductionPlan, productionPlan } from "./production";
 import { siteUrl } from "./config";
 
 type Ship = { name?: string | null; address?: Stripe.Address | null } | null | undefined;
-export type OrderLine = { sku: string; name: string; variant: string; quantity: number; amountCents: number };
+export type OrderLine = {
+  sku: string;
+  name: string;
+  variant: string;
+  quantity: number;
+  amountCents: number;
+  drop?: { printfulProductId: string; printfulVariantId: string; color: string; files: { type: string; url: string }[]; sample: boolean };
+};
 export type OrderSummary = {
   orderNumber: string; sessionId: string; customerName: string; email?: string; phone?: string;
   address: string[]; lines: OrderLine[]; subtotalCents: number; shippingCents: number; taxCents: number; totalCents: number;
 };
 export type PrintfulResult = { id?: number; status?: string; error?: string } | null;
 
-export function orderSummary(session: Stripe.Checkout.Session): OrderSummary {
+export async function orderSummary(session: Stripe.Checkout.Session): Promise<OrderSummary> {
   const loose = session as unknown as { collected_information?: { shipping_details?: Ship }; shipping_details?: Ship };
   const d = loose.collected_information?.shipping_details ?? loose.shipping_details;
   const a = d?.address;
   const name = d?.name || session.customer_details?.name || "Customer";
   const city = a ? [a.city, a.state].filter(Boolean).join(", ") + (a.postal_code ? ` ${a.postal_code}` : "") : "";
-  const lines = (session.line_items?.data ?? []).map((li) => {
+  const lines: OrderLine[] = [];
+  for (const li of session.line_items?.data ?? []) {
     const prod = li.price?.product as Stripe.Product | string | undefined;
-    const sku = (typeof prod === "object" ? prod?.metadata?.sku : undefined) ?? "unknown";
+    const meta = typeof prod === "object" ? prod?.metadata : undefined;
+    const sku = meta?.sku ?? "unknown";
     const f = findVariant(sku);
-    return { sku, name: f?.product.name ?? li.description ?? sku, variant: f?.variant.label ?? "", quantity: li.quantity ?? 1, amountCents: li.amount_total ?? 0 };
-  });
+    if (f || !meta?.pf_variant) {
+      lines.push({ sku, name: f?.product.name ?? li.description ?? sku, variant: f?.variant.label ?? "", quantity: li.quantity ?? 1, amountCents: li.amount_total ?? 0 });
+      continue;
+    }
+    const files = (await filesFromMetadata(meta)) ?? [];
+    lines.push({
+      sku,
+      name: meta.item_name || li.description || sku,
+      variant: meta.label || "",
+      quantity: li.quantity ?? 1,
+      amountCents: li.amount_total ?? 0,
+      drop: {
+        printfulProductId: meta.pf_product || "",
+        printfulVariantId: meta.pf_variant,
+        color: meta.color || "",
+        files,
+        sample: meta.sample === "1",
+      },
+    });
+  }
   return {
     orderNumber: externalIdFor(session.id), sessionId: session.id, customerName: name,
     email: session.customer_details?.email || undefined, phone: session.customer_details?.phone || undefined,
@@ -74,7 +102,12 @@ const A = (href: string, label = href) => `<a style="color:#2ee6d6" href="${esc(
 export function adminEmail(o: OrderSummary, printful: PrintfulResult): Mail {
   const plans = o.lines.map((l) => {
     const f = findVariant(l.sku);
-    return { l, plan: f ? productionPlan(f.product, f.variant) : null };
+    const plan = f
+      ? productionPlan(f.product, f.variant)
+      : l.drop
+        ? dropProductionPlan({ sku: l.sku, name: l.name, ...l.drop })
+        : null;
+    return { l, plan };
   });
   const flagged = plans.some((p) => !p.plan || p.plan.flags.length);
   const subject = `${printful?.error ? "[PRINTFUL FAILED] " : flagged ? "[ACTION] " : printful?.status === "draft" ? "[CONFIRM IN PRINTFUL] " : ""}New order ${o.orderNumber}: ${o.lines.map((l) => `${l.quantity}x ${l.name} (${l.variant})`).join(", ")}`;

@@ -1,7 +1,8 @@
 "use client";
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 
-export type CartItem = { sku: string; qty: number };
+export type CartSnap = { name: string; label: string; priceCents: number; image: string };
+export type CartItem = { sku: string; qty: number; snap?: CartSnap };
 const KEY = "aiom-cart-v1";
 const ID_KEY = "aiom-cart-id-v1"; // random id for the current cart; sent to Stripe as metadata.cart_id
 const ORDERS_KEY = "aiom-orders-v1"; // simple local order history (this device only)
@@ -42,6 +43,16 @@ const EMPTY: CartItem[] = [];
 const listeners = new Set<() => void>();
 let cache: { raw: string | null; items: CartItem[] } = { raw: null, items: EMPTY };
 
+function readSnap(raw: unknown): CartSnap | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const s = raw as { name?: unknown; label?: unknown; priceCents?: unknown; image?: unknown };
+  const image = typeof s.image === "string" ? s.image : "";
+  const imageOk = (image.startsWith("/") && !image.includes("..") && !image.startsWith("//")) || /^https:\/\/[^\s]+$/.test(image);
+  if (typeof s.name !== "string" || typeof s.label !== "string" || !Number.isInteger(s.priceCents) || !imageOk) return undefined;
+  if (s.name.length > 140 || s.label.length > 80 || (s.priceCents as number) < 0 || (s.priceCents as number) > 100_000 || image.length > 400) return undefined;
+  return { name: s.name, label: s.label, priceCents: s.priceCents as number, image };
+}
+
 function read(): CartItem[] {
   let raw: string | null = null;
   try {
@@ -54,9 +65,15 @@ function read(): CartItem[] {
   try {
     const parsed: unknown = raw ? JSON.parse(raw) : [];
     if (Array.isArray(parsed)) {
-      items = parsed
-        .filter((i): i is CartItem => typeof i?.sku === "string" && Number.isInteger(i?.qty))
-        .map((i) => ({ sku: i.sku, qty: Math.max(1, Math.min(MAX, i.qty)) }));
+      items = parsed.flatMap((i) => {
+        if (!i || typeof i !== "object") return [];
+        const row = i as { sku?: unknown; qty?: unknown; snap?: unknown };
+        if (typeof row.sku !== "string" || !Number.isInteger(row.qty)) return [];
+        const item: CartItem = { sku: row.sku, qty: Math.max(1, Math.min(MAX, row.qty as number)) };
+        const snap = readSnap(row.snap);
+        if (snap) item.snap = snap;
+        return [item];
+      });
     }
   } catch {
     items = EMPTY;
@@ -91,10 +108,11 @@ export function useCart() {
   const items = useSyncExternalStore(subscribe, read, () => EMPTY);
   const ready = useSyncExternalStore(subscribe, () => true, () => false);
 
-  const add = useCallback((sku: string, qty = 1) => {
+  const add = useCallback((sku: string, qty = 1, snap?: CartSnap) => {
     const cur = read();
     const found = cur.find((i) => i.sku === sku);
-    write(found ? cur.map((i) => (i.sku === sku ? { ...i, qty: Math.min(MAX, i.qty + qty) } : i)) : [...cur, { sku, qty }]);
+    const next = { sku, qty, ...(snap ? { snap } : {}) };
+    write(found ? cur.map((i) => (i.sku === sku ? { ...i, qty: Math.min(MAX, i.qty + qty), ...(snap ? { snap } : {}) } : i)) : [...cur, next]);
   }, []);
   const setQty = useCallback((sku: string, qty: number) => {
     const n = Number.isFinite(qty) ? Math.round(qty) : 1;
