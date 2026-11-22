@@ -39,7 +39,7 @@ export default async function SuccessPage({ searchParams }: Props) {
       </>
     );
   }
-  const o = orderSummary(session);
+  const o = await orderSummary(session);
   const order = {
     orderNumber: o.orderNumber,
     date: new Date(session.created * 1000).toISOString(),

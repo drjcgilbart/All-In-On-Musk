@@ -29,7 +29,7 @@ async function claimOnce(store: DedupeStore, key: string) {
 async function sendOrderEmails(session: Stripe.Checkout.Session, printful: PrintfulResult, deps: Deps): Promise<string> {
   const send = deps.sendEmail ?? sendMail;
   let o;
-  try { o = orderSummary(session); } catch (err) { logError("order-mail", err, { session: session.id, alert: "ADMIN NOTICE NOT SENT" }); return "+admin-mail-failed"; }
+  try { o = await orderSummary(session); } catch (err) { logError("order-mail", err, { session: session.id, alert: "ADMIN NOTICE NOT SENT" }); return "+admin-mail-failed"; }
   const kind = printful?.error ? "failed" : "ok";
   const jobs: [string, string | undefined, () => Mail, string | undefined][] = [
     [`mail:admin:${kind}:${session.id}`, ADMIN_EMAIL, () => adminEmail(o, printful), o.email],
@@ -81,7 +81,7 @@ export async function handleStripeEvent(event: Stripe.Event, deps: Deps): Promis
     if (!printfulLines(session).length) {
       return "self-fulfilled" + (await sendOrderEmails(session, null, deps));
     }
-    const order = sessionToPrintfulOrder(session);
+    const order = await sessionToPrintfulOrder(session);
     let result;
     try {
       result = await (deps.createOrder ?? createPrintfulOrder)(order, autoConfirm());
