@@ -50,6 +50,45 @@
   border: 0;
 }
 
+/* Shorts on /watch/[id]. Width is capped so a 9:16 frame stays near 80vh and 360–420px.
+   Phone uses the full content width. Long videos keep the 16:9 rule above. */
+.watch-frame.is-short {
+  display: block;
+  width: min(100%, 420px, calc(80vh * 9 / 16));
+  aspect-ratio: 9 / 16;
+  margin: 1rem auto 1.4rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+button.watch-frame.is-short {
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.watch-frame.is-short img,
+.watch-frame.is-short iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.watch-frame.is-short .jv-play {
+  z-index: 1;
+}
+
+@media (max-width: 760px) {
+  .watch-frame.is-short {
+    width: 100%;
+  }
+}
+
 .piece-links {
   display: flex;
   flex-wrap: wrap;

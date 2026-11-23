@@ -4,7 +4,9 @@ import { LetterVideo } from "@/components/letter-video";
 import { storyDate } from "@/components/story-body";
 import { podcastUrl } from "@/content/site";
 import { getChannelRss, watchPathForVideo } from "@/lib/channelRss";
+import { resolveWatchVideo, type WatchVideoSource } from "@/lib/shorts";
 import { readCatalog } from "@/lib/studio/catalog";
+import { fetchChannelVideos, fetchVideoListing } from "@/lib/youtubeChannel";
 import "../../journal/journal.css";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +29,23 @@ async function findClip(slug: string) {
 async function channelVideo(slug: string) {
   if (!YOUTUBE_ID.test(slug)) return null;
   const videos = await getChannelRss(15);
-  return videos.find((video) => video.id === slug) ?? null;
+  const fromRss = videos.find((video) => video.id === slug) ?? null;
+  const sources: Array<WatchVideoSource | null> = [
+    fromRss
+      ? { kind: fromRss.kind, title: fromRss.title, dateLabel: fromRss.dateLabel, summary: fromRss.summary }
+      : null,
+  ];
+  if (!fromRss) {
+    const feed = await fetchChannelVideos();
+    const listed = feed.videos.find((video) => video.id === slug) ?? null;
+    sources.push(
+      listed
+        ? { kind: listed.kind, title: listed.title, dateLabel: listed.dateLabel, duration: listed.duration }
+        : null,
+    );
+    if (!listed) sources.push(await fetchVideoListing(slug));
+  }
+  return resolveWatchVideo(sources);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -67,7 +85,7 @@ export default async function ClipPage({ params }: Props) {
         </p>
         <h1 className="page-title">{title}</h1>
         {video?.dateLabel ? <p className="note">{video.dateLabel}</p> : null}
-        <LetterVideo id={slug} title={title} />
+        <LetterVideo id={slug} title={title} short={video?.short} />
         {video?.summary ? <p className="lede">{video.summary}</p> : null}
       </>
     );
