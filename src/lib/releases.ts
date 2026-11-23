@@ -44,6 +44,17 @@ function videoDateLabel(iso: string) {
   }).format(date);
 }
 
+/**
+ * The current `/letter` page already shows this graphic as the page banner.
+ * Hide it on that page's featured card only. Homepage and other Latest cards keep it.
+ * A featured video is not the banner, so its image stays.
+ */
+export function featuredReleaseShowsImage(release: Pick<Release, "kind" | "image">, onCurrentLetter: boolean) {
+  if (!release.image) return false;
+  if (onCurrentLetter && release.kind === "letter") return false;
+  return true;
+}
+
 export function letterToRelease(issue: LetterIssue): Release {
   const image = letterHasShareImage(issue.date) ? letterOgPublicPath(issue.date) : "";
   return {

@@ -1,4 +1,15 @@
-export type Frame = { src: string; alt: string };
+export type Frame = { src: string; alt: string; width?: number; height?: number };
+
+/** Issues whose `public/letter/og/YYYY-MM-DD.jpg` exists, plus the current issue date. */
+export type LetterBanners = {
+  currentDate: string | null;
+  byDate: Record<string, Frame>;
+};
+
+/** True for the daily teaser reused as the on-page banner. */
+export function isLetterGraphic(src: string) {
+  return src.startsWith("/letter/og/");
+}
 
 export const frames = {
   rocket: {
@@ -100,8 +111,25 @@ export const machineArt: Record<string, Frame> = {
   terafab: frames.terafab,
 };
 
+/**
+ * Banner for `/letter` and `/letter/YYYY-MM-DD` when that issue has a teaser.
+ * Other letter routes (archive, subscribe) return null and keep the page default.
+ */
+export function letterPageFrame(pathname: string, banners?: LetterBanners | null): Frame | null {
+  if (!banners) return null;
+  const path = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  if (path === "/letter") {
+    return banners.currentDate ? banners.byDate[banners.currentDate] ?? null : null;
+  }
+  const match = /^\/letter\/(\d{4}-\d{2}-\d{2})$/.exec(path);
+  if (!match) return null;
+  return banners.byDate[match[1]] ?? null;
+}
+
 /** One or more stills for the desk banner. Add a frame here when a page needs its own picture. */
-export function pageFrames(pathname: string): Frame[] {
+export function pageFrames(pathname: string, banners?: LetterBanners | null): Frame[] {
+  const letter = letterPageFrame(pathname, banners);
+  if (letter) return [letter];
   if (pathname.startsWith("/si-slopcore-videos")) return [{ src: "/art/slopcore-banner.svg", alt: "SI Slopcore banner: glowing red equalizer and waveform over a circuit grid" }];
   if (pathname === "/" || pathname === "/machines") return [frames.starship, frames.robotaxi, frames.optimus];
   if (pathname.startsWith("/machines/tesla")) return [frames.cybertruck, frames.robotaxi, frames.modely];
