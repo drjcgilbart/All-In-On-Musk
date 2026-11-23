@@ -664,6 +664,27 @@ button.nav-btn {
   text-decoration: none;
 }
 
+.release-row.has-shot {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.release-row-shot {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--desk-line);
+}
+
+.release-row-copy {
+  display: block;
+  min-width: 0;
+}
+
 .release-row .mono,
 .release-row strong,
 .release-line {
@@ -1008,6 +1029,31 @@ button.nav-btn {
   letter-spacing: -0.03em;
   text-transform: uppercase;
   line-height: 1.05;
+}
+
+.letter-archive li:has(.letter-archive-shot) {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  gap: 0.75rem 1rem;
+  align-items: start;
+}
+
+.letter-archive-shot-link {
+  display: block;
+  align-self: start;
+}
+
+.letter-archive-shot {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--desk-line);
+}
+
+.letter-archive-copy {
+  min-width: 0;
 }
 
 .letter-archive p {
@@ -1663,6 +1709,20 @@ a.plain-card {
   border: 1px solid var(--desk-line);
 }
 
+/* The letter teaser is a 16:9 card. Show the whole graphic instead of the short photo crop. */
+.page-art.page-art-letter {
+  display: flex;
+  justify-content: center;
+}
+
+.page-art.page-art-letter img {
+  width: min(100%, 56.9rem);
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: #05070a;
+}
+
 .page-art-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2087,6 +2147,20 @@ a.plain-card {
   .page-art img,
   .page-art-row img {
     height: 11rem;
+  }
+
+  .page-art.page-art-letter img {
+    height: auto;
+  }
+
+  .release-row.has-shot {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .letter-archive li:has(.letter-archive-shot) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.55rem;
   }
 
   .page-art-row img {

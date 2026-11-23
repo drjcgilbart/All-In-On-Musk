@@ -1,6 +1,6 @@
 "use client";
 
-import { pageFrames } from "@/content/art";
+import { isLetterGraphic, pageFrames, type LetterBanners } from "@/content/art";
 import { glossary, watchlist } from "@/content/records";
 import { machines } from "@/content/machines";
 import { moreNav, nav, site, tabs } from "@/content/site";
@@ -89,7 +89,13 @@ function DeskLink({
   );
 }
 
-export function Shell({ children }: { children: React.ReactNode }) {
+export function Shell({
+  children,
+  letterBanners,
+}: {
+  children: React.ReactNode;
+  letterBanners: LetterBanners;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -99,7 +105,13 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const [logoutBusy, setLogoutBusy] = useState(false);
   const [logoutError, setLogoutError] = useState("");
   const logoutNoRef = useRef<HTMLButtonElement>(null);
-  const frames = pageFrames(pathname);
+  const frames = pageFrames(pathname, letterBanners);
+  const artClass =
+    frames.length > 1
+      ? "page-art page-art-row"
+      : frames.length === 1 && isLetterGraphic(frames[0].src)
+        ? "page-art page-art-letter"
+        : "page-art";
 
   useEffect(() => {
     let cancel = false;
@@ -259,9 +271,15 @@ export function Shell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className="desk-main" id="content">
-        <div className={frames.length > 1 ? "page-art page-art-row" : "page-art"}>
+        <div className={artClass}>
           {frames.map((frame) => (
-            <img key={frame.src + frame.alt} src={frame.src} alt={frame.alt} />
+            <img
+              key={frame.src + frame.alt}
+              src={frame.src}
+              alt={frame.alt}
+              width={frame.width}
+              height={frame.height}
+            />
           ))}
         </div>
         {children}

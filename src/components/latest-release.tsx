@@ -22,14 +22,27 @@ function Featured({ release }: { release: Release }) {
 }
 
 function Row({ release }: { release: Release }) {
+  const shot = release.kind === "letter" && release.image ? release.image : null;
+  const copy = (
+    <>
+      <p className="mono">
+        {kindLabel(release.kind)} · <time dateTime={new Date(release.at).toISOString()}>{release.dateLabel}</time>
+      </p>
+      <strong>{release.title}</strong>
+      <p className="release-line">{release.blurb}</p>
+    </>
+  );
   return (
     <li>
-      <Link className="release-row" href={release.href}>
-        <p className="mono">
-          {kindLabel(release.kind)} · <time dateTime={new Date(release.at).toISOString()}>{release.dateLabel}</time>
-        </p>
-        <strong>{release.title}</strong>
-        <p className="release-line">{release.blurb}</p>
+      <Link className={shot ? "release-row has-shot" : "release-row"} href={release.href}>
+        {shot ? (
+          <>
+            <img className="release-row-shot" src={shot} alt={release.title} width={1200} height={675} />
+            <span className="release-row-copy">{copy}</span>
+          </>
+        ) : (
+          copy
+        )}
       </Link>
     </li>
   );
