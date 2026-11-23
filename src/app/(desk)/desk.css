@@ -598,6 +598,10 @@ button.nav-btn {
   text-decoration: none;
 }
 
+.release-feature-plain .release-copy {
+  padding: 1.05rem 1.1rem 1.2rem;
+}
+
 .release-shot {
   display: block;
   width: 100%;

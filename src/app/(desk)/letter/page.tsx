@@ -40,7 +40,7 @@ export default function LetterPage() {
   }
   return (
     <>
-      <LatestRelease />
+      <LatestRelease hideFeaturedLetterImage />
       <LetterView issue={issue} onPermalink={false} />
     </>
   );
