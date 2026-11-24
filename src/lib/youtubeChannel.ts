@@ -128,6 +128,29 @@ async function listPlaylist(playlistId: string, kind: ChannelVideo["kind"], key:
   return videos;
 }
 
+/** One video, for a /watch page that is not in the latest RSS or playlist window. */
+export async function fetchVideoListing(id: string): Promise<{ title: string; duration: string; dateLabel: string } | null> {
+  if (!/^[\w-]{11}$/.test(id)) return null;
+  const key = process.env.YOUTUBE_API_KEY?.trim() || "";
+  if (!key) return null;
+  try {
+    const body = await youtubeGet("/videos", { part: "snippet,contentDetails", id }, key);
+    const row = (Array.isArray(body.items) ? body.items[0] : null) as {
+      snippet?: { title?: string; publishedAt?: string };
+      contentDetails?: { duration?: string };
+    } | null;
+    const title = row?.snippet?.title?.trim() || "";
+    if (!row || !title || title === "Private video" || title === "Deleted video") return null;
+    return {
+      title,
+      duration: formatRunTime(row.contentDetails?.duration || ""),
+      dateLabel: dateLabel(row.snippet?.publishedAt || ""),
+    };
+  } catch {
+    return null;
+  }
+}
+
 async function fillDurations(videos: ChannelVideo[], key: string) {
   const ids = [...new Set(videos.map((video) => video.id))].slice(0, 50);
   if (ids.length === 0) return videos;

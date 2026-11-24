@@ -2,6 +2,7 @@
  *  Public YouTube channel RSS (no API key). Cached by Next for 30 minutes (ISR).
  *  A failed pull returns an empty list and the block hides itself.
  */
+import { classifyRssTitle } from "@/lib/shorts";
 import { channelIdFromEnv } from "@/lib/youtubeChannel";
 import { readCatalog } from "@/lib/studio/catalog";
 
@@ -57,16 +58,16 @@ export async function getChannelRss(limit = 6): Promise<RssVideo[]> {
       const publishedAt = pick(entry, /<published>([^<]+)<\/published>/);
       const link = pick(entry, /<link rel="alternate" href="([^"]+)"/);
       if (!id || !title) continue;
-      const kind = link.includes("/shorts/") ? "short" : "video";
+      const classified = classifyRssTitle(title, link);
       const summary = pick(entry, /<media:description>([\s\S]*?)<\/media:description>/).replace(/\s+/g, " ").slice(0, 280);
       videos.push({
         id,
-        title: title.replace(/\s*#shorts\b/gi, "").trim(),
+        title: classified.title,
         publishedAt,
         dateLabel: dateLabel(publishedAt),
         thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
         summary,
-        kind,
+        kind: classified.kind,
         href: watchPathForVideo(id),
       });
     }
